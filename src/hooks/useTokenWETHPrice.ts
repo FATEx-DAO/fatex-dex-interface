@@ -3,7 +3,7 @@ import { Token, WETH, Price } from '@venomswap/sdk'
 import { useActiveWeb3React } from './index'
 import { usePair } from '../data/Reserves'
 
-export default function useTokenWethPrice(token: Token | undefined): Price | undefined {
+export default function useTokenWETHPrice(token: Token | undefined): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const [, tokenWETHPair] = usePair(chainId && WETH[chainId], token)
 

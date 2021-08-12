@@ -8,7 +8,7 @@ import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import useTokensWithWethPrices from '../../hooks/useTokensWithWethPrices'
+import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
 import useFilterStakingRewardsInfo from '../../hooks/useFilterStakingRewardsInfo'
 import getBlocksPerYear from '../../utils/getBlocksPerYear'
@@ -76,7 +76,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
 
   const masterInfo = useFilterStakingRewardsInfo(chainId, active, pairToFilterBy)
 
-  const tokensWithPrices = useTokensWithWethPrices()
+  const tokensWithPrices = useTokensWithWETHPrices()
 
   const weth = tokensWithPrices?.WETH?.token
   const wethBusdPrice = useBUSDPrice(weth)
