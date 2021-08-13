@@ -18,8 +18,7 @@ import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { useMasterBreederContract } from '../../hooks/useContract'
-import { ZERO_ADDRESS } from '../../constants'
+import { useFateRewardController } from '../../hooks/useContract'
 import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
@@ -74,8 +73,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     onDismiss()
   }, [onDismiss])
 
-  const masterBreeder = useMasterBreederContract()
-  const referral = ZERO_ADDRESS
+  const fateRewardController = useFateRewardController()
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
@@ -84,18 +82,18 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // approval data for stake
   const deadline = useTransactionDeadline()
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, masterBreeder?.address)
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, fateRewardController?.address)
 
   async function onStake() {
     setAttempting(true)
-    if (masterBreeder && parsedAmount && deadline) {
+    if (fateRewardController && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
         const formattedAmount = `0x${parsedAmount.raw.toString(16)}`
 
-        const estimatedGas = await masterBreeder.estimateGas.deposit(stakingInfo.pid, formattedAmount, referral)
+        const estimatedGas = await fateRewardController.estimateGas.deposit(stakingInfo.pid, formattedAmount)
 
-        await masterBreeder
-          .deposit(stakingInfo.pid, formattedAmount, referral, {
+        await fateRewardController
+          .deposit(stakingInfo.pid, formattedAmount, {
             gasLimit: calculateGasMargin(estimatedGas)
           })
           .then((response: TransactionResponse) => {

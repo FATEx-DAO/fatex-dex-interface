@@ -21,7 +21,7 @@ import { BlueCard } from '../../components/Card'
 
 import usePrevious from '../../hooks/usePrevious'
 
-import { PIT, PIT_SETTINGS } from '../../constants'
+import { X_FATE, PIT_SETTINGS } from '../../constants'
 import { GOVERNANCE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
 import { PIT_INTERFACE } from '../../constants/abis/pit'
 import useGovernanceToken from 'hooks/useGovernanceToken'
@@ -127,7 +127,7 @@ export default function Pit({
     GOVERNANCE_TOKEN_INTERFACE
   )
 
-  const pit = chainId ? PIT[chainId] : undefined
+  const pit = chainId ? X_FATE[chainId] : undefined
   const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
   const pitBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, pit, 'balanceOf', PIT_INTERFACE)
   const govTokenPitTokenRatio = usePitRatio()

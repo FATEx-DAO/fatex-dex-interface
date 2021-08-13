@@ -16,96 +16,72 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.BSC_TESTNET]: '0xDBbEbd367133609DA8c7AcDF96A4498E4F0f1F9c',
-  [ChainId.HARMONY_MAINNET]: '0xf012702a5f0e54015362cBCA26a26fc90AA832a3',
-  [ChainId.HARMONY_TESTNET]: '0x8e9A3cE409B13ef459fE4448aE97a79d6Ecd8b4b'
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: '0xa21b4C8eB8391eCbC5B99e64365E7BB8e06Bd736'
 }
 
-export const GOVERNANCE_ADDRESS = '0x5e4be8Bc9637f0EAA1A755019e06A68ce081D58F'
+export const GOVERNANCE_ADDRESS = '0x101CC7F0C03F3E4904b68e6DDEE9Ff405bEEa1E5'
 
-export const TIMELOCK_ADDRESS = '0x1a9C8182C09F50C8318d769245beA52c32BE35BC'
+export const TIMELOCK_ADDRESS = '0xE636C0997388AB64DEE938bd6cbCf588D31C531c'
 
 export const GOVERNANCE_TOKEN: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'VIPER', 'Viper'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'VIPER', 'Viper'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ONE_ADDRESS, 18, 'VIPER', 'Viper'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ONE_ADDRESS, 18, 'VIPER', 'Viper'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ONE_ADDRESS, 18, 'VIPER', 'Viper'),
-  [ChainId.BSC_MAINNET]: new Token(ChainId.BSC_MAINNET, ZERO_ONE_ADDRESS, 18, 'COBRA', 'Cobra'),
-  [ChainId.BSC_TESTNET]: new Token(
-    ChainId.BSC_TESTNET,
-    '0x955F82C58dCd3c1369769aEc1Bbd80611b1cff30',
-    18,
-    'COBRA',
-    'Cobra'
-  ),
-  [ChainId.HARMONY_MAINNET]: new Token(
-    ChainId.HARMONY_MAINNET,
-    '0xEa589E93Ff18b1a1F1e9BaC7EF3E86Ab62addc79',
-    18,
-    'VIPER',
-    'Viper'
-  ),
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
+  [ChainId.BSC_MAINNET]: new Token(ChainId.BSC_MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Cobra'),
+  [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Cobra'),
+  [ChainId.HARMONY_MAINNET]: new Token(ChainId.HARMONY_MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
   [ChainId.HARMONY_TESTNET]: new Token(
     ChainId.HARMONY_TESTNET,
-    '0x69A655c56087D927eb05247FB56495a0f19B9f70',
+    '0xF16BF531e77dfF1A1467D21a53a6bd31A8b3b6D7',
     18,
-    'VIPER',
-    'Viper'
+    'FATE',
+    'Fate'
   )
 }
 
-export const MASTER_BREEDER: { [chainId in ChainId]: string } = {
+export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
   [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
   [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.BSC_TESTNET]: '0x8E7Cfa9685935fd87562E5749eFCAF64Eef61DD6',
-  [ChainId.HARMONY_MAINNET]: '0x7AbC67c8D4b248A38B0dc5756300630108Cb48b4',
-  [ChainId.HARMONY_TESTNET]: '0x651e2E555164834bc42303c1a1B4f795a9Fb7619'
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: '0x843dC2546587855cc17360b92A4dEFDfbB8c1D78'
 }
 
-export const PIT_BREEDER: { [chainId in ChainId]: string } = {
+export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
   [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
   [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.BSC_TESTNET]: '0x38a75B033c2C3444Cb91D580645F76d042F98EdA',
-  [ChainId.HARMONY_MAINNET]: '0x08913d353091e24B361f0E519e2f7aD07a78995d',
-  [ChainId.HARMONY_TESTNET]: '0x3945509547b74370468238F715e2dcf698a088B4'
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: '0xbbF5718e1f952E02B584C0a0d4BDda155aB5abcA'
 }
 
-export const PIT: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'xVIPER', 'ViperPit'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'xVIPER', 'ViperPit'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ONE_ADDRESS, 18, 'xVIPER', 'ViperPit'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ONE_ADDRESS, 18, 'xVIPER', 'ViperPit'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ONE_ADDRESS, 18, 'xVIPER', 'ViperPit'),
-  [ChainId.BSC_MAINNET]: new Token(ChainId.BSC_MAINNET, ZERO_ONE_ADDRESS, 18, 'xCOBRA', 'CobraDen'),
-  [ChainId.BSC_TESTNET]: new Token(
-    ChainId.BSC_TESTNET,
-    '0x6F08B9914A4BDce7a2220D9f72BC2728Bc083A18',
-    18,
-    'xCOBRA',
-    'CobraDen'
-  ),
-  [ChainId.HARMONY_MAINNET]: new Token(
-    ChainId.HARMONY_MAINNET,
-    '0xE064a68994e9380250CfEE3E8C0e2AC5C0924548',
-    18,
-    'xVIPER',
-    'ViperPit'
-  ),
+export const X_FATE: { [chainId in ChainId]: Token } = {
+  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
+  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
+  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
+  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
+  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
+  [ChainId.BSC_MAINNET]: new Token(ChainId.BSC_MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'CobraDen'),
+  [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'xFATE Token'),
+  [ChainId.HARMONY_MAINNET]: new Token(ChainId.HARMONY_MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'xFATE Token'),
   [ChainId.HARMONY_TESTNET]: new Token(
     ChainId.HARMONY_TESTNET,
-    '0x1e11CA9830Cd3a9867990CE2769EDf77F21ae5FA',
+    '0x1d01f69c0F9E3180bAE1083f1a906a10692342bE',
     18,
-    'xVIPER',
-    'ViperPit'
+    'xFATE',
+    'xFATE Token'
   )
 }
 
@@ -115,10 +91,10 @@ export const PIT_SETTINGS: { [chainId in ChainId]: Record<string, string> } = {
   [ChainId.ROPSTEN]: { name: '', path: '' },
   [ChainId.GÖRLI]: { name: '', path: '' },
   [ChainId.KOVAN]: { name: '', path: '' },
-  [ChainId.BSC_MAINNET]: { name: 'CobraDen', path: '/cobraDen' },
-  [ChainId.BSC_TESTNET]: { name: 'CobraDen', path: '/cobraDen' },
-  [ChainId.HARMONY_MAINNET]: { name: 'ViperPit', path: '/viperPit' },
-  [ChainId.HARMONY_TESTNET]: { name: 'ViperPit', path: '/viperPit' }
+  [ChainId.BSC_MAINNET]: { name: 'CobraDen', path: '' },
+  [ChainId.BSC_TESTNET]: { name: 'CobraDen', path: '' },
+  [ChainId.HARMONY_MAINNET]: { name: 'Fate', path: '/xfate' },
+  [ChainId.HARMONY_TESTNET]: { name: 'Fate', path: '/xfate' }
 }
 
 export const WEB_INTERFACES: { [chainId in ChainId]: string[] } = {
@@ -127,10 +103,10 @@ export const WEB_INTERFACES: { [chainId in ChainId]: string[] } = {
   [ChainId.ROPSTEN]: [''],
   [ChainId.GÖRLI]: [''],
   [ChainId.KOVAN]: [''],
-  [ChainId.BSC_MAINNET]: ['cobra.exchange', 'cobraswap.io', 'cobradex.org'],
-  [ChainId.BSC_TESTNET]: ['cobra.exchange', 'cobraswap.io', 'cobradex.org'],
-  [ChainId.HARMONY_MAINNET]: ['viper.exchange', 'viperswap.one', 'viperswap.com', 'viperswap.io', 'viperswap.org'],
-  [ChainId.HARMONY_TESTNET]: ['viper.exchange', 'viperswap.one', 'viperswap.com', 'viperswap.io', 'viperswap.org']
+  [ChainId.BSC_MAINNET]: [''],
+  [ChainId.BSC_TESTNET]: [''],
+  [ChainId.HARMONY_MAINNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org'],
+  [ChainId.HARMONY_TESTNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org']
 }
 
 export { PRELOADED_PROPOSALS } from './proposals'
@@ -186,7 +162,7 @@ export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'bscBUSD'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, '1USDC'),
-    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'VIPER'),
+    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'FATE'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, '1ETH'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'LINK')
   ]
@@ -209,7 +185,7 @@ export const SUGGESTED_BASES: ChainTokenList = {
   [ChainId.HARMONY_MAINNET]: [
     ...WETH_ONLY[ChainId.HARMONY_MAINNET],
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
-    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'VIPER')
+    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'FATE')
   ]
 }
 
@@ -222,7 +198,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'bscBUSD'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, '1USDC'),
-    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'VIPER'),
+    getTokenWithDefault(ChainId.HARMONY_MAINNET, 'FATE'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, '1ETH'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'LINK')
   ]

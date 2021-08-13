@@ -6,13 +6,12 @@ import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
+import { useFateRewardController } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import FormattedCurrencyAmount from '../FormattedCurrencyAmount'
 import { useActiveWeb3React } from '../../hooks'
-import { ZERO_ADDRESS } from '../../constants'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 
 const ContentWrapper = styled(AutoColumn)`
@@ -37,8 +36,6 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
   const [attempting, setAttempting] = useState(false)
   const [failed, setFailed] = useState<boolean>(false)
 
-  const referral = ZERO_ADDRESS
-
   function wrappedOnDismiss() {
     setHash(undefined)
     setAttempting(false)
@@ -46,13 +43,13 @@ export default function UnstakingModal({ isOpen, onDismiss, stakingInfo }: Staki
     onDismiss()
   }
 
-  const masterBreeder = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
   async function onWithdraw() {
-    if (masterBreeder && stakingInfo?.stakedAmount) {
+    if (fateRewardController && stakingInfo?.stakedAmount) {
       setAttempting(true)
-      await masterBreeder
-        .withdraw(stakingInfo.pid, `0x${stakingInfo.stakedAmount.raw.toString(16)}`, referral)
+      await fateRewardController
+        .withdraw(stakingInfo.pid, `0x${stakingInfo.stakedAmount.raw.toString(16)}`)
         .then((response: TransactionResponse) => {
           addTransaction(response, {
             summary: `Withdraw deposited liquidity`

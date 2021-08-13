@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
-import { usePitBreederContract } from '../../hooks/useContract'
+import { useFeeTokenConverterToFateContract } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -52,7 +52,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
     onDismiss()
   }
 
-  const pitBreeder = usePitBreederContract()
+  const feeTokenConverterToFate = useFeeTokenConverterToFateContract()
   const stakingPools = useMemo(() => (chainId ? PIT_POOLS[chainId] : []), [chainId])
 
   const liquidityTokenAddresses = useMemo(
@@ -66,7 +66,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   ).filter(address => address !== undefined)
 
   const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, PAIR_INTERFACE, 'balanceOf', [
-    pitBreeder?.address
+    feeTokenConverterToFate?.address
   ])
 
   const [claimFrom, claimTo] = useEligiblePitPools(stakingPools, balanceResults)
@@ -74,13 +74,13 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   const rewardsAreClaimable = claimFrom.length > 0 && claimTo.length > 0
 
   async function onClaimRewards() {
-    if (pitBreeder) {
+    if (feeTokenConverterToFate) {
       setAttempting(true)
 
       try {
-        const estimatedGas = await pitBreeder.estimateGas.convertMultiple(claimFrom, claimTo)
+        const estimatedGas = await feeTokenConverterToFate.estimateGas.convertMultiple(claimFrom, claimTo)
 
-        await pitBreeder
+        await feeTokenConverterToFate
           .convertMultiple(claimFrom, claimTo, {
             gasLimit: calculateGasMargin(estimatedGas)
           })

@@ -3,14 +3,20 @@ import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.j
 import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
 import { abi as GOVERNANCE_TOKEN_ABI } from '@venomswap/contracts/build/GovernanceToken.json'
 import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { abi as MASTER_BREEDER_ABI } from '@venomswap/contracts/build/MasterBreeder.json'
+import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/FateRewardController.json'
 import { abi as PIT_ABI } from '@venomswap/contracts/build/Pit.json'
-import { abi as PIT_BREEDER_ABI } from '@venomswap/contracts/build/PitBreeder.json'
+import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/FeeTokenConverterToFate.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { ChainId, WETH } from '@venomswap/sdk'
 import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
 import { useMemo } from 'react'
-import { GOVERNANCE_ADDRESS, MERKLE_DISTRIBUTOR_ADDRESS, MASTER_BREEDER, PIT, PIT_BREEDER } from '../constants'
+import {
+  GOVERNANCE_ADDRESS,
+  MERKLE_DISTRIBUTOR_ADDRESS,
+  FATE_REWARD_CONTROLLER,
+  X_FATE,
+  FEE_TOKEN_CONVERTER
+} from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
   ARGENT_WALLET_DETECTOR_MAINNET_ADDRESS
@@ -126,22 +132,26 @@ export function useGovTokenContract(): Contract | null {
 
 export function usePitContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? PIT[chainId].address : undefined, PIT_ABI, withSignerIfPossible)
+  return useContract(chainId ? X_FATE[chainId].address : undefined, PIT_ABI, withSignerIfPossible)
 }
 
-export function usePitBreederContract(withSignerIfPossible?: boolean): Contract | null {
+export function useFeeTokenConverterToFateContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? PIT_BREEDER[chainId] : undefined, PIT_BREEDER_ABI, withSignerIfPossible)
+  return useContract(
+    chainId ? FEE_TOKEN_CONVERTER[chainId] : undefined,
+    FEE_TOKEN_CONVERTER_TO_FATE_ABI,
+    withSignerIfPossible
+  )
 }
 
 export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
-export function useMasterBreederContract(withSignerIfPossible?: boolean): Contract | null {
+export function useFateRewardController(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  const address = chainId && MASTER_BREEDER[chainId]
-  return useContract(address, MASTER_BREEDER_ABI, withSignerIfPossible)
+  const address = chainId && FATE_REWARD_CONTROLLER[chainId]
+  return useContract(address, FATE_REWARD_CONTROLLER_ABI, withSignerIfPossible)
 }
 
 export function useSocksController(): Contract | null {

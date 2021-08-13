@@ -4,7 +4,7 @@ import { JSBI } from '@venomswap/sdk'
 import { TYPE } from '../../theme'
 import { useBlockNumber } from '../../state/application/hooks'
 import { useSingleCallResult } from '../../state/multicall/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
+import { useFateRewardController } from '../../hooks/useContract'
 import useBlockchain from '../../hooks/useBlockchain'
 import getBlockchainBlockTime from '../../utils/getBlockchainBlockTime'
 import { BlueCard } from '../../components/Card'
@@ -17,10 +17,10 @@ const DAY = HOUR * 24
 export default function AwaitingRewards() {
   const blockchain = useBlockchain()
   const blockTime = getBlockchainBlockTime(blockchain)
-  const masterBreederContract = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
   const govToken = useGovernanceToken()
 
-  const rewardsStartBlock = useSingleCallResult(masterBreederContract, 'START_BLOCK').result?.[0]
+  const rewardsStartBlock = useSingleCallResult(fateRewardController, 'startBlock').result?.[0]
   const currentBlock = useBlockNumber()
 
   const rewardsStarted = useMemo<boolean>(() => {

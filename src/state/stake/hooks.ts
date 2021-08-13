@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
+import { useFateRewardController } from '../../hooks/useContract'
 import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
 import { Interface } from '@ethersproject/abi'
@@ -72,7 +72,7 @@ export interface StakingInfo {
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(active: boolean | undefined = undefined, pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
-  const masterBreederContract = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
   const masterInfo = useFilterStakingRewardsInfo(chainId, active, pairToFilterBy)
 
@@ -92,11 +92,11 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     [masterInfo, account]
   )
 
-  const pendingRewards = useSingleContractMultipleData(masterBreederContract, 'pendingReward', pidAccountMapping)
-  const userInfos = useSingleContractMultipleData(masterBreederContract, 'userInfo', pidAccountMapping)
+  const pendingRewards = useSingleContractMultipleData(fateRewardController, 'pendingFate', pidAccountMapping)
+  const userInfos = useSingleContractMultipleData(fateRewardController, 'userInfo', pidAccountMapping)
 
   const poolInfos = useSingleContractMultipleData(
-    masterBreederContract,
+    fateRewardController,
     'poolInfo',
     pids.map(pids => [pids])
   )
@@ -114,7 +114,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const lpTokenTotalSupplies = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'totalSupply')
   const lpTokenReserves = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'getReserves')
   const lpTokenBalances = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'balanceOf', [
-    masterBreederContract?.address
+    fateRewardController?.address
   ])
 
   // getNewRewardPerBlock uses pid = 0 to return the base rewards
@@ -124,15 +124,15 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   adjustedPids = [...[0], ...adjustedPids]
 
   const poolRewardsPerBlock = useSingleContractMultipleData(
-    masterBreederContract,
+    fateRewardController,
     'getNewRewardPerBlock',
     adjustedPids.map(adjustedPids => [adjustedPids])
   )
 
   //const poolLength = useSingleCallResult(masterBreederContract, 'poolLength')
-  const startBlock = useSingleCallResult(masterBreederContract, 'START_BLOCK')
-  const lockRewardsRatio = useSingleCallResult(masterBreederContract, 'PERCENT_LOCK_BONUS_REWARD')
-  //const rewardPerBlock = useSingleCallResult(masterBreederContract, 'REWARD_PER_BLOCK')
+  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+  // const lockRewardsRatio = useSingleCallResult(masterBreederContract, 'PERCENT_LOCK_BONUS_REWARD')
+  const lockRewardsRatio = useSingleCallResult(fateRewardController, 'startBlock')
 
   return useMemo(() => {
     if (!chainId || !weth || !govToken) return []
