@@ -170,6 +170,7 @@ export function useSingleContractMultipleData(
     () =>
       contract && fragment && isValidMethodArgs(callInputs)
         ? callInputs.map<Call>(inputs => {
+            // console.log('methodName ', methodName, contract.interface.encodeFunctionData(fragment, inputs).slice(0, 10))
             return {
               address: contract.address,
               callData: contract.interface.encodeFunctionData(fragment, inputs)

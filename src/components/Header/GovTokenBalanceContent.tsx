@@ -17,7 +17,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import { GOVERNANCE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
+import { FATE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
 import { MouseoverTooltip } from '../Tooltip'
 import useBlockchain from '../../hooks/useBlockchain'
 
@@ -57,19 +57,19 @@ export default function GovTokenBalanceContent({ setShowUniBalanceModal }: { set
     account ?? undefined,
     govToken,
     'balanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const govTokenLockedBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     govToken,
     'lockOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const govTokenTotalBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     govToken,
     'totalBalanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const lockedGovTokensToClaim: TokenAmount | undefined = useTotalLockedGovTokensEarned()
   const unlockedGovTokensToClaim: TokenAmount | undefined = useTotalUnlockedGovTokensEarned()

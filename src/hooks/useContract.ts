@@ -1,10 +1,10 @@
 import { Contract } from '@ethersproject/contracts'
-import { abi as GOVERNANCE_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
-import { abi as UNI_ABI } from '@uniswap/governance/build/Uni.json'
-import { abi as GOVERNANCE_TOKEN_ABI } from '@venomswap/contracts/build/GovernanceToken.json'
-import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
+import { abi as GOVERNANCE_ABI } from '../constants/abis/governor-alpha.json'
+import { abi as UNI_ABI } from '../constants/abis/fate-token.json'
+import { abi as GOVERNANCE_TOKEN_ABI } from '../constants/abis/fate-token.json'
+// import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/FateRewardController.json'
-import { abi as PIT_ABI } from '@venomswap/contracts/build/Pit.json'
+import { abi as X_FATE_ABI } from '../constants/abis/xfate-token.json'
 import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/FeeTokenConverterToFate.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { ChainId, WETH } from '@venomswap/sdk'
@@ -130,9 +130,9 @@ export function useGovTokenContract(): Contract | null {
   return useContract(useGovernanceToken()?.address, GOVERNANCE_TOKEN_ABI, true)
 }
 
-export function usePitContract(withSignerIfPossible?: boolean): Contract | null {
+export function useXFateContract(withSignerIfPossible?: boolean): Contract | null {
   const { chainId } = useActiveWeb3React()
-  return useContract(chainId ? X_FATE[chainId].address : undefined, PIT_ABI, withSignerIfPossible)
+  return useContract(chainId ? X_FATE[chainId].address : undefined, X_FATE_ABI, withSignerIfPossible)
 }
 
 export function useFeeTokenConverterToFateContract(withSignerIfPossible?: boolean): Contract | null {
@@ -142,10 +142,6 @@ export function useFeeTokenConverterToFateContract(withSignerIfPossible?: boolea
     FEE_TOKEN_CONVERTER_TO_FATE_ABI,
     withSignerIfPossible
   )
-}
-
-export function useStakingContract(stakingAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(stakingAddress, STAKING_REWARDS_ABI, withSignerIfPossible)
 }
 
 export function useFateRewardController(withSignerIfPossible?: boolean): Contract | null {

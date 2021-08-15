@@ -17,7 +17,7 @@ import { useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { usePitContract } from '../../hooks/useContract'
+import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
 import { PIT_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -65,7 +65,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
     onDismiss()
   }, [onDismiss])
 
-  const pit = usePitContract()
+  const pit = useXFateContract()
 
   // approval data for stake
   const deadline = useTransactionDeadline()

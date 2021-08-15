@@ -22,8 +22,8 @@ import { BlueCard } from '../../components/Card'
 import usePrevious from '../../hooks/usePrevious'
 
 import { X_FATE, PIT_SETTINGS } from '../../constants'
-import { GOVERNANCE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
-import { PIT_INTERFACE } from '../../constants/abis/pit'
+import { FATE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
+import { X_FATE_INTERFACE } from '../../constants/abis/xfate-token'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
 import usePitRatio from '../../hooks/usePitRatio'
@@ -124,12 +124,12 @@ export default function Pit({
     account ?? undefined,
     govToken,
     'balanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
 
   const pit = chainId ? X_FATE[chainId] : undefined
   const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
-  const pitBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, pit, 'balanceOf', PIT_INTERFACE)
+  const pitBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, pit, 'balanceOf', X_FATE_INTERFACE)
   const govTokenPitTokenRatio = usePitRatio()
   const adjustedPitBalance = govTokenPitTokenRatio ? pitBalance?.multiply(govTokenPitTokenRatio) : undefined
 

@@ -14,7 +14,7 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from '../../hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { usePitContract } from '../../hooks/useContract'
+import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
 import { PIT_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -67,7 +67,7 @@ export default function ModifiedStakingModal({
 
   const govToken = useGovernanceToken()
   const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
-  const pit = usePitContract()
+  const pit = useXFateContract()
   const pitToken = usePitToken()
 
   async function onWithdraw() {

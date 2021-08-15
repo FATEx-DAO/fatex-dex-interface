@@ -9,7 +9,7 @@ import { calculateGasMargin } from '../../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
 import { useState, useEffect, useCallback } from 'react'
-import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { abi as GOV_ABI } from '../../constants/abis/governor-alpha.json'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 interface ProposalDetail {
