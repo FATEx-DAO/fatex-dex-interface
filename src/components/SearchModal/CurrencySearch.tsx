@@ -28,6 +28,8 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
+  border: 3px solid ${({ theme }) => theme.text1};
+  border-radius: 20px;
 `
 
 const Footer = styled.div`
@@ -223,12 +225,12 @@ export function CurrencySearch({
       )}
       <Footer>
         <Row justify="center">
-          <ButtonText onClick={showManageView} color={theme.blue1} className="list-token-manage-button">
+          <ButtonText onClick={showManageView} color={theme.text1} className="list-token-manage-button">
             <RowFixed>
               <IconWrapper size="16px" marginRight="6px">
                 <Edit />
               </IconWrapper>
-              <TYPE.main color={theme.blue1}>Manage</TYPE.main>
+              <TYPE.main color={theme.text1}>Manage</TYPE.main>
             </RowFixed>
           </ButtonText>
         </Row>

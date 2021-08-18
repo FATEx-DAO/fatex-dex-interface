@@ -1,4 +1,4 @@
-import { transparentize } from 'polished'
+//import { transparentize } from 'polished'
 import React, { useMemo } from 'react'
 import styled, {
   ThemeProvider as StyledComponentsThemeProvider,
@@ -49,30 +49,31 @@ export function defaultColors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#000000' : '#FFFFFF',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
+    bg1: darkMode ? '#000000' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg5: darkMode ? '#b7b7b7' : '#888D9B',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ff007a',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
+    primary1: darkMode ? '#c8c02b' : '#ff007a',
+    primary2: darkMode ? '#c8c02b' : '#FF8CC3',
+    primary3: darkMode ? '#c8c02b' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#FDEAF1',
 
     // color text
-    primaryText1: darkMode ? '#6da8ff' : '#ff007a',
+    primaryText1: darkMode ? '#c8c02b' : '#ff007a',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
+    secondary1: darkMode ? '#c8c02b' : '#ff007a',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
@@ -109,13 +110,14 @@ export function viperColors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#000000' : '#FFFFFF',
 
     // backgrounds / greys
     bg1: darkMode ? '#212429' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg5: darkMode ? '#b7b7b7' : '#888D9B',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
@@ -123,8 +125,8 @@ export function viperColors(darkMode: boolean): Colors {
 
     //primary colors
     primary1: darkMode ? '#669999' : '#00c09c',
-    primary2: darkMode ? '#3680E7' : '#FF8CC3',
-    primary3: darkMode ? '#4D8FEA' : '#FF99C9',
+    primary2: darkMode ? '#c8c02b' : '#FF8CC3',
+    primary3: darkMode ? '#c8c02b' : '#FF99C9',
     primary4: darkMode ? '#376bad70' : '#F6DDE8',
     primary5: darkMode ? '#153d6f70' : '#e8f4e5',
 
@@ -132,7 +134,7 @@ export function viperColors(darkMode: boolean): Colors {
     primaryText1: darkMode ? '#669999' : '#00c09c',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ff007a',
+    secondary1: darkMode ? '#c8c02b' : '#ff007a',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
@@ -169,22 +171,23 @@ export function bscColors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#000000' : '#FFFFFF',
 
     // backgrounds / greys
     bg1: darkMode ? '#212429' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#565A69' : '#888D9B',
+    bg5: darkMode ? '#b7b7b7' : '#888D9B',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,42.5)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#ffad00',
-    primary2: darkMode ? '#3680E7' : '#FFE08C',
-    primary3: darkMode ? '#4D8FEA' : '#F2CB61',
+    primary1: darkMode ? '#c8c02b' : '#ffad00',
+    primary2: darkMode ? '#c8c02b' : '#FFE08C',
+    primary3: darkMode ? '#c8c02b' : '#F2CB61',
     primary4: darkMode ? '#376bad70' : '#FFE08C',
     primary5: darkMode ? '#153d6f70' : '#FAECC5',
 
@@ -192,7 +195,7 @@ export function bscColors(darkMode: boolean): Colors {
     primaryText1: darkMode ? '#6da8ff' : '#ffad00',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#ffad00',
+    secondary1: darkMode ? '#c8c02b' : '#ffad00',
     secondary2: darkMode ? '#17000b26' : '#FFE08C',
     secondary3: darkMode ? '#17000b26' : '#FAECC5',
 
@@ -229,22 +232,23 @@ export function harmonyColors(darkMode: boolean): Colors {
     text3: darkMode ? '#6C7284' : '#888D9B',
     text4: darkMode ? '#565A69' : '#C3C5CB',
     text5: darkMode ? '#2C2F36' : '#EDEEF2',
+    text6: darkMode ? '#000000' : '#FFFFFF',
 
     // backgrounds / greys
-    bg1: darkMode ? '#212429' : '#FFFFFF',
+    bg1: darkMode ? '#000000' : '#FFFFFF',
     bg2: darkMode ? '#2C2F36' : '#F7F8FA',
     bg3: darkMode ? '#40444F' : '#EDEEF2',
     bg4: darkMode ? '#565A69' : '#CED0D9',
-    bg5: darkMode ? '#6C7284' : '#888D9B',
+    bg5: darkMode ? '#b7b7b7' : '#888D9B',
 
     //specialty colors
     modalBG: darkMode ? 'rgba(0,0,0,.425)' : 'rgba(0,0,0,0.3)',
     advancedBG: darkMode ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.6)',
 
     //primary colors
-    primary1: darkMode ? '#2172E5' : '#00AEE9',
-    primary2: darkMode ? '#3680E7' : '#69FABD',
-    primary3: darkMode ? '#4D8FEA' : '#00c5eb',
+    primary1: darkMode ? '#c8c02b' : '#00AEE9',
+    primary2: darkMode ? '#c8c02b' : '#69FABD',
+    primary3: darkMode ? '#c8c02b' : '#00c5eb',
     primary4: darkMode ? '#376bad70' : '#bcecfd',
     primary5: darkMode ? '#153d6f70' : '#d9f4fd',
 
@@ -252,7 +256,7 @@ export function harmonyColors(darkMode: boolean): Colors {
     primaryText1: darkMode ? '#6da8ff' : '#00AEE9',
 
     // secondary colors
-    secondary1: darkMode ? '#2172E5' : '#00AEE9',
+    secondary1: darkMode ? '#c8c02b' : '#00AEE9',
     secondary2: darkMode ? '#17000b26' : '#F6DDE8',
     secondary3: darkMode ? '#17000b26' : '#FDEAF1',
 
@@ -384,7 +388,7 @@ html, input, textarea, button {
 }
 @supports (font-variation-settings: normal) {
   html, input, textarea, button {
-    font-family: 'Inter var', sans-serif;
+    font-family: 'Lexend', sans-serif;
   }
 }
 
@@ -420,17 +424,11 @@ html {
 export const ThemedGlobalStyle = createGlobalStyle`
 html {
   color: ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg2};
+  background-color: ${({ theme }) => theme.bg1};
 }
 
 body {
   min-height: 100vh;
-  background-position: 0 -30vh;
-  background-repeat: no-repeat;
-  background-image: ${({ theme }) =>
-    `radial-gradient(50% 50% at 50% 50%, ${transparentize(0.9, theme.primary1)} 0%, ${transparentize(
-      1,
-      theme.bg1
-    )} 100%)`};
+  background-color: ${({ theme }) => theme.bg1};
 }
 `

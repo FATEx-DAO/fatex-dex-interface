@@ -6,8 +6,6 @@ import { TYPE } from '../../theme'
 import { AutoColumn } from '../Column'
 import { RowBetween, RowFixed } from '../Row'
 
-import { darken } from 'polished'
-
 enum SlippageError {
   InvalidInput = 'InvalidInput',
   RiskyLow = 'RiskyLow',
@@ -22,18 +20,18 @@ const FancyButton = styled.button`
   color: ${({ theme }) => theme.text1};
   align-items: center;
   height: 2rem;
-  border-radius: 36px;
+  border-radius: 8px;
   font-size: 1rem;
   width: auto;
   min-width: 3.5rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.text1};
   outline: none;
   background: ${({ theme }) => theme.bg1};
   :hover {
-    border: 1px solid ${({ theme }) => theme.bg4};
+    background: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.text6};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
   }
 `
 
@@ -42,8 +40,8 @@ const Option = styled(FancyButton)<{ active: boolean }>`
   :hover {
     cursor: pointer;
   }
-  background-color: ${({ active, theme }) => active && theme.primary1};
-  color: ${({ active, theme }) => (active ? theme.white : theme.text1)};
+  background-color: ${({ active, theme }) => active && theme.text1};
+  color: ${({ active, theme }) => (active ? theme.text6 : theme.text1)};
 `
 
 const Input = styled.input`
@@ -64,17 +62,25 @@ const OptionCustom = styled(FancyButton)<{ active?: boolean; warning?: boolean }
   position: relative;
   padding: 0 0.75rem;
   flex: 1;
-  border: ${({ theme, active, warning }) => active && `1px solid ${warning ? theme.red1 : theme.primary1}`};
+  border: 1px solid ${({ theme, active, warning }) => (active ? (warning ? theme.red1 : theme.text1) : theme.text1)};
+  background-color: ${({ active, theme }) => active && theme.text1};
+  color: ${({ active, theme }) => (active ? theme.text6 : theme.text1)};
   :hover {
-    border: ${({ theme, active, warning }) =>
-      active && `1px solid ${warning ? darken(0.1, theme.red1) : darken(0.1, theme.primary1)}`};
+    background: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.text6};
   }
 
   input {
     width: 100%;
     height: 100%;
     border: 0px;
-    border-radius: 2rem;
+    border-radius: 8px;
+    background: none;
+    color: ${({ active, theme }) => (active ? theme.text6 : theme.text1)};
+
+    :hover {
+      color: ${({ theme }) => theme.text6};
+    }
   }
 `
 
