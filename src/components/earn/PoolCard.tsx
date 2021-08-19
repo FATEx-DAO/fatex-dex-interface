@@ -41,7 +41,7 @@ const StatContainerTop = styled.div`
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
-  border-radius: 12px;
+  border-radius: 8px;
   width: 100%;
   overflow: hidden;
   position: relative;

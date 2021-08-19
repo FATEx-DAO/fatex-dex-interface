@@ -23,21 +23,23 @@ const StyledMenuIcon = styled(MenuIcon)`
 const StyledMenuButton = styled.button`
   width: 100%;
   height: 100%;
-  border: none;
-  background-color: transparent;
   margin: 0;
   padding: 0;
-  height: 35px;
-  background-color: ${({ theme }) => theme.bg3};
-
+  height: 41px;
+  cursor: pointer;
   padding: 0.15rem 0.5rem;
-  border-radius: 0.5rem;
+  border-radius: 8px;
+  border: 3px solid ${({ theme }) => theme.text1};
+  background-color: ${({ theme }) => theme.bg1};
+  color: ${({ theme }) => theme.text1};
 
-  :hover,
-  :focus {
-    cursor: pointer;
-    outline: none;
-    background-color: ${({ theme }) => theme.bg4};
+  :hover {
+    color: ${({ theme }) => theme.text6}
+    background-color: ${({ theme }) => theme.bg6};
+    
+    svg {
+      filter: invert(1)
+    }
   }
 
   svg {
@@ -57,10 +59,10 @@ const StyledMenu = styled.div`
 
 const MenuFlyout = styled.span`
   min-width: 8.125rem;
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 0.5rem;
   display: flex;
   flex-direction: column;

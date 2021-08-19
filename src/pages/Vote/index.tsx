@@ -34,7 +34,7 @@ const Proposal = styled(Button)`
   padding: 0.75rem 1rem;
   width: 100%;
   margin-top: 1rem;
-  border-radius: 12px;
+  border-radius: 8px;
   display: grid;
   grid-template-columns: 48px 1fr 120px;
   align-items: center;
@@ -96,7 +96,7 @@ const StyledExternalLink = styled(ExternalLink)`
 const EmptyProposals = styled.div`
   border: 1px solid ${({ theme }) => theme.text4};
   padding: 16px 12px;
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
