@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Pair } from '@venomswap/sdk'
 import React, { useState, useCallback } from 'react'
-import styled from 'styled-components'
+import styled from 'styled-components/macro'
 import { darken } from 'polished'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
@@ -26,10 +26,9 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
   height: 2.2rem;
   font-size: 20px;
   font-weight: 500;
-  background-color: ${({ selected, theme }) => (selected ? theme.bg1 : theme.primary1)};
-  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.white)};
-  border-radius: 12px;
-  box-shadow: ${({ selected }) => (selected ? 'none' : '0px 6px 10px rgba(0, 0, 0, 0.075)')};
+  background: none;
+  color: ${({ selected, theme }) => (selected ? theme.text6 : theme.text6)};
+  border-radius: 8px;
   outline: none;
   cursor: pointer;
   user-select: none;
@@ -38,7 +37,11 @@ const CurrencySelect = styled.button<{ selected: boolean }>`
 
   :focus,
   :hover {
-    background-color: ${({ selected, theme }) => (selected ? theme.bg2 : darken(0.05, theme.primary1))};
+    background-color: ${({ selected, theme }) => (selected ? theme.bg5 : theme.bg5)};
+  }
+
+  path {
+    stroke: ${({ theme }) => theme.text6} !important;
   }
 `
 
@@ -74,15 +77,15 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
 const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${({ theme }) => theme.flexColumnNoWrap}
   position: relative;
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
   background-color: ${({ theme }) => theme.bg2};
   z-index: 1;
 `
 
 const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '20px')};
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg1};
+  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
+  border: none;
+  background-color: ${({ theme }) => theme.text1};
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
@@ -93,20 +96,21 @@ const StyledTokenName = styled.span<{ active?: boolean }>`
 
 const StyledBalanceMax = styled.button`
   height: 28px;
-  background-color: ${({ theme }) => theme.primary5};
-  border: 1px solid ${({ theme }) => theme.primary5};
+  background: none;
+  border: none;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-
+  margin-bottom: -2px;
   font-weight: 500;
   cursor: pointer;
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.primaryText1};
+  color: ${({ theme }) => theme.text6};
   :hover {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: none;
+    color: ${({ theme }) => theme.text3};
   }
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: none;
     outline: none;
   }
 

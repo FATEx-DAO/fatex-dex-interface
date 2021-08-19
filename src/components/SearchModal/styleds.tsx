@@ -81,23 +81,23 @@ export const SearchInput = styled.input`
   align-items: center;
   width: 100%;
   white-space: nowrap;
-  background: none;
+  background: ${({ theme }) => theme.bg6};
   border: none;
   outline: none;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.text1};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.text6};
   border-style: solid;
-  border: 1px solid ${({ theme }) => theme.bg3};
+  border: 1px solid ${({ theme }) => theme.bg6};
   -webkit-appearance: none;
 
-  font-size: 18px;
+  font-size: 16px;
 
   ::placeholder {
     color: ${({ theme }) => theme.text3};
   }
   transition: border 100ms;
   :focus {
-    border: 1px solid ${({ theme }) => theme.primary1};
+    border: 1px solid ${({ theme }) => theme.text1};
     outline: none;
   }
 `

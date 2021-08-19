@@ -1,6 +1,6 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 import { UnsupportedChainIdError, useWeb3React } from '@web3-react/core'
-import { darken, lighten } from 'polished'
+import { darken } from 'polished'
 import React, { useMemo } from 'react'
 import { Activity } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -42,7 +42,7 @@ const Web3StatusGeneric = styled(ButtonSecondary)`
   width: 100%;
   align-items: center;
   padding: 0.5rem;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
   user-select: none;
   :focus {
@@ -61,44 +61,37 @@ const Web3StatusError = styled(Web3StatusGeneric)`
 `
 
 const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.primary4};
-  border: none;
-  color: ${({ theme }) => theme.primaryText1};
-  font-weight: 500;
+  background-color: ${({ theme }) => theme.bg1};
+  border: 3px solid ${({ theme }) => theme.text1};
+  color: ${({ theme }) => theme.text1};
 
-  :hover,
-  :focus {
-    border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-    color: ${({ theme }) => theme.primaryText1};
+  :hover {
+    background-color: ${({ theme }) => theme.bg6};
+    color: ${({ theme }) => theme.text6};
   }
 
   ${({ faded }) =>
     faded &&
     css`
-      background-color: ${({ theme }) => theme.primary5};
-      border: 1px solid ${({ theme }) => theme.primary5};
-      color: ${({ theme }) => theme.primaryText1};
+      background-color: ${({ theme }) => theme.bg1};
+      border: 3px solid ${({ theme }) => theme.text1};
+      color: ${({ theme }) => theme.text1};
 
-      :hover,
-      :focus {
-        border: 1px solid ${({ theme }) => darken(0.05, theme.primary4)};
-        color: ${({ theme }) => darken(0.05, theme.primaryText1)};
+      :hover {
+        background-color: ${({ theme }) => theme.bg6};
+        color: ${({ theme }) => theme.text6};
       }
     `}
 `
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{ pending?: boolean }>`
-  background-color: ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg2)};
-  border: 1px solid ${({ pending, theme }) => (pending ? theme.primary1 : theme.bg3)};
-  color: ${({ pending, theme }) => (pending ? theme.white : theme.text1)};
+  background-color: ${({ pending, theme }) => (pending ? theme.bg1 : theme.bg1)};
+  border: 3px solid ${({ pending, theme }) => (pending ? theme.text1 : theme.text1)};
+  color: ${({ pending, theme }) => (pending ? theme.text1 : theme.text1)};
   font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ pending, theme }) => (pending ? darken(0.05, theme.primary1) : lighten(0.05, theme.bg2))};
-
-    :focus {
-      border: 1px solid ${({ pending, theme }) => (pending ? darken(0.1, theme.primary1) : darken(0.1, theme.bg3))};
-    }
+  :hover {
+    background-color: ${({ theme }) => theme.bg6};
+    color: ${({ theme }) => theme.text6};
   }
 `
 

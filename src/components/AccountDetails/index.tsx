@@ -27,7 +27,8 @@ import getExplorerName from '../../utils/getExplorerName'
 
 const HeaderRow = styled.div`
   ${({ theme }) => theme.flexRowNoWrap};
-  padding: 1rem 1rem;
+  padding: 2rem 0 1rem 2rem;
+  font-size: 18px;
   font-weight: 500;
   color: ${props => (props.color === 'blue' ? ({ theme }) => theme.primary1 : 'inherit')};
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -56,9 +57,8 @@ const UpperSection = styled.div`
 `
 
 const InfoCard = styled.div`
-  padding: 1rem;
-  border: 1px solid ${({ theme }) => theme.bg3};
-  border-radius: 20px;
+  padding: 0.5rem 1rem 0 1rem;
+  border-radius: 10px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
@@ -79,9 +79,18 @@ const AccountGroupingRow = styled.div`
 `
 
 const AccountSection = styled.div`
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: ${({ theme }) => theme.bg2};
   padding: 0rem 1rem;
   ${({ theme }) => theme.mediaWidth.upToMedium`padding: 0rem 1rem 1.5rem 1rem;`};
+
+  > div > div > div > div > button {
+    background-color: ${({ theme }) => theme.bg2} !important;
+    text-decoration: none !important;
+
+    :hover {
+      background-color: ${({ theme }) => theme.bg6} !important;
+    }
+  }
 `
 
 const YourAccount = styled.div`
@@ -147,8 +156,8 @@ const AddressLink = styled(ExternalLink)<{ hasENS: boolean; isENS: boolean }>`
 
 const CloseIcon = styled.div`
   position: absolute;
-  right: 1rem;
-  top: 14px;
+  right: 1.4rem;
+  top: 1.2rem;
   &:hover {
     cursor: pointer;
     opacity: 0.6;

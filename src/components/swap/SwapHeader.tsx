@@ -16,7 +16,9 @@ export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <RowBetween>
-        <TYPE.black fontWeight={500}>Swap</TYPE.black>
+        <TYPE.black fontWeight={500} fontSize={20}>
+          Swap
+        </TYPE.black>
         <Settings />
       </RowBetween>
     </StyledSwapHeader>

@@ -43,7 +43,7 @@ const PositionInfo = styled(AutoColumn)<{ dim: any }>`
 `
 
 const BottomSection = styled(AutoColumn)`
-  border-radius: 12px;
+  border-radius: 8px;
   width: 100%;
   position: relative;
 `
