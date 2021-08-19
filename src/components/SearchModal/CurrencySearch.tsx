@@ -27,13 +27,12 @@ const ContentWrapper = styled(Column)`
   width: 100%;
   flex: 1 1;
   position: relative;
-  border: 3px solid ${({ theme }) => theme.text1};
-  border-radius: 20px;
+  border-radius: 10px;
 `
 
 /*const Footer = styled.div`
   width: 100%;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: 20px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;

@@ -58,7 +58,7 @@ const UpperSection = styled.div`
 
 const InfoCard = styled.div`
   padding: 0.5rem 1rem 0 1rem;
-  border-radius: 20px;
+  border-radius: 10px;
   position: relative;
   display: grid;
   grid-row-gap: 12px;
