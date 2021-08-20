@@ -26,6 +26,14 @@ const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
+
+  button {
+    background: ${({ theme }) => theme.bg2};
+
+    :hover {
+      color: ${({ theme }) => theme.bg2};
+    }
+  }
 `
 interface ClaimModalProps {
   isOpen: boolean

@@ -27,11 +27,12 @@ const ContentWrapper = styled(AutoColumn)`
 
 const ModalUpper = styled(DataCard)`
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: radial-gradient(
+  /*background: radial-gradient(
     76.02% 75.41% at 1.84% 0%,
     ${({ theme }) => theme.tokenButtonGradientStart} 0%,
     #000 100%
-  );
+  );*/
+  background: ${({ theme }) => theme.bg3};
   padding: 0.5rem;
 `
 

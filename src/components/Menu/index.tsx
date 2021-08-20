@@ -30,7 +30,7 @@ const StyledMenuButton = styled.button`
   padding: 0.15rem 0.5rem;
   border-radius: 8px;
   border: 3px solid ${({ theme }) => theme.text1};
-  background-color: ${({ theme }) => theme.bg1};
+  background-color: inherit;/*${({ theme }) => theme.bg1};*/
   color: ${({ theme }) => theme.text1};
 
   :hover {

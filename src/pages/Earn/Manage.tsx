@@ -49,15 +49,16 @@ const BottomSection = styled(AutoColumn)`
 `
 
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);
+  /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);*/
   z-index: 2;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};
+  /*background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};*/
+  background: ${({ theme }) => theme.bg3};
 `
 
 const StyledBottomCard = styled(DataCard)<{ dim: any }>`
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.bg2};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
   padding: 0 1.25rem 1rem 1.25rem;
@@ -67,14 +68,32 @@ const StyledBottomCard = styled(DataCard)<{ dim: any }>`
 
 const PoolData = styled(DataCard)`
   background: none;
-  border: 1px solid ${({ theme }) => theme.bg4};
-  padding: 1rem;
+  /*border: 1px solid ${({ theme }) => theme.bg4};*/
+  padding: 1rem 0.5rem;
   z-index: 1;
+  
+  > div > div {
+    :nth-of-type(1) {
+      font-size: 18px;
+    }
+    :nth-of-type(2) {
+      font-size: 26px;
+    }
+  }
 `
 
 const VoteCard = styled(DataCard)`
-  background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
+  /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);*/
+  background: ${({ theme }) => theme.bg3};
   overflow: hidden;
+
+  > div > div > a {
+    background-color: ${({ theme }) => theme.bg3};
+
+    :hover {
+      color: ${({ theme }) => theme.bg3};
+    }
+  }
 `
 
 const DataRow = styled(RowBetween)`
@@ -154,7 +173,7 @@ export default function Manage({
         <DoubleCurrencyLogo currency0={currencyA ?? undefined} currency1={currencyB ?? undefined} size={24} />
       </RowBetween>
 
-      <DataRow style={{ gap: '24px' }}>
+      <DataRow style={{ gap: '0px' }}>
         <PoolData>
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Total Deposits</TYPE.body>
