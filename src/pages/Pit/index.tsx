@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { TokenAmount } from '@venomswap/sdk'
+import { TokenAmount } from '@fatex-dao/sdk'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 

@@ -1,5 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers'
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 import { BLOCKCHAIN } from '../connectors'
 
 export default function getLibrary(provider: any): Web3Provider {

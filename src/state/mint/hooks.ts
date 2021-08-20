@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, Percent, Price, TokenAmount, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { PairState, usePair } from '../../data/Reserves'

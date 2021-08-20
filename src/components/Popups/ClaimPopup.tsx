@@ -1,4 +1,4 @@
-import { TokenAmount } from '@venomswap/sdk'
+import { TokenAmount } from '@fatex-dao/sdk'
 import React, { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'

@@ -7,7 +7,7 @@ import { PortisConnector } from '@web3-react/portis-connector'
 import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
-import { Blockchain, Currency } from '@venomswap/sdk'
+import { Blockchain, Currency } from '@fatex-dao/sdk'
 
 import baseCurrencies from '../utils/baseCurrencies'
 import getBlockchain from '../utils/getBlockchain'

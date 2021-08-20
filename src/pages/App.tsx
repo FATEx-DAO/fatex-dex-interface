@@ -36,7 +36,7 @@ import { PIT_SETTINGS } from '../constants'
 import { useActiveWeb3React } from '../hooks'
 import usePlatformName from '../hooks/usePlatformName'
 
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 import useBlockchain from '../hooks/useBlockchain'
 
 const AppWrapper = styled.div`

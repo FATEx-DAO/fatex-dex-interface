@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@venomswap/sdk'
+import { CurrencyAmount, JSBI, Token, Trade } from '@fatex-dao/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'

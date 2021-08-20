@@ -1,6 +1,6 @@
 import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Trade, TokenAmount, CurrencyAmount, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { Trade, TokenAmount, CurrencyAmount, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 import { useCallback, useMemo } from 'react'
 import { useTokenAllowance } from '../data/Allowances'
 import { getTradeVersion, useV1TradeExchangeAddress } from '../data/V1'

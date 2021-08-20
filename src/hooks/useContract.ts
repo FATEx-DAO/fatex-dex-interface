@@ -3,12 +3,12 @@ import { abi as GOVERNANCE_ABI } from '../constants/abis/governor-alpha.json'
 import { abi as UNI_ABI } from '../constants/abis/fate-token.json'
 import { abi as GOVERNANCE_TOKEN_ABI } from '../constants/abis/fate-token.json'
 // import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
-import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/FateRewardController.json'
+import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/fate-reward-controller.json'
 import { abi as X_FATE_ABI } from '../constants/abis/xfate-token.json'
-import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/FeeTokenConverterToFate.json'
+import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/fee-token-converter-to-fate.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
-import { ChainId, WETH } from '@venomswap/sdk'
-import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
+import { ChainId, WETH } from '@fatex-dao/sdk'
+import { abi as IUniswapV2PairABI } from '../constants/abis/uniswap-v2-pair.json'
 import { useMemo } from 'react'
 import {
   GOVERNANCE_ADDRESS,
@@ -118,8 +118,8 @@ export function useMerkleDistributorContract(): Contract | null {
   return useContract(chainId ? MERKLE_DISTRIBUTOR_ADDRESS[chainId] : undefined, MERKLE_DISTRIBUTOR_ABI, true)
 }
 
-export function useGovernanceContract(): Contract | null {
-  return useContract(GOVERNANCE_ADDRESS, GOVERNANCE_ABI, true)
+export function useGovernanceContract(chainId: ChainId): Contract | null {
+  return useContract(GOVERNANCE_ADDRESS[chainId], GOVERNANCE_ABI, true)
 }
 
 export function useUniContract(): Contract | null {

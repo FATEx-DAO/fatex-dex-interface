@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount } from '@venomswap/sdk'
+import { JSBI, TokenAmount } from '@fatex-dao/sdk'
 // import { useSingleCallResult } from '../state/multicall/hooks'
 // import { useMasterBreederContract } from './useContract'
 import useGovernanceToken from './useGovernanceToken'

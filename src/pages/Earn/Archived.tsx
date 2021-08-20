@@ -1,6 +1,6 @@
 import React from 'react'
-import { JSBI } from '@venomswap/sdk'
-import { BLOCKCHAIN_SETTINGS } from '@venomswap/sdk-extra'
+import { JSBI } from '@fatex-dao/sdk'
+import { BLOCKCHAIN_SETTINGS } from '@fatex-dao/sdk-extra'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO } from '../../constants/staking'

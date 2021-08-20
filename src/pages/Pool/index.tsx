@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
-import { Pair, JSBI } from '@venomswap/sdk'
+import { Pair, JSBI } from '@fatex-dao/sdk'
 import { Link } from 'react-router-dom'
 import { SwapPoolTabs } from '../../components/NavigationTabs'
 
@@ -22,7 +22,7 @@ import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/
 import { useStakingInfo } from '../../state/stake/hooks'
 import { BIG_INT_ZERO } from '../../constants'
 
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 import useBlockchain from '../../hooks/useBlockchain'
 import baseCurrencies from '../../utils/baseCurrencies'
 
@@ -180,13 +180,7 @@ export default function Pool() {
                 <ResponsiveButtonSecondary as={Link} padding="6px 8px" to={createPoolUrl}>
                   Create a pair
                 </ResponsiveButtonSecondary>
-                <ResponsiveButtonPrimary
-                  id="join-pool-button"
-                  as={Link}
-                  padding="6px 8px"
-                  borderRadius="12px"
-                  to={addLiquidityUrl}
-                >
+                <ResponsiveButtonPrimary id="join-pool-button" as={Link} padding="6px 8px" to={addLiquidityUrl}>
                   <Text fontWeight={500} fontSize={16}>
                     Add Liquidity
                   </Text>

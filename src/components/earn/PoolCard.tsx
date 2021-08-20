@@ -4,7 +4,7 @@ import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { JSBI } from '@venomswap/sdk'
+import { JSBI } from '@fatex-dao/sdk'
 import { ButtonPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
@@ -59,7 +59,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: grid;
   grid-template-columns: 48px 1fr 120px;
-  grid-gap: 0px;
+  grid-gap: 0;
   align-items: center;
   padding: 1rem;
   z-index: 1;
@@ -126,7 +126,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <TYPE.white> Total deposited </TYPE.white>
           <TYPE.white fontWeight={500}>
             <b>
-              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
+              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd?.greaterThan('0')
                 ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(0, { groupSeparator: ',' })}`
                 : '-'}
             </b>

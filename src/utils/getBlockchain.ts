@@ -1,4 +1,4 @@
-import { Blockchain, ChainId } from '@venomswap/sdk'
+import { Blockchain, ChainId } from '@fatex-dao/sdk'
 
 export default function getBlockchain(chainId: ChainId | undefined): Blockchain {
   switch (chainId) {

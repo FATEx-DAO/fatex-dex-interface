@@ -1,4 +1,4 @@
-import { Percent } from '@venomswap/sdk'
+import { Percent } from '@fatex-dao/sdk'
 import React from 'react'
 import { ONE_BIPS } from '../../constants'
 import { warningSeverity } from '../../utils/prices'

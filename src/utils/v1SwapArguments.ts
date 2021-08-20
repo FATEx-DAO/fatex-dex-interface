@@ -7,7 +7,7 @@ import {
   TradeOptionsDeadline,
   TradeType,
   DEFAULT_CURRENCIES
-} from '@venomswap/sdk'
+} from '@fatex-dao/sdk'
 import { getTradeVersion } from '../data/V1'
 import { Version } from '../hooks/useToggledVersion'
 

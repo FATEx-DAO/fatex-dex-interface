@@ -1,4 +1,4 @@
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 
 export default function getExplorerName(blockchain: Blockchain): string {
   switch (blockchain) {

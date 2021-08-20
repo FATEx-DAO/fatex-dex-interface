@@ -1,5 +1,4 @@
-import { BigNumber } from '@ethersproject/bignumber'
-import { ChainId, JSBI, Percent, Token, WETH } from '@venomswap/sdk'
+import { ChainId, JSBI, Percent, Token, WETH } from '@fatex-dao/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
@@ -18,12 +17,32 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_TESTNET]: '0xa21b4C8eB8391eCbC5B99e64365E7BB8e06Bd736'
+  [ChainId.HARMONY_TESTNET]: '0x7c5071037264D903b2B1e0873eE30193E95E1921'
 }
 
-export const GOVERNANCE_ADDRESS = '0x101CC7F0C03F3E4904b68e6DDEE9Ff405bEEa1E5'
+export const GOVERNANCE_ADDRESS: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: '0xa2A283C5dF20c9dbC0079aa1b0f59942907607A8'
+}
 
-export const TIMELOCK_ADDRESS = '0xE636C0997388AB64DEE938bd6cbCf588D31C531c'
+export const TIMELOCK_ADDRESS = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: '0x63F58F9a1D9f4f497295fEE4850eD6c19E8aFa1e'
+}
 
 export const GOVERNANCE_TOKEN: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
@@ -36,7 +55,7 @@ export const GOVERNANCE_TOKEN: { [chainId in ChainId]: Token } = {
   [ChainId.HARMONY_MAINNET]: new Token(ChainId.HARMONY_MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
   [ChainId.HARMONY_TESTNET]: new Token(
     ChainId.HARMONY_TESTNET,
-    '0xF16BF531e77dfF1A1467D21a53a6bd31A8b3b6D7',
+    '0xEceA81B678994938E8e18eeEb70105F0DC7564c2',
     18,
     'FATE',
     'Fate'
@@ -52,7 +71,7 @@ export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_TESTNET]: '0x843dC2546587855cc17360b92A4dEFDfbB8c1D78'
+  [ChainId.HARMONY_TESTNET]: '0x5942De83526766d2b3630fF2A53B723f1F460869'
 }
 
 export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
@@ -64,7 +83,7 @@ export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_TESTNET]: '0xbbF5718e1f952E02B584C0a0d4BDda155aB5abcA'
+  [ChainId.HARMONY_TESTNET]: '0x1D6A2C72Ca5916C5602b87533A9fd80b5911f292'
 }
 
 export const X_FATE: { [chainId in ChainId]: Token } = {
@@ -78,7 +97,7 @@ export const X_FATE: { [chainId in ChainId]: Token } = {
   [ChainId.HARMONY_MAINNET]: new Token(ChainId.HARMONY_MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'xFATE Token'),
   [ChainId.HARMONY_TESTNET]: new Token(
     ChainId.HARMONY_TESTNET,
-    '0x1d01f69c0F9E3180bAE1083f1a906a10692342bE',
+    '0x7Ff60348C76ce5CED433709Ed3f2F5D182CeF822',
     18,
     'xFATE',
     'xFATE Token'
@@ -125,20 +144,53 @@ export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
-export const AVERAGE_BLOCK_TIME_IN_SECS = 13
-export const PROPOSAL_LENGTH_IN_BLOCKS = 40_320
-export const PROPOSAL_LENGTH_IN_SECS = AVERAGE_BLOCK_TIME_IN_SECS * PROPOSAL_LENGTH_IN_BLOCKS
+export const AVERAGE_BLOCK_TIME_IN_SECS = 2
 
-export const COMMON_CONTRACT_NAMES: { [address: string]: string } = {
-  [GOVERNANCE_ADDRESS]: 'Governance',
-  [TIMELOCK_ADDRESS]: 'Timelock'
+export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]: { [address: string]: string } } = {
+  // [GOVERNANCE_ADDRESS]: 'Governance',
+  // [TIMELOCK_ADDRESS]: 'Timelock'
+  [ChainId.MAINNET]: {
+    [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock'
+  },
+  [ChainId.ROPSTEN]: {
+    [GOVERNANCE_ADDRESS[ChainId.ROPSTEN]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.ROPSTEN]]: 'Timelock'
+  },
+  [ChainId.RINKEBY]: {
+    [GOVERNANCE_ADDRESS[ChainId.RINKEBY]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.RINKEBY]]: 'Timelock'
+  },
+  [ChainId.GÖRLI]: {
+    [GOVERNANCE_ADDRESS[ChainId.GÖRLI]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.GÖRLI]]: 'Timelock'
+  },
+  [ChainId.KOVAN]: {
+    [GOVERNANCE_ADDRESS[ChainId.KOVAN]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.KOVAN]]: 'Timelock'
+  },
+  [ChainId.BSC_MAINNET]: {
+    [GOVERNANCE_ADDRESS[ChainId.BSC_MAINNET]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.BSC_MAINNET]]: 'Timelock'
+  },
+  [ChainId.BSC_TESTNET]: {
+    [GOVERNANCE_ADDRESS[ChainId.BSC_TESTNET]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.BSC_TESTNET]]: 'Timelock'
+  },
+  [ChainId.HARMONY_MAINNET]: {
+    [GOVERNANCE_ADDRESS[ChainId.HARMONY_MAINNET]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.HARMONY_MAINNET]]: 'Timelock'
+  },
+  [ChainId.HARMONY_TESTNET]: {
+    [GOVERNANCE_ADDRESS[ChainId.HARMONY_TESTNET]]: 'Governance',
+    [TIMELOCK_ADDRESS[ChainId.HARMONY_TESTNET]]: 'Timelock'
+  }
 }
 
-export const FALLBACK_GAS_LIMIT = BigNumber.from(6721900)
-
-// TODO: specify merkle distributor for mainnet
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
-  [ChainId.MAINNET]: '0x090D4613473dEE047c3f2706764f49E0821D256e'
+  [ChainId.MAINNET]: undefined,
+  [ChainId.HARMONY_MAINNET]: undefined,
+  [ChainId.HARMONY_TESTNET]: undefined
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -186,6 +238,11 @@ export const SUGGESTED_BASES: ChainTokenList = {
     ...WETH_ONLY[ChainId.HARMONY_MAINNET],
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'FATE')
+  ],
+  [ChainId.HARMONY_TESTNET]: [
+    ...WETH_ONLY[ChainId.HARMONY_TESTNET],
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'BUSD'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'FATE')
   ]
 }
 
@@ -201,6 +258,15 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'FATE'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, '1ETH'),
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'LINK')
+  ],
+  [ChainId.HARMONY_TESTNET]: [
+    ...WETH_ONLY[ChainId.HARMONY_TESTNET],
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'BUSD'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'bscBUSD'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, '1USDC'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'FATE'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, '1ETH'),
+    getTokenWithDefault(ChainId.HARMONY_TESTNET, 'LINK')
   ]
 }
 

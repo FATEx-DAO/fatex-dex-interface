@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { CallState } from '../state/multicall/hooks'
-import { JSBI } from '@venomswap/sdk'
+import { JSBI } from '@fatex-dao/sdk'
 
 export default function useEligiblePitPools(
   stakingPools: any,

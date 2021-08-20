@@ -1,11 +1,11 @@
-import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@venomswap/sdk'
+import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
-import { useMultipleContractSingleData } from '../../state/multicall/hooks'
-import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
+import { useMultipleContractSingleData } from '../multicall/hooks'
+import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
@@ -129,10 +129,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     adjustedPids.map(adjustedPids => [adjustedPids])
   )
 
-  //const poolLength = useSingleCallResult(masterBreederContract, 'poolLength')
   const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
-  // const lockRewardsRatio = useSingleCallResult(masterBreederContract, 'PERCENT_LOCK_BONUS_REWARD')
-  const lockRewardsRatio = useSingleCallResult(fateRewardController, 'startBlock')
 
   return useMemo(() => {
     if (!chainId || !weth || !govToken) return []
@@ -160,7 +157,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           userInfo,
           baseRewardsPerBlock,
           specificPoolRewardsPerBlock,
-          lockRewardsRatio,
           lpTokenTotalSupply,
           lpTokenReserve,
           lpTokenBalance,
@@ -175,8 +171,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
 
         const poolShare = new Fraction(poolBlockRewards.raw, baseBlockRewards.raw)
 
-        const lockedRewardsPercentageUnits = Number(lockRewardsRatio.result?.[0] ?? 0)
-        const unlockedRewardsPercentageUnits = 100 - lockedRewardsPercentageUnits
+        const lockedRewardsPercentageUnits = 0
+        const unlockedRewardsPercentageUnits = 100
 
         const calculatedTotalPendingRewards = JSBI.BigInt(pendingReward?.result?.[0] ?? 0)
         const calculatedLockedPendingRewards = JSBI.divide(
@@ -208,7 +204,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result
         const allocPoint = JSBI.BigInt(poolInfoResult && poolInfoResult[1])
-        const active = poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0) ? true : false
+        const active = !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0))
 
         const baseToken = determineBaseToken(tokensWithPrices, tokens)
 
@@ -274,7 +270,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     lpTokenBalances,
     blocksPerYear,
     startBlock,
-    lockRewardsRatio,
     poolRewardsPerBlock
   ])
 }

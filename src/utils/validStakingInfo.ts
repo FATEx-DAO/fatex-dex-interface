@@ -1,4 +1,4 @@
-import { Token } from '@venomswap/sdk'
+import { Token } from '@fatex-dao/sdk'
 import { CallState } from '../state/multicall/hooks'
 
 export default function validStakingInfo(
@@ -8,7 +8,6 @@ export default function validStakingInfo(
   userInfo: CallState,
   baseRewardsPerBlock: CallState,
   specificPoolRewardsPerBlock: CallState,
-  lockRewardsRatio: CallState,
   lpTokenTotalSupply: CallState,
   lpTokenReserve: CallState,
   lpTokenBalance: CallState,
@@ -36,10 +35,6 @@ export default function validStakingInfo(
     !specificPoolRewardsPerBlock.error &&
     !specificPoolRewardsPerBlock.loading &&
     specificPoolRewardsPerBlock?.result?.[0] !== undefined &&
-    lockRewardsRatio &&
-    !lockRewardsRatio.error &&
-    !lockRewardsRatio.loading &&
-    lockRewardsRatio?.result?.[0] !== undefined &&
     lpTokenTotalSupply &&
     !lpTokenTotalSupply.error &&
     !lpTokenTotalSupply.loading &&

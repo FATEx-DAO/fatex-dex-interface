@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@venomswap/sdk'
+import { ChainId, Token } from '@fatex-dao/sdk'
 import getPairTokensWithDefaults from '../utils/getPairTokensWithDefaults'
 
 export interface StakingRewardsInfo {
@@ -11,18 +11,28 @@ export const STAKING_REWARDS_INFO: {
   [chainId in ChainId]?: StakingRewardsInfo[]
 } = {
   [ChainId.HARMONY_MAINNET]: [
-    // {
-    //   pid: 0,
-    //   tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/BUSD'),
-    //   active: true
-    // },
+    {
+      pid: 0,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'FATE/WONE'),
+      active: true
+    },
+    {
+      pid: 1,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'ONE/USDC'),
+      active: true
+    }
   ],
   [ChainId.HARMONY_TESTNET]: [
-    // {
-    //   pid: 0,
-    //   tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'WONE/1BUSD'),
-    //   active: true
-    // },
+    {
+      pid: 0,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'FATE/WONE'),
+      active: true
+    },
+    {
+      pid: 1,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'WONE/1BUSD'),
+      active: true
+    }
   ],
   [ChainId.BSC_TESTNET]: [
     {

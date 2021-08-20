@@ -1,4 +1,4 @@
-import { Token, TokenAmount, Fraction, ChainId } from '@venomswap/sdk'
+import { Token, TokenAmount, Fraction, ChainId } from '@fatex-dao/sdk'
 import { wrappedCurrency } from './wrappedCurrency'
 import calculateTotalStakedAmount from './calculateTotalStakedAmount'
 import getPair from './getPair'

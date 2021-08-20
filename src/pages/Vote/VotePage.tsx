@@ -3,22 +3,22 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 
 import { RouteComponentProps } from 'react-router-dom'
-import { TYPE, StyledInternalLink, ExternalLink } from '../../theme'
-import { RowFixed, RowBetween } from '../../components/Row'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { CardSection, DataCard } from '../../components/earn/styled'
 import { ArrowLeft } from 'react-feather'
 import { ButtonPrimary } from '../../components/Button'
 import { ProposalStatus } from './styled'
-import { useProposalData, useUserVotesAsOfBlock, ProposalData, useUserDelegatee } from '../../state/governance/hooks'
+import { ProposalData, useProposalData, useUserDelegatee, useUserVotesAsOfBlock } from '../../state/governance/hooks'
 import { DateTime } from 'luxon'
 import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
-import { TokenAmount, JSBI } from '@venomswap/sdk'
+import { ChainId, JSBI, TokenAmount } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, ZERO_ADDRESS } from '../../constants'
-import { isAddress, getEtherscanLink } from '../../utils'
+import { getEtherscanLink, isAddress } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
-import { useModalOpen, useToggleDelegateModal, useToggleVoteModal, useBlockNumber } from '../../state/application/hooks'
+import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { GreyCard } from '../../components/Card'
 import { useTokenBalance } from '../../state/wallet/hooks'
@@ -62,8 +62,7 @@ const CardWrapper = styled.div`
 
 const StyledDataCard = styled(DataCard)`
   width: 100%;
-  background: none;
-  background-color: ${({ theme }) => theme.bg1};
+  background: ${({ theme }) => theme.bg1} none;
   height: fit-content;
   z-index: 2;
 `
@@ -112,7 +111,7 @@ export default function VotePage({
   const { chainId, account } = useActiveWeb3React()
 
   // get data for this specific proposal
-  const proposalData: ProposalData | undefined = useProposalData(id)
+  const proposalData: ProposalData | undefined = useProposalData(id, chainId ?? ChainId.MAINNET)
 
   // update support based on button interactions
   const [support, setSupport] = useState<boolean>(true)
@@ -163,11 +162,11 @@ export default function VotePage({
     govTokenBalance && JSBI.notEqual(govTokenBalance.raw, JSBI.BigInt(0)) && userDelegatee === ZERO_ADDRESS
   )
 
-  // show links in propsoal details if content is an address
+  // show links in proposal details if content is an address
   // if content is contract with common name, replace address with common name
   const linkIfAddress = (content: string) => {
     if (isAddress(content) && chainId) {
-      const commonName = COMMON_CONTRACT_NAMES[content] ?? content
+      const commonName = COMMON_CONTRACT_NAMES[chainId][content] ?? content
       return <ExternalLink href={getEtherscanLink(chainId, content, 'address')}>{commonName}</ExternalLink>
     }
     return <span>{content}</span>

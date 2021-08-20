@@ -1,4 +1,4 @@
-import { TokenAmount, Blockchain } from '@venomswap/sdk'
+import { TokenAmount, Blockchain } from '@fatex-dao/sdk'
 import React from 'react'
 //import React, { useMemo } from 'react'
 import { X } from 'react-feather'

@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@venomswap/sdk'
+import { ChainId, Token } from '@fatex-dao/sdk'
 import getPairTokensWithDefaults from '../utils/getPairTokensWithDefaults'
 
 export const PIT_POOLS: {

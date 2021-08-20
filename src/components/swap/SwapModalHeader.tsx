@@ -1,4 +1,4 @@
-import { Trade, TradeType } from '@venomswap/sdk'
+import { Trade, TradeType } from '@fatex-dao/sdk'
 import React, { useContext, useMemo } from 'react'
 import { ArrowDown, AlertTriangle } from 'react-feather'
 import { Text } from 'rebass'

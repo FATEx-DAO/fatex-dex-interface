@@ -2,7 +2,7 @@ import { useSingleCallResult } from '../state/multicall/hooks'
 import { useFateRewardController } from './useContract'
 import { useBlockNumber } from '../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Fraction, JSBI } from '@venomswap/sdk'
+import { Fraction, JSBI } from '@fatex-dao/sdk'
 
 function calculateFee(devFeeStage: BigNumber, divisor: number, multiply = '100'): Fraction | undefined {
   return devFeeStage && !devFeeStage.isZero()

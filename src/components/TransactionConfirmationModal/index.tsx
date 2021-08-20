@@ -1,4 +1,4 @@
-import { ChainId, Currency } from '@venomswap/sdk'
+import { ChainId, Currency } from '@fatex-dao/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'

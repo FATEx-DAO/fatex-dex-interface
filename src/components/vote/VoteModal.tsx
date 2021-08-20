@@ -12,7 +12,7 @@ import Circle from '../../assets/images/blue-loader.svg'
 import { useVoteCallback, useUserVotes } from '../../state/governance/hooks'
 import { getEtherscanLink } from '../../utils'
 import { ExternalLink } from '../../theme/components'
-import { TokenAmount } from '@venomswap/sdk'
+import { TokenAmount } from '@fatex-dao/sdk'
 
 import useBlockchain from '../../hooks/useBlockchain'
 import getExplorerName from '../../utils/getExplorerName'

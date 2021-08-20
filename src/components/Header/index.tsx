@@ -1,4 +1,4 @@
-import { ChainId /*, TokenAmount*/ } from '@venomswap/sdk'
+import { ChainId /*, TokenAmount*/ } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'

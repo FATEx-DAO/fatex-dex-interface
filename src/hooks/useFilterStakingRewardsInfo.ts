@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { ChainId, Pair } from '@venomswap/sdk'
+import { ChainId, Pair } from '@fatex-dao/sdk'
 import { STAKING_REWARDS_INFO, StakingRewardsInfo } from '../constants/staking'
 
 export default function useFilterStakingRewardsInfo(

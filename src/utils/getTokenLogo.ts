@@ -1,4 +1,4 @@
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 import { BLOCKCHAIN } from '../connectors'
 import viperTokenLogo from '../assets/images/viper-token-logo.png'
 import cobraTokenLogo from '../assets/images/cobra-token-logo.png'

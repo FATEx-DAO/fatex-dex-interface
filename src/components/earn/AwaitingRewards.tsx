@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { AutoColumn } from '../../components/Column'
-import { JSBI } from '@venomswap/sdk'
+import { JSBI } from '@fatex-dao/sdk'
 import { TYPE } from '../../theme'
 import { useBlockNumber } from '../../state/application/hooks'
 import { useSingleCallResult } from '../../state/multicall/hooks'

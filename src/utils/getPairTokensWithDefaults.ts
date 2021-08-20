@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@venomswap/sdk'
+import { ChainId, Token } from '@fatex-dao/sdk'
 import getTokenWithDefault from './getTokenWithDefault'
 import { ZERO_ONE_ADDRESS } from '../constants/index'
 

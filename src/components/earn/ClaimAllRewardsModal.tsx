@@ -13,7 +13,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import { TokenAmount } from '@venomswap/sdk'
+import { TokenAmount } from '@fatex-dao/sdk'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
