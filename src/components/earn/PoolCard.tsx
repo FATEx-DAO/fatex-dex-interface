@@ -46,8 +46,9 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};
+  /*background: ${({ theme, bgColor, showBackground }) =>
+    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};*/
+  background: ${({ theme }) => theme.bg3};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
 
   ${({ showBackground }) =>
@@ -66,6 +67,14 @@ const TopSection = styled.div`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 48px 1fr 96px;
   `};
+
+  > a > button {
+    background-color: ${({ theme }) => theme.bg3};
+
+    :hover {
+      color: ${({ theme }) => theme.bg3};
+    }
+  }
 `
 
 const BottomSection = styled.div<{ showBackground: boolean }>`

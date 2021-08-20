@@ -152,7 +152,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
             <ColumnCenter>
               <BlueCard>
                 <AutoColumn gap="10px">
-                  <TYPE.link fontWeight={400} color={'primaryText1'}>
+                  <TYPE.link fontWeight={400} color={'text1'}>
                     <b>Important:</b> The deposit fee is now <b>0%</b>!
                   </TYPE.link>
                 </AutoColumn>
@@ -197,7 +197,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} VENOM-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -205,7 +205,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} VENOM-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

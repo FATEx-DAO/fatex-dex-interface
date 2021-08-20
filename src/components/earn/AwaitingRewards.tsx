@@ -48,7 +48,7 @@ export default function AwaitingRewards() {
       {rewardsStartBlock && blocksLeftUntilRewards && !rewardsStarted && (
         <BlueCard>
           <AutoColumn gap="10px">
-            <TYPE.link fontWeight={400} color={'primaryText1'}>
+            <TYPE.link fontWeight={400} color={'text1'}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>

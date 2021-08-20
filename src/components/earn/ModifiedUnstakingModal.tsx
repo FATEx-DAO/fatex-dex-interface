@@ -153,19 +153,19 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
             <ColumnCenter>
               <BlueCard>
                 <AutoColumn gap="10px">
-                  <TYPE.link fontWeight={400} color={'primaryText1'}>
+                  <TYPE.link fontWeight={400} color={'text1'}>
                     <b>Important:</b> {platformName} utilizes LP withdrawal fees to disincentivize short term farming
                     and selling.
                   </TYPE.link>
                   {feeInfoUrl && (
-                    <TYPE.link fontWeight={400} fontSize={12} color={'primaryText1'}>
+                    <TYPE.link fontWeight={400} fontSize={12} color={'text1'}>
                       <ExternalLink href={feeInfoUrl}>Read more about the fees here.</ExternalLink>
                     </TYPE.link>
                   )}
                   {withdrawalFee && (
                     <>
                       <Separator />
-                      <TYPE.link fontWeight={400} color={'primaryText1'}>
+                      <TYPE.link fontWeight={400} color={'text1'}>
                         <b>Your current withdrawal fee:</b>
                         <br />
                         <WithdrawalFee>{withdrawalFee.toSignificant(2)}%</WithdrawalFee>
@@ -173,7 +173,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
                     </>
                   )}
                   {lastActionBlock && (
-                    <TYPE.link fontWeight={400} fontSize={10} color={'primaryText1'}>
+                    <TYPE.link fontWeight={400} fontSize={10} color={'text1'}>
                       <em>
                         * You first deposited funds or last withdrew funds at block <b>{lastActionBlock?.toString()}</b>
                         .
@@ -210,7 +210,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Withdrawing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} VENOM-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -218,7 +218,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} VENOM-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}
