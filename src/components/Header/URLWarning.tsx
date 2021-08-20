@@ -10,8 +10,8 @@ import { WEB_INTERFACES } from '../../constants'
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
   padding: 6px 6px;
-  background-color: ${({ theme }) => theme.blue1};
-  color: white;
+  background-color: ${({ theme }) => theme.bg2};
+  color: ${({ theme }) => theme.text1};
   font-size: 11px;
   justify-content: space-between;
   align-items: center;

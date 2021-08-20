@@ -58,7 +58,7 @@ const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>
 `
 
 const StyledBottomCard = styled(DataCard)<{ dim: any }>`
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.bg2};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
   padding: 0 1.25rem 1rem 1.25rem;

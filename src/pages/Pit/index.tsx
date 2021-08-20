@@ -89,7 +89,7 @@ const CustomCard = styled(DataCard)`
     ${({ theme }) => theme.customCardGradientStart} 0%,
     ${({ theme }) => theme.customCardGradientEnd} 100%
   );*/
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.bg2};
   overflow: hidden;
 `
 

@@ -18,7 +18,7 @@ export const TextBox = styled.div`
 
 export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #2172e5 100%);*/
-  background: ${({ theme }) => theme.bg2};
+  background: ${({ theme }) => theme.bg3};
   border-radius: 8px;
   width: 100%;
   position: relative;
@@ -27,7 +27,7 @@ export const DataCard = styled(AutoColumn)<{ disabled?: boolean }>`
 
 export const ExtraDataCard = styled(AutoColumn)<{ disabled?: boolean }>`
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #777777 0%, #909090 100%);*/
-  background: ${({ theme }) => theme.bg2};
+  background: ${({ theme }) => theme.bg3};
   border-radius: 8px;
   width: 100%;
   position: relative;

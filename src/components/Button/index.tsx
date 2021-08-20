@@ -20,7 +20,7 @@ const Base = styled(RebassButton)<{
   border-radius: ${({ borderRadius }) => borderRadius && borderRadius};
   outline: none;
   border: 1px solid transparent;
-  color: white;
+  color: ${({ theme }) => theme.text1};
   text-decoration: none;
   display: flex;
   justify-content: center;
@@ -144,7 +144,7 @@ export const ButtonSecondary = styled(Base)`
 
 export const ButtonPink = styled(Base)`
   background-color: inherit;/*${({ theme }) => theme.primary1};*/
-  color: white;
+  color: ${({ theme }) => theme.text1};
 
   &:focus {
     box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
@@ -165,7 +165,7 @@ export const ButtonPink = styled(Base)`
 `
 
 export const ButtonUNIGradient = styled(ButtonPrimary)`
-  color: white;
+  color: ${({ theme }) => theme.text1};
   padding: 4px 8px;
   height: 36px;
   font-weight: 500;
