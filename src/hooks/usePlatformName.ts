@@ -5,12 +5,12 @@ export default function usePlatformName(): string {
   const blockchain = useBlockchain()
   switch (blockchain) {
     case Blockchain.BINANCE_SMART_CHAIN:
-      return 'Cobraswap'
+      return 'FATExDEX'
     case Blockchain.HARMONY:
-      return 'ViperSwap'
+      return 'FATExDEX'
     case Blockchain.ETHEREUM:
-      return 'Venomswap'
+      return 'FATExDEX'
     default:
-      return 'ViperSwap'
+      return 'FATExDEX'
   }
 }
