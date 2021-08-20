@@ -1,410 +1,153 @@
-import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import Button, { ButtonConfirmed, ButtonSecondary } from '../../components/Button'
-import { ChainId, JSBI } from '@venomswap/sdk'
-//import { ChevronDownIcon, XIcon } from '@heroicons/react/outline'
-import React, { useCallback, useEffect, useState } from 'react'
-import { formatUnits, parseUnits } from '@ethersproject/units'
-//import useMigrateState, { MigrateState } from '../../hooks/useMigrateState'
+import React, { useContext, useMemo } from 'react'
+import styled, { ThemeContext } from 'styled-components/macro'
+import { Pair } from '@venomswap/sdk'
 
-import { AddressZero } from '@ethersproject/constants'
-//import Badge from '../../components/Badge'
-import { Dots } from '../../components/swap/styleds'
-import DoubleCurrencyLogo from '../../components/DoubleLogo'
-//import DoubleGlowShadow from '../../components/DoubleGlowShadow'
-//import Head from 'next/head'
-//import LPToken from '../../types/LPToken'
-//import MetamaskError from '../../types/MetamaskError'
-import { Input as NumericalInput } from '../../components/NumericalInput'
-//import Typography from '../../components/Typography'
-//import Web3Connect from '../../components/Web3Connect'
-//import { t } from '@lingui/macro'
+import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
+import { ExternalLink, TYPE, HideSmall } from '../../theme'
+import Card from '../../components/Card'
+import { RowBetween } from '../../components/Row'
+//import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
+import { AutoColumn } from '../../components/Column'
+
 import { useActiveWeb3React } from '../../hooks'
-//import { useLingui } from '@lingui/react'
-//import { useSushiRollContract } from '../../hooks/useContract'
-import styled from 'styled-components/macro'
-import { darken } from 'polished'
-import { css } from 'styled-components'
+import { usePairs } from '../../data/Reserves'
+import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
+import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { Dots } from '../../components/swap/styleds'
+import Web3Status from '../../components/Web3Status'
 
-const ZERO = JSBI.BigInt(0)
-
-const Container = styled.div<{ hideInput: boolean }>`
-  border-radius: ${({ hideInput }) => (hideInput ? '8px' : '10px')};
-  border: none;
-  background-color: ${({ theme }) => theme.text1};
-`
-
-const Empty = styled.div``
-
-const Typgraphy = styled.div``
-
-const Web3StatusGeneric = styled(ButtonSecondary)`
-  ${({ theme }) => theme.flexRowNoWrap}
+const PageWrapper = styled(AutoColumn)`
+  max-width: 640px;
   width: 100%;
-  align-items: center;
-  padding: 0.5rem;
+`
+
+const VoteCard = styled(DataCard)`
+  /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #777777 0%, #909090 100%);*/
+  background: ${({ theme }) => theme.bg3};
+  overflow: hidden;
+`
+
+const TitleRow = styled(RowBetween)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    flex-direction: column-reverse;
+  `};
+`
+
+const EmptyProposals = styled.div`
+  border: 1px solid ${({ theme }) => theme.text4};
+  padding: 16px 12px;
   border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  :focus {
-    outline: none;
-  }
-`
-const Web3StatusError = styled(Web3StatusGeneric)`
-  background-color: ${({ theme }) => theme.red1};
-  border: 1px solid ${({ theme }) => theme.red1};
-  color: ${({ theme }) => theme.white};
-  font-weight: 500;
-  :hover,
-  :focus {
-    background-color: ${({ theme }) => darken(0.1, theme.red1)};
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `
 
-const Web3StatusConnect = styled(Web3StatusGeneric)<{ faded?: boolean }>`
-  background-color: ${({ theme }) => theme.bg1};
-  border: 3px solid ${({ theme }) => theme.text1};
-  color: ${({ theme }) => theme.text1};
-
-  :hover {
-    background-color: ${({ theme }) => theme.bg6};
-    color: ${({ theme }) => theme.text6};
-  }
-
-  ${({ faded }) =>
-  faded &&
-  css`
-      background-color: ${({ theme }) => theme.bg1};
-      border: 3px solid ${({ theme }) => theme.text1};
-      color: ${({ theme }) => theme.text1};
-
-      :hover {
-        background-color: ${({ theme }) => theme.bg6};
-        color: ${({ theme }) => theme.text6};
-      }
-    `}
+const WalletConnectWrapper = styled.div`
+  width: 100%;
+  max-width: 200px;
+  margin: 10px auto;
 `
 
-const AmountInput = ({ state }: { state: MigrateState }) => {
-  const { i18n } = useLingui()
-  const onPressMax = useCallback(() => {
-    if (state.selectedLPToken) {
-      let balance = state.selectedLPToken.balance.quotient
-      if (state.selectedLPToken.address === AddressZero) {
-        // Subtract 0.01 ETH for gas fee
-        const fee = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(16))
-        balance = JSBI.greaterThan(balance, fee) ? JSBI.subtract(balance, fee) : ZERO
-      }
+export default function Pool() {
+  const theme = useContext(ThemeContext)
+  const { account } = useActiveWeb3React()
 
-      state.setAmount(formatUnits(balance.toString(), state.selectedLPToken.decimals))
-    }
-  }, [state])
+  const trackedTokenPairs = useTrackedTokenPairs()
+  const tokenPairsWithLiquidityTokens = useMemo(
+    () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
+    [trackedTokenPairs]
+  )
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+    tokenPairsWithLiquidityTokens
+  ])
+  const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    liquidityTokens
+  )
 
-  useEffect(() => {
-    if (!state.mode || state.lpTokens.length === 0 || !state.selectedLPToken) {
-      state.setAmount('')
-    }
-  }, [state])
+  const liquidityTokensWithBalances = useMemo(
+    () =>
+      tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) =>
+        v2PairsBalances[liquidityToken.address]?.greaterThan('0')
+      ),
+    [tokenPairsWithLiquidityTokens, v2PairsBalances]
+  )
 
-  if (!state.lpTokens.length) {
-    return null
-  }
+  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const v2IsLoading =
+    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
 
-  if (!state.mode || !state.selectedLPToken) {
-    return (
-      <>
-        <Typography variant="sm" className="text-secondary">
-          Amount of Tokens
-        </Typography>
-        <div className="p-3 text-center rounded cursor-not-allowed bg-dark-800">
-          <Typography variant="lg" className="text-secondary">
-            {state.mode && state.lpTokens.length === 0 ? 'No LP tokens found' : 'Select an LP Token'}
-          </Typography>
-        </div>
-      </>
-    )
-  }
+  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
 
   return (
     <>
-      <Typography variant="sm" className="text-secondary">
-        {i18n._(t`Amount of Tokens`)}
-      </Typography>
+      <PageWrapper>
+        <VoteCard>
+          <CardBGImage />
+          <CardNoise />
+          <CardSection>
+            <AutoColumn gap="md">
+              <RowBetween>
+                <TYPE.white fontWeight={600}>Migrate Viperswap Liquidity</TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  {`Migrate your Viperswap LP tokenss to FATExDEX LP tokens with just a couple of clicks.`}
+                </TYPE.white>
+              </RowBetween>
+              <ExternalLink
+                style={{ color: 'white', textDecoration: 'underline' }}
+                target="_blank"
+                href="https://uniswap.org/docs/v2/core-concepts/pools/"
+              >
+                <TYPE.white fontSize={14}>Read more about migrating liquidity</TYPE.white>
+              </ExternalLink>
+            </AutoColumn>
+          </CardSection>
+          <CardBGImage />
+          <CardNoise />
+        </VoteCard>
+        <AutoColumn gap="lg" justify="center">
+          <AutoColumn gap="lg" style={{ width: '100%' }}>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <HideSmall>
+                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  Your Venomswap Liquidity
+                </TYPE.mediumHeader>
+              </HideSmall>
+            </TitleRow>
 
-      <div className="relative flex items-center w-full mb-4">
-        <NumericalInput
-          className="w-full p-3 rounded bg-dark-700 focus:ring focus:ring-pink"
-          value={state.amount}
-          onUserInput={(val) => state.setAmount(val)}
-        />
-        <Button
-          variant="outlined"
-          color="pink"
-          size="xs"
-          onClick={onPressMax}
-          className="absolute right-4 focus:ring focus:ring-pink"
-        >
-          {i18n._(t`MAX`)}
-        </Button>
-      </div>
+            {!account ? (
+              <Card padding="15px 40px">
+                <TYPE.body color={theme.text3} textAlign="center">
+                  Connect to a wallet to view your LP tokens.
+                </TYPE.body>
+                <WalletConnectWrapper>
+                  <Web3Status />
+                </WalletConnectWrapper>
+              </Card>
+            ) : v2IsLoading ? (
+              <EmptyProposals>
+                <TYPE.body color={theme.text3} textAlign="center">
+                  <Dots>Loading</Dots>
+                </TYPE.body>
+              </EmptyProposals>
+            ) : allV2PairsWithLiquidity?.length > 0 ? (
+              <>loaded</>
+            ) : (
+              <EmptyProposals>
+                <TYPE.body color={theme.text3} textAlign="center">
+                  No liquidity found.
+                </TYPE.body>
+              </EmptyProposals>
+            )}
+          </AutoColumn>
+        </AutoColumn>
+      </PageWrapper>
     </>
-  )
-}
-
-interface PositionCardProps {
-  lpToken: LPToken
-  onToggle: (lpToken: LPToken) => void
-  isSelected: boolean
-  updating: boolean
-  exchange: string | undefined
-}
-
-const LPTokenSelect = ({ lpToken, onToggle, isSelected, updating, exchange }: PositionCardProps) => {
-  return (
-    <div
-      key={lpToken.address}
-      className="flex items-center justify-between px-3 py-5 rounded cursor-pointer bg-dark-800 hover:bg-dark-700"
-      onClick={() => onToggle(lpToken)}
-    >
-      <div className="flex items-center space-x-3">
-        <DoubleCurrencyLogo currency0={lpToken.tokenA} currency1={lpToken.tokenB} size={20} />
-        <Typography
-          variant="lg"
-          className="text-primary"
-        >{`${lpToken.tokenA.symbol}/${lpToken.tokenB.symbol}`}</Typography>
-        {lpToken.version && <Badge color="pink">{lpToken.version}</Badge>}
-      </div>
-      {isSelected ? <XIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
-    </div>
-  )
-}
-
-const MigrateModeSelect = ({ state }: { state: MigrateState }) => {
-  const { i18n } = useLingui()
-  function toggleMode(mode = undefined) {
-    state.setMode(mode !== state.mode ? mode : undefined)
-  }
-
-  const items = [
-    {
-      key: 'permit',
-      text: i18n._(t`Non-hardware Wallet`),
-      description: i18n._(t`Migration is done in one-click using your signature (permit)`),
-    },
-    {
-      key: 'approve',
-      text: i18n._(t`Hardware Wallet`),
-      description: i18n._(t`You need to first approve LP tokens and then migrate it`),
-    },
-  ]
-
-  return (
-    <>
-      {items.reduce((acc: any, { key, text, description }: any) => {
-        if (state.mode === undefined || key === state.mode)
-          acc.push(
-            <div
-              key={key}
-              className="flex items-center justify-between p-3 rounded cursor-pointer bg-dark-800 hover:bg-dark-700"
-              onClick={() => toggleMode(key)}
-            >
-              <div>
-                <div>
-                  <Typography variant="sm">{text}</Typography>
-                </div>
-                <div>
-                  <Typography variant="sm" className="text-secondary">
-                    {description}
-                  </Typography>
-                </div>
-              </div>
-              {key === state.mode ? <XIcon width={16} height={16} /> : <ChevronDownIcon width={16} height={16} />}
-            </div>
-          )
-        return acc
-      }, [])}
-    </>
-  )
-}
-
-const MigrateButtons = ({ state, exchange }: { state: MigrateState; exchange: string | undefined }) => {
-  const { i18n } = useLingui()
-
-  const [error, setError] = useState<MetamaskError>({})
-  const sushiRollContract = useSushiRollContract(
-    state.selectedLPToken?.version ? state.selectedLPToken?.version : undefined
-  )
-  // console.log(
-  //   'sushiRollContract address',
-  //   sushiRollContract?.address,
-  //   state.selectedLPToken?.balance,
-  //   state.selectedLPToken?.version
-  // )
-
-  const [approval, approve] = useApproveCallback(state.selectedLPToken?.balance, sushiRollContract?.address)
-  const noLiquidityTokens = !!state.selectedLPToken?.balance && state.selectedLPToken?.balance.equalTo(ZERO)
-  const isButtonDisabled = !state.amount
-
-  useEffect(() => {
-    setError({})
-  }, [state.selectedLPToken])
-
-  if (!state.mode || state.lpTokens.length === 0 || !state.selectedLPToken || !state.amount) {
-    return <ButtonConfirmed disabled={true}>Migrate</ButtonConfirmed>
-  }
-
-  const insufficientAmount = JSBI.lessThan(
-    state.selectedLPToken.balance.quotient,
-    JSBI.BigInt(parseUnits(state.amount || '0', state.selectedLPToken.decimals).toString())
-  )
-
-  const onPress = async () => {
-    setError({})
-    try {
-      await state.onMigrate()
-    } catch (e) {
-      console.log(e)
-      setError(e)
-    }
-  }
-
-  return (
-    <div className="space-y-4">
-      {insufficientAmount ? (
-        <div className="text-sm text-primary">{i18n._(t`Insufficient Balance`)}</div>
-      ) : state.loading ? (
-        <Dots>{i18n._(t`Loading`)}</Dots>
-      ) : (
-        <>
-          <div className="flex justify-between">
-            <div className="text-sm text-secondary">
-              {i18n._(t`Balance`)}:{' '}
-              <span className="text-primary">{state.selectedLPToken.balance.toSignificant(4)}</span>
-            </div>
-          </div>
-          {state.mode === 'approve' && (
-            <ButtonConfirmed
-              onClick={approve}
-              confirmed={approval === ApprovalState.APPROVED}
-              disabled={approval !== ApprovalState.NOT_APPROVED || isButtonDisabled}
-            >
-              {approval === ApprovalState.PENDING ? (
-                <Dots>{i18n._(t`Approving`)}</Dots>
-              ) : approval === ApprovalState.APPROVED ? (
-                i18n._(t`Approved`)
-              ) : (
-                i18n._(t`Approve`)
-              )}
-            </ButtonConfirmed>
-          )}
-          {((state.mode === 'approve' && approval === ApprovalState.APPROVED) || state.mode === 'permit') && (
-            <ButtonConfirmed
-              disabled={noLiquidityTokens || state.isMigrationPending || isButtonDisabled}
-              onClick={onPress}
-            >
-              {state.isMigrationPending ? <Dots>{i18n._(t`Migrating`)}</Dots> : i18n._(t`Migrate`)}
-            </ButtonConfirmed>
-          )}
-        </>
-      )}
-      {error.message && error.code !== 4001 && <div className="font-medium text-center text-red">{error.message}</div>}
-      <div className="text-sm text-center text-low-emphesis">
-        {i18n._(
-          t`Your ${exchange} ${state.selectedLPToken.tokenA.symbol}/${state.selectedLPToken.tokenB.symbol} liquidity will become SushiSwap ${state.selectedLPToken.tokenA.symbol}/${state.selectedLPToken.tokenB.symbol} liquidity.`
-        )}
-      </div>
-    </div>
-  )
-}
-
-const ExchangeLiquidityPairs = ({ state, exchange }: { state: MigrateState; exchange: undefined | string }) => {
-  const { i18n } = useLingui()
-
-  function onToggle(lpToken: LPToken) {
-    state.setSelectedLPToken(state.selectedLPToken !== lpToken ? lpToken : undefined)
-    state.setAmount('')
-  }
-
-  if (!state.mode) {
-    return null
-  }
-
-  if (state.lpTokens.length === 0) {
-    return <Empty>{i18n._(t`No Liquidity found`)}</Empty>
-  }
-
-  return (
-    <>
-      {state.lpTokens.reduce<JSX.Element[]>((acc, lpToken) => {
-        if (lpToken.balance && JSBI.greaterThan(lpToken.balance.quotient, JSBI.BigInt(0))) {
-          acc.push(
-            <LPTokenSelect
-              lpToken={lpToken}
-              onToggle={onToggle}
-              isSelected={state.selectedLPToken === lpToken}
-              updating={state.updatingLPTokens}
-              exchange={exchange}
-            />
-          )
-        }
-        return acc
-      }, [])}
-    </>
-  )
-}
-
-export default function Migrate() {
-  const { i18n } = useLingui()
-  const { account, chainId } = useActiveWeb3React()
-
-  const state = useMigrateState()
-
-  let exchange
-
-  if (chainId === ChainId.MAINNET) {
-    exchange = 'Uniswap'
-  } else if (chainId === ChainId.BSC) {
-    exchange = 'PancakeSwap'
-  } else if (chainId === ChainId.MATIC) {
-    exchange = 'QuickSwap'
-  }
-
-  return (
-    <Container id="migrate-page" className="py-4 space-y-6 md:py-8 lg:py-12" maxWidth="lg">
-      <Head>
-        <title>Migrate | Sushi</title>
-        <meta key="description" name="description" content="Migrate your liquidity to SushiSwap." />
-      </Head>
-
-      <div className="mb-8 text-2xl text-center">{i18n._(t`Migrate ${exchange} Liquidity`)}</div>
-
-      <DoubleGlowShadow>
-        <div className="p-4 space-y-4 rounded bg-dark-900">
-          {!account ? (
-            <Web3Connect color="blue" className="w-full" />
-          ) : state.loading ? (
-            <Typography variant="lg" className="p-4 text-center text-primary">
-              <Dots>{i18n._(t`Loading your ${exchange} liquidity positions`)}</Dots>
-            </Typography>
-          ) : (
-            <>
-              {!state.loading && <Typography variant="lg">{i18n._(t`Your Wallet`)}</Typography>}
-              <MigrateModeSelect state={state} />
-              {!state.loading && state.lpTokens.length > 0 && (
-                <div>
-                  <Typography variant="lg">{i18n._(t`Your Liquidity`)}</Typography>
-                  <Typography variant="sm" className="text-secondary">
-                    {t`Click on a pool below, input the amount you wish to migrate or select max, and click
-                        migrate`}
-                  </Typography>
-                </div>
-              )}
-              <ExchangeLiquidityPairs state={state} exchange={exchange} />
-              <AmountInput state={state} />
-              {state.selectedLPToken && <MigrateButtons state={state} exchange={exchange} />}
-            </>
-          )}
-        </div>
-      </DoubleGlowShadow>
-    </Container>
   )
 }

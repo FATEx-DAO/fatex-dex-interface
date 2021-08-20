@@ -354,8 +354,11 @@ export default function Header() {
           <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
             Staking
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={`${pitSettings?.path}`}>
+          <StyledNavLink id={`xfatee-nav-link`} to={`${pitSettings?.path}`}>
             xFATE
+          </StyledNavLink>
+          <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
+            Migrate
           </StyledNavLink>
         </HeaderLinks>
       </HeaderRow>
