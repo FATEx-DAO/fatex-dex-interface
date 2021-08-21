@@ -13,7 +13,9 @@ export default function baseCurrencies(chainId: ChainId | undefined): Currency[]
         break
       case 1666600000:
       case 1666700000:
+        //currencies.push(FATE)
         currencies.push(HARMONY)
+        //currencies.push(X_FATE)
         currencies.push(WETH[chainId])
         break
       default:
