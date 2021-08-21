@@ -20,7 +20,7 @@ import {
 import Earn from './Earn'
 import EarnArchived from './Earn/Archived'
 import Manage from './Earn/Manage'
-import Pit from './Pit'
+import Pit from './XFate'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
 import RemoveV1Exchange from './MigrateV1/RemoveV1Exchange'
@@ -32,7 +32,7 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
-import { PIT_SETTINGS } from '../constants'
+import { X_FATE_SETTINGS } from '../constants'
 import { useActiveWeb3React } from '../hooks'
 import usePlatformName from '../hooks/usePlatformName'
 
@@ -84,7 +84,7 @@ function TopLevelModals() {
 export default function App() {
   const { chainId } = useActiveWeb3React()
   const blockchain = useBlockchain()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const platformName = usePlatformName()
 
   useEffect(() => {

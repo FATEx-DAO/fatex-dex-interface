@@ -15,7 +15,7 @@ import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.j
 import { Interface } from '@ethersproject/abi'
 import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { toV2LiquidityToken } from '../../state/user/hooks'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
 import { PIT_POOLS } from '../../constants/pit'
@@ -45,7 +45,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
 
   const blockchain = useBlockchain()
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()

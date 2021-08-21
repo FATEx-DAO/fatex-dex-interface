@@ -128,24 +128,9 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
             <ColumnCenter>
               <BlueCard>
                 <AutoColumn gap="10px">
-                  {/*{withdrawalFee && (*/}
-                  {/*  <>*/}
-                  {/*    <Separator />*/}
-                  {/*    <TYPE.link fontWeight={400} color={'primaryText1'}>*/}
-                  {/*      <b>Your current withdrawal fee:</b>*/}
-                  {/*      <br />*/}
-                  {/*      <WithdrawalFee>{withdrawalFee.toSignificant(2)}%</WithdrawalFee>*/}
-                  {/*    </TYPE.link>*/}
-                  {/*  </>*/}
-                  {/*)}*/}
-                  {/*{lastActionBlock && (*/}
-                  {/*  <TYPE.link fontWeight={400} fontSize={10} color={'primaryText1'}>*/}
-                  {/*    <em>*/}
-                  {/*      * You first deposited funds or last withdrew funds at block <b>{lastActionBlock?.toString()}</b>*/}
-                  {/*      .*/}
-                  {/*    </em>*/}
-                  {/*  </TYPE.link>*/}
-                  {/*)}*/}
+                  <TYPE.link fontWeight={400} color={'text1'}>
+                    💡 There is <b>no</b> withdrawal fee!
+                  </TYPE.link>
                 </AutoColumn>
               </BlueCard>
             </ColumnCenter>

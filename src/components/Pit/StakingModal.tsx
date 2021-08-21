@@ -19,7 +19,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
@@ -51,7 +51,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingToken, userLiquidityUnstaked)
 
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // state for pending and submitted txn views
   const addTransaction = useTransactionAdder()

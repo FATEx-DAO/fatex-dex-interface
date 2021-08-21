@@ -8,7 +8,7 @@
           "type": "address"
         },
         {
-          "internalType": "contract EmissionSchedule",
+          "internalType": "contract RewardSchedule",
           "name": "_emissionSchedule",
           "type": "address"
         },
@@ -20,6 +20,31 @@
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "pid",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "ClaimRewards",
+      "type": "event"
     },
     {
       "anonymous": false,
@@ -183,6 +208,32 @@
           "internalType": "uint256",
           "name": "_pid",
           "type": "uint256"
+        }
+      ],
+      "name": "claimReward",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "_pids",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "claimRewards",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_pid",
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -213,7 +264,7 @@
       "name": "emissionSchedule",
       "outputs": [
         {
-          "internalType": "contract EmissionSchedule",
+          "internalType": "contract RewardSchedule",
           "name": "",
           "type": "address"
         }
@@ -403,7 +454,7 @@
     {
       "inputs": [
         {
-          "internalType": "contract EmissionSchedule",
+          "internalType": "contract RewardSchedule",
           "name": "_emissionSchedule",
           "type": "address"
         }

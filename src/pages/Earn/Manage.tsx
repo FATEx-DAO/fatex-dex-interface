@@ -315,12 +315,21 @@ export default function Manage({
               </span>
               When you deposit or withdraw the contract will automatically claim {govToken?.symbol} on your behalf.
               <br />
+              <br />
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above is your total rewards -
+              The unclaimed {govToken?.symbol} amount listed above represents 20% of your rewards.
               <br />
-              when claiming 95% will be locked and 5% will be immediately accessible.
+              The other 80% can be claimed later, once this 13 week epoch period is over. Learn more{' '}
+              <a
+                href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
+                target={'_blank'}
+                rel="noreferrer"
+              >
+                here
+              </a>
+              .
             </TYPE.main>
           )}
         </>

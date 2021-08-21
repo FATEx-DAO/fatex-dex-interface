@@ -21,12 +21,12 @@ import { BlueCard } from '../../components/Card'
 
 import usePrevious from '../../hooks/usePrevious'
 
-import { X_FATE, PIT_SETTINGS } from '../../constants'
+import { X_FATE, X_FATE_SETTINGS } from '../../constants'
 import { FATE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
 import { X_FATE_INTERFACE } from '../../constants/abis/xfate-token'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
-import usePitRatio from '../../hooks/usePitRatio'
+import useXFateRatio from '../../hooks/useXFateRatio'
 import { useStakingInfo } from '../../state/stake/hooks'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
@@ -128,13 +128,18 @@ export default function Pit({
     FATE_TOKEN_INTERFACE
   )
 
-  const pit = chainId ? X_FATE[chainId] : undefined
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
-  const pitBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, pit, 'balanceOf', X_FATE_INTERFACE)
-  const govTokenPitTokenRatio = usePitRatio()
-  const adjustedPitBalance = govTokenPitTokenRatio ? pitBalance?.multiply(govTokenPitTokenRatio) : undefined
+  const xFate = chainId ? X_FATE[chainId] : undefined
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateBalance: TokenAmount | undefined = useTokenBalance(
+    account ?? undefined,
+    xFate,
+    'balanceOf',
+    X_FATE_INTERFACE
+  )
+  const govTokenStakedTokenRatio = useXFateRatio()
+  const adjustedStakedBalance = govTokenStakedTokenRatio ? xFateBalance?.multiply(govTokenStakedTokenRatio) : undefined
 
-  const userLiquidityStaked = pitBalance
+  const userLiquidityStaked = xFateBalance
   const userLiquidityUnstaked = govTokenBalance
 
   // toggle for staking modal and unstaking modal
@@ -142,7 +147,7 @@ export default function Pit({
   const [showUnstakingModal, setShowUnstakingModal] = useState(false)
   const [showClaimModal, setShowClaimModal] = useState(false)
 
-  const countUpAmount = pitBalance?.toFixed(6) ?? '0'
+  const countUpAmount = xFateBalance?.toFixed(6) ?? '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   const toggleWalletModal = useWalletModalToggle()
@@ -178,7 +183,7 @@ export default function Pit({
       <TopSection gap="lg" justify="center">
         <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
           <NonCenteredDataRow style={{ alignItems: 'baseline' }}>
-            <TYPE.mediumHeader></TYPE.mediumHeader>
+            <TYPE.mediumHeader />
             {TVLs?.stakingPoolTVL?.greaterThan('0') && (
               <TYPE.black>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
@@ -197,11 +202,11 @@ export default function Pit({
               <CardNoise />
               <AutoColumn gap="md">
                 <RowBetween>
-                  <TYPE.white fontWeight={600}>{pitSettings?.name} - DEX fee sharing</TYPE.white>
+                  <TYPE.white fontWeight={600}>{xFateSettings?.name} - DEX fee sharing</TYPE.white>
                 </RowBetween>
                 <RowBetween style={{ alignItems: 'baseline' }}>
                   <TYPE.white fontSize={14}>
-                    Stake your {govToken?.symbol} tokens and earn 1/3rd of the generated trading fees.
+                    Stake your {govToken?.symbol} tokens and earn 0.05% of all generated trading volume.
                   </TYPE.white>
                 </RowBetween>
                 <br />
@@ -216,9 +221,9 @@ export default function Pit({
                 <div>
                   <TYPE.black>
                     Your x{govToken?.symbol} Balance
-                    {govTokenPitTokenRatio && (
+                    {govTokenStakedTokenRatio && (
                       <TYPE.italic display="inline" marginLeft="0.25em">
-                        (1 x{govToken?.symbol} = {govTokenPitTokenRatio.toSignificant(4)} {govToken?.symbol})
+                        (1 x{govToken?.symbol} = {govTokenStakedTokenRatio.toSignificant(4)} {govToken?.symbol})
                       </TYPE.italic>
                     )}
                   </TYPE.black>
@@ -241,17 +246,17 @@ export default function Pit({
           </StyledBottomCard>
         </BottomSection>
 
-        {account && adjustedPitBalance && adjustedPitBalance?.greaterThan('0') && (
+        {account && adjustedStakedBalance && adjustedStakedBalance?.greaterThan('0') && (
           <TYPE.main>
-            You have {adjustedPitBalance?.toFixed(2, { groupSeparator: ',' })} {govToken?.symbol} tokens staked in
-            the&nbsp;{pitSettings?.name}.
+            You have {adjustedStakedBalance?.toFixed(2, { groupSeparator: ',' })} {govToken?.symbol} tokens staked in
+            the&nbsp;{xFateSettings?.name}.
           </TYPE.main>
         )}
 
-        {account && (!adjustedPitBalance || adjustedPitBalance?.equalTo('0')) && (
+        {account && (!adjustedStakedBalance || adjustedStakedBalance?.equalTo('0')) && (
           <TYPE.main>
             You have {govTokenBalance?.toFixed(2, { groupSeparator: ',' })} {govToken?.symbol} tokens available to
-            deposit to the {pitSettings?.name}.
+            deposit to the {xFateSettings?.name}.
           </TYPE.main>
         )}
 
@@ -282,7 +287,7 @@ export default function Pit({
               after you withdraw your x{govToken?.symbol} tokens from the pool.
               <br />
               <br />
-              {pitSettings?.name} does not have any withdrawal fees.
+              {xFateSettings?.name} does not have any withdrawal fees.
               <br />
               Tokens are also 100% unlocked when they are claimed.
             </TYPE.main>

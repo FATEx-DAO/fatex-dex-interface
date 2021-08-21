@@ -351,7 +351,7 @@ export default function AddLiquidity({
                         The ratio of tokens you add will set the price of this pool.
                       </TYPE.link>
                       <TYPE.link fontWeight={400} color={'text1'}>
-                        Once you are happy with the rate click supply to review.
+                        Once you are done setting the rate, click supply to review.
                       </TYPE.link>
                     </AutoColumn>
                   </BlueCard>

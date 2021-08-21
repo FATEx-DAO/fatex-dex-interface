@@ -20,7 +20,7 @@ import { StyledBalanceMaxMini, SwapCallbackError } from './styleds'
 import useBlockchain from '../../hooks/useBlockchain'
 import getBlockchainAdjustedCurrency from '../../utils/getBlockchainAdjustedCurrency'
 import { useActiveWeb3React } from '../../hooks'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 
 export default function SwapModalFooter({
   trade,
@@ -36,7 +36,7 @@ export default function SwapModalFooter({
   disabledConfirm: boolean
 }) {
   const { chainId } = useActiveWeb3React()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const blockchain = useBlockchain()
 
   const [showInverted, setShowInverted] = useState<boolean>(false)

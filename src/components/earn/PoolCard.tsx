@@ -163,18 +163,16 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <Break />
           <StatContainerTop>
             <RowBetween>
-              <TYPE.white> Your Unlocked Rewards </TYPE.white>
+              <TYPE.white> Your Unclaimed Rewards </TYPE.white>
               <TYPE.white>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔓
                 </span>
                 {stakingInfo
                   ? stakingInfo.active
-                    ? `${stakingInfo.unlockedEarnedAmount.toSignificant(4, { groupSeparator: ',' })} ${
-                        govToken?.symbol
-                      } / $${
+                    ? `${stakingInfo.earnedAmount.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
                         govTokenPrice
-                          ? stakingInfo.unlockedEarnedAmount
+                          ? stakingInfo.earnedAmount
                               .multiply(govTokenPrice?.raw)
                               .toSignificant(2, { groupSeparator: ',' })
                           : '0'
@@ -184,18 +182,16 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               </TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white> Your Locked Rewards </TYPE.white>
+              <TYPE.white> Your Claimed Rewards </TYPE.white>
               <TYPE.white>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                  🔒
+                  ✅
                 </span>
                 {stakingInfo
                   ? stakingInfo.active
-                    ? `${stakingInfo.lockedEarnedAmount.toSignificant(4, { groupSeparator: ',' })} ${
-                        govToken?.symbol
-                      } / $${
+                    ? `${stakingInfo.rewardDebt?.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
                         govTokenPrice
-                          ? stakingInfo.lockedEarnedAmount
+                          ? stakingInfo.rewardDebt
                               .multiply(govTokenPrice?.raw)
                               .toSignificant(2, { groupSeparator: ',' })
                           : '0'
@@ -217,9 +213,11 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               </span>
               {stakingInfo
                 ? stakingInfo.active
-                  ? `${stakingInfo.earnedAmount.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
+                  ? `${stakingInfo.allClaimedRewards.toSignificant(4, { groupSeparator: ',' })} ${
+                      govToken?.symbol
+                    } / $${
                       govTokenPrice
-                        ? stakingInfo.earnedAmount
+                        ? stakingInfo.allClaimedRewards
                             .multiply(govTokenPrice?.raw)
                             .toSignificant(2, { groupSeparator: ',' })
                         : '0'

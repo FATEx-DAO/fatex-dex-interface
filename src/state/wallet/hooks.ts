@@ -7,7 +7,7 @@ import { useMulticallContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
-import { useTotalUnlockedGovTokensEarned } from '../stake/hooks'
+import { useTotalClaimedAndEarnedGovTokens } from '../stake/hooks'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 /**
@@ -154,7 +154,7 @@ export function useAggregateGovTokenBalance(): TokenAmount | undefined {
 
   const govTokenBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, govToken)
   const govTokenUnclaimed: TokenAmount | undefined = useUserUnclaimedAmount(account)
-  const govTokenUnHarvested: TokenAmount | undefined = useTotalUnlockedGovTokensEarned()
+  const govTokenUnHarvested: TokenAmount | undefined = useTotalClaimedAndEarnedGovTokens()
 
   if (!govToken) return undefined
 

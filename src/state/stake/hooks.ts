@@ -22,6 +22,10 @@ const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 export const STAKING_GENESIS = 6502000
 
 export const REWARDS_DURATION_DAYS = 60
+
+/// rewards are locked 80% initially, meaning they receive 4 times the amount later on
+export const REWARD_MULTIPLIER = '4'
+
 export interface StakingInfo {
   // the pool id (pid) of the pool
   pid: number
@@ -55,10 +59,10 @@ export interface StakingInfo {
   stakedRatio: Fraction
   // the amount of reward token earned by the active account, or undefined if no account
   earnedAmount: TokenAmount
-  // the amount of reward token earned by the active account, or undefined if no account - which will be locked
-  lockedEarnedAmount: TokenAmount
-  // the amount of reward token earned by the active account, or undefined if no account - which will be unlocked
-  unlockedEarnedAmount: TokenAmount
+  // the amount of reward token claimed by the active account, or undefined if no account
+  rewardDebt: TokenAmount
+  // the addition of earnedAmount and rewardDebt
+  allClaimedRewards: TokenAmount
   // value of total staked amount, measured in weth
   valueOfTotalStakedAmountInWeth: TokenAmount | Fraction | undefined
   // value of total staked amount, measured in a USD stable coin (busd, usdt, usdc or a mix thereof)
@@ -175,14 +179,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         const unlockedRewardsPercentageUnits = 100
 
         const calculatedTotalPendingRewards = JSBI.BigInt(pendingReward?.result?.[0] ?? 0)
-        const calculatedLockedPendingRewards = JSBI.divide(
-          JSBI.multiply(calculatedTotalPendingRewards, JSBI.BigInt(lockedRewardsPercentageUnits)),
-          JSBI.BigInt(100)
-        )
-        const calculatedUnlockedPendingRewards = JSBI.divide(
-          JSBI.multiply(calculatedTotalPendingRewards, JSBI.BigInt(unlockedRewardsPercentageUnits)),
-          JSBI.BigInt(100)
-        )
 
         const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
         const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(userInfo?.result?.[0] ?? 0))
@@ -197,8 +193,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.BigInt(lpTokenTotalSupply.result?.[0] ?? 0)
         )
         const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
-        const totalPendingLockedRewardAmount = new TokenAmount(govToken, calculatedLockedPendingRewards)
-        const totalPendingUnlockedRewardAmount = new TokenAmount(govToken, calculatedUnlockedPendingRewards)
+        const totalRewardDebt = new TokenAmount(govToken, JSBI.BigInt(userInfo?.result?.[1] ?? 0))
         const startsAtBlock = startBlock.result?.[0] ?? 0
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
@@ -242,8 +237,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           stakedAmount: stakedAmount,
           stakedRatio: stakedRatio,
           earnedAmount: totalPendingRewardAmount,
-          lockedEarnedAmount: totalPendingLockedRewardAmount,
-          unlockedEarnedAmount: totalPendingUnlockedRewardAmount,
+          rewardDebt: totalRewardDebt,
+          allClaimedRewards: totalPendingRewardAmount.add(totalRewardDebt),
           valueOfTotalStakedAmountInWeth: totalStakedAmountWETH,
           valueOfTotalStakedAmountInUsd: totalStakedAmountBUSD,
           apr: apr,
@@ -297,14 +292,20 @@ export function useTotalLockedGovTokensEarned(): TokenAmount | undefined {
     if (!govToken) return undefined
     return (
       stakingInfos?.reduce(
-        (accumulator, stakingInfo) => accumulator.add(stakingInfo.lockedEarnedAmount),
+        (accumulator, stakingInfo) =>
+          accumulator.add(
+            new TokenAmount(
+              govToken,
+              stakingInfo.earnedAmount.add(stakingInfo.rewardDebt).multiply(REWARD_MULTIPLIER).quotient
+            )
+          ),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )
   }, [stakingInfos, govToken])
 }
 
-export function useTotalUnlockedGovTokensEarned(): TokenAmount | undefined {
+export function useTotalClaimedAndEarnedGovTokens(): TokenAmount | undefined {
   const govToken = useGovernanceToken()
   const stakingInfos = useStakingInfo(true)
 
@@ -312,7 +313,7 @@ export function useTotalUnlockedGovTokensEarned(): TokenAmount | undefined {
     if (!govToken) return undefined
     return (
       stakingInfos?.reduce(
-        (accumulator, stakingInfo) => accumulator.add(stakingInfo.unlockedEarnedAmount),
+        (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount.add(stakingInfo.rewardDebt)),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )

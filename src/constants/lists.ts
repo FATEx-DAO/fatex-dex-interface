@@ -17,8 +17,10 @@ export const UNSUPPORTED_LIST_URLS: string[] = []
 // const CMC_STABLECOIN = 'stablecoin.cmc.eth'
 // const KLEROS_LIST = 't2crtokens.eth'
 // const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
-const FATEX_DEFAULT_LIST = 'https://d1xrz6ki9z98vb.cloudfront.net/venomswap/lists/venomswap-default.tokenlist.json'
-const FATEX_COMMUNITY_LIST = 'https://d1xrz6ki9z98vb.cloudfront.net/venomswap/lists/venomswap-community.tokenlist.json'
+const FATEX_DEFAULT_LIST =
+  'https://raw.githubusercontent.com/FATEx-DAO/default-token-list/main/build/fatex-default.tokenlist.json'
+const FATEX_COMMUNITY_LIST =
+  'https://raw.githubusercontent.com/FATEx-DAO/community-token-list/main/build/fatex-dao-community.tokenlist.json'
 
 // lower index == higher priority for token import
 export const DEFAULT_LIST_OF_LISTS: string[] = [
