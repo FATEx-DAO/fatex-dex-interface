@@ -29,7 +29,6 @@ import Modal from '../Modal'
 import GovTokenBalanceContent from './GovTokenBalanceContent'
 //import usePrevious from '../../hooks/usePrevious'
 import { BASE_CURRENCY } from '../../connectors'
-import { X_FATE_SETTINGS } from '../../constants'
 //import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 const HeaderFrame = styled.div`
@@ -306,7 +305,6 @@ export default function Header() {
   const { t } = useTranslation()
 
   //const govToken = useGovernanceToken()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -354,7 +352,7 @@ export default function Header() {
           <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
             Staking
           </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={`${pitSettings?.path}`}>
+          <StyledNavLink id={`stake-nav-link`} to={`${'/xFATE'}`}>
             xFATE
           </StyledNavLink>
         </HeaderLinks>

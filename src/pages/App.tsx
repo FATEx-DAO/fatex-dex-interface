@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
@@ -32,8 +31,6 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
-import { X_FATE_SETTINGS } from '../constants'
-import { useActiveWeb3React } from '../hooks'
 import usePlatformName from '../hooks/usePlatformName'
 
 import { Blockchain } from '@fatex-dao/sdk'
@@ -82,9 +79,7 @@ function TopLevelModals() {
 }
 
 export default function App() {
-  const { chainId } = useActiveWeb3React()
   const blockchain = useBlockchain()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const platformName = usePlatformName()
 
   useEffect(() => {
@@ -93,7 +88,6 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
-      <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
         <HeaderWrapper>
@@ -113,7 +107,7 @@ export default function App() {
               <Route exact strict path="/pool" component={Pool} />
               <Route exact strict path="/staking" component={Earn} />
               <Route exact strict path="/staking/archived" component={EarnArchived} />
-              <Route exact strict path={pitSettings?.path} component={Pit} />
+              <Route exact strict path={'/xFATE'} component={Pit} />
               {blockchain === Blockchain.ETHEREUM && <Route exact strict path="/vote" component={Vote} />}
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />
