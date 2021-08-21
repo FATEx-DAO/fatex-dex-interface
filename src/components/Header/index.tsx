@@ -165,9 +165,10 @@ const NetworkCard = styled(Card)`
   text-align: center;
   color: ${({ theme }) => theme.text1};
   background: ${({ theme }) => theme.bg3};
-  padding: 5px 12px 5px 12px;
+  padding: 7px 18px 7px 18px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 14px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
