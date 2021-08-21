@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "production": "fatex-dao"
+  },
+  "targets": {}
+}

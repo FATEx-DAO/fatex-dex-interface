@@ -37,18 +37,8 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
-let supportedChainIds: number[]
-switch (BLOCKCHAIN) {
-  case Blockchain.BINANCE_SMART_CHAIN:
-    supportedChainIds = [56, 97]
-    break
-  case Blockchain.HARMONY:
-    supportedChainIds = [1666600000, 1666700000]
-    break
-  default:
-    supportedChainIds = [1, 3, 4, 5, 42]
-    break
-}
+// const supportedChainIds = [1666600000, 1666700000]
+const supportedChainIds = [1666700000]
 
 export const injected = new InjectedConnector({
   supportedChainIds: supportedChainIds
