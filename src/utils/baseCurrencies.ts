@@ -1,5 +1,6 @@
 import { ChainId, Currency, ETHER, HARMONY, BINANCE_COIN, WETH } from '@fatex-dao/sdk'
 import { NETWORK_CHAIN_ID } from '../connectors'
+// import getTokenWithDefault from './getTokenWithDefault'
 
 export default function baseCurrencies(chainId: ChainId | undefined): Currency[] {
   const currencies: Currency[] = []
@@ -13,9 +14,8 @@ export default function baseCurrencies(chainId: ChainId | undefined): Currency[]
         break
       case 1666600000:
       case 1666700000:
-        //currencies.push(FATE)
         currencies.push(HARMONY)
-        //currencies.push(X_FATE)
+        // currencies.push(getTokenWithDefault(chainId, 'FATE'))
         currencies.push(WETH[chainId])
         break
       default:

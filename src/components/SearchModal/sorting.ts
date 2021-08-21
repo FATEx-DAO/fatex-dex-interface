@@ -18,6 +18,11 @@ function getTokenComparator(balances: {
   [tokenAddress: string]: TokenAmount | undefined
 }): (tokenA: Token, tokenB: Token) => number {
   return function sortTokens(tokenA: Token, tokenB: Token): number {
+    if (tokenA.symbol === 'FATE' || tokenB.symbol === 'FATE') {
+      return tokenA.symbol === 'FATE' ? -1 : 1
+    } else if (tokenA.symbol === 'ONE' || tokenB.symbol === 'ONE') {
+      return tokenA.symbol === 'ONE' ? -1 : 1
+    }
     // -1 = a is first
     // 1 = b is first
 
