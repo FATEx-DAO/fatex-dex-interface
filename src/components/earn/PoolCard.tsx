@@ -146,7 +146,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <TYPE.white>{poolSharePercentage ? `${poolSharePercentage.toSignificant(4)}%` : '-'}</TYPE.white>
         </RowBetween>
         <RowBetween>
-          <TYPE.white> Emission rate </TYPE.white>
+          <TYPE.white> Reward rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active

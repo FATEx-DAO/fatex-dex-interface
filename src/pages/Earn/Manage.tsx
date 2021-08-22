@@ -186,7 +186,7 @@ export default function Manage({
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Emission Rate</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>Reward Rate</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo
                 ? stakingInfo.active

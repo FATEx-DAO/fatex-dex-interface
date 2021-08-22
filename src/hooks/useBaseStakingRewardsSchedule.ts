@@ -3,7 +3,7 @@ import { JSBI, TokenAmount } from '@fatex-dao/sdk'
 // import { useMasterBreederContract } from './useContract'
 import useGovernanceToken from './useGovernanceToken'
 
-export default function useBaseStakingRewardsEmission(): TokenAmount | undefined {
+export default function useBaseStakingRewardsSchedule(): TokenAmount | undefined {
   const govToken = useGovernanceToken()
   // const masterBreederContract = useMasterBreederContract()
 
