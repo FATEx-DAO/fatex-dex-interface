@@ -57,6 +57,8 @@ const ButtonRow = styled(RowFixed)`
 
 const ResponsiveButtonPrimary = styled(ButtonPrimary)`
   width: fit-content;
+  border-radius: 8px;
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     width: 48%;
   `};
