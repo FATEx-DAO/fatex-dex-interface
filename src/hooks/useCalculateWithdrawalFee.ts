@@ -1,9 +1,8 @@
-import { useSingleCallResult, useSingleContractMultipleData } from '../state/multicall/hooks'
-import { useMasterBreederContract } from './useContract'
+import { useSingleCallResult } from '../state/multicall/hooks'
+import { useFateRewardController } from './useContract'
 import { useBlockNumber } from '../state/application/hooks'
 import { BigNumber } from '@ethersproject/bignumber'
-import { Fraction, JSBI } from '@venomswap/sdk'
-import { Contract } from '@ethersproject/contracts'
+import { Fraction, JSBI } from '@fatex-dao/sdk'
 
 function calculateFee(devFeeStage: BigNumber, divisor: number, multiply = '100'): Fraction | undefined {
   return devFeeStage && !devFeeStage.isZero()
@@ -11,19 +10,19 @@ function calculateFee(devFeeStage: BigNumber, divisor: number, multiply = '100')
     : undefined
 }
 
-function useStages(contract: Contract | null, method: string, stages: number[]): BigNumber[] {
-  return useSingleContractMultipleData(
-    contract,
-    method,
-    stages.map(item => [item])
-  )
-    .map(stage => {
-      return !stage.loading && stage.result ? stage.result[0] : null
-    })
-    .filter(stage => {
-      return stage != null
-    })
-}
+// function useStages(contract: Contract | null, method: string, stages: number[]): BigNumber[] {
+//   return useSingleContractMultipleData(
+//     contract,
+//     method,
+//     stages.map(item => [item])
+//   )
+//     .map(stage => {
+//       return !stage.loading && stage.result ? stage.result[0] : null
+//     })
+//     .filter(stage => {
+//       return stage != null
+//     })
+// }
 
 export default function useCalculateWithdrawalFee(
   pid: number,
@@ -32,14 +31,17 @@ export default function useCalculateWithdrawalFee(
   let withdrawalFee: Fraction | undefined
 
   const currentBlock = useBlockNumber()
-  const masterBreeder = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
-  const userInfo = useSingleCallResult(masterBreeder, 'userInfo', [pid, account ? account : ''])?.result
+  const userInfo = useSingleCallResult(fateRewardController, 'userInfo', [pid, account ? account : ''])?.result
 
-  const defaultStageIndexes = [0, 1, 2, 3, 4, 5, 6, 7]
-  const blockDeltaStartStages = useStages(masterBreeder, 'blockDeltaStartStage', defaultStageIndexes)
-  const blockDeltaEndStages = useStages(masterBreeder, 'blockDeltaEndStage', [0, 1, 2, 3, 4, 5])
-  const devFeeStages = useStages(masterBreeder, 'devFeeStage', defaultStageIndexes)
+  // const defaultStageIndexes = [0, 1, 2, 3, 4, 5, 6, 7]
+  // const blockDeltaStartStages = useStages(fateRewardController, 'blockDeltaStartStage', defaultStageIndexes)
+  // const blockDeltaEndStages = useStages(fateRewardController, 'blockDeltaEndStage', [0, 1, 2, 3, 4, 5])
+  // const devFeeStages = useStages(fateRewardController, 'devFeeStage', defaultStageIndexes)
+  const blockDeltaStartStages = [BigNumber.from('0')]
+  const blockDeltaEndStages = [BigNumber.from('0')]
+  const devFeeStages = [BigNumber.from('0')]
 
   const lastWithdrawBlock = userInfo?.[3]
   const firstDepositBlock = userInfo?.[4]

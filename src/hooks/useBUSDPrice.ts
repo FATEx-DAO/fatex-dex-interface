@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, JSBI, Token, Price, WETH, ChainId } from '@venomswap/sdk'
+import { Currency, currencyEquals, JSBI, Token, Price, WETH, ChainId } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { PairState, usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '.'
@@ -49,8 +49,14 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
     }
 
     const ethPairETHAmount = ethPair?.reserveOf(WETH[chainId])
+    const busdWethPrice = busdEthPair?.priceOf(WETH[chainId])
     const ethPairETHBUSDValue: JSBI =
-      ethPairETHAmount && busdEthPair ? busdEthPair.priceOf(WETH[chainId]).quote(ethPairETHAmount).raw : JSBI.BigInt(0)
+      ethPairETHAmount &&
+      busdWethPrice &&
+      JSBI.notEqual(busdWethPrice.denominator, JSBI.BigInt('0')) &&
+      ethPairETHAmount.greaterThan('0')
+        ? busdWethPrice.quote(ethPairETHAmount).raw
+        : JSBI.BigInt(0)
 
     // all other tokens
     // first try the usdc pair

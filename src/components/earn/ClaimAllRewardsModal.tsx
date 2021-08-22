@@ -6,14 +6,14 @@ import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
+import { useFateRewardController } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import { TokenAmount } from '@venomswap/sdk'
+import { TokenAmount } from '@fatex-dao/sdk'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -48,17 +48,17 @@ export default function ClaimAllRewardsModal({ isOpen, onDismiss, stakingInfos }
     onDismiss()
   }
 
-  const masterBreeder = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
   async function onClaimReward() {
-    if (masterBreeder) {
+    if (fateRewardController) {
       setAttempting(true)
 
       const pids = stakingInfos.map(({ pid }) => pid)
 
-      const estimatedGas = await masterBreeder.estimateGas.claimRewards(pids)
+      const estimatedGas = await fateRewardController.estimateGas.claimRewards(pids)
 
-      await masterBreeder
+      await fateRewardController
         .claimRewards(pids, {
           gasLimit: calculateGasMargin(estimatedGas)
         })

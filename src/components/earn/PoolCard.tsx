@@ -4,7 +4,7 @@ import { RowBetween } from '../Row'
 import styled from 'styled-components'
 import { TYPE, StyledInternalLink } from '../../theme'
 import DoubleCurrencyLogo from '../DoubleLogo'
-import { JSBI } from '@venomswap/sdk'
+import { JSBI } from '@fatex-dao/sdk'
 import { ButtonPrimary } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
 import { useColor } from '../../hooks/useColor'
@@ -60,7 +60,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
 const TopSection = styled.div`
   display: grid;
   grid-template-columns: 48px 1fr 120px;
-  grid-gap: 0px;
+  grid-gap: 0;
   align-items: center;
   padding: 1rem;
   z-index: 1;
@@ -135,7 +135,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <TYPE.white> Total deposited </TYPE.white>
           <TYPE.white fontWeight={500}>
             <b>
-              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
+              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd?.greaterThan('0')
                 ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(0, { groupSeparator: ',' })}`
                 : '-'}
             </b>
@@ -146,7 +146,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <TYPE.white>{poolSharePercentage ? `${poolSharePercentage.toSignificant(4)}%` : '-'}</TYPE.white>
         </RowBetween>
         <RowBetween>
-          <TYPE.white> Emission rate </TYPE.white>
+          <TYPE.white> Reward rate </TYPE.white>
           <TYPE.white>
             {stakingInfo
               ? stakingInfo.active
@@ -163,18 +163,16 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <Break />
           <StatContainerTop>
             <RowBetween>
-              <TYPE.white> Your Unlocked Rewards </TYPE.white>
+              <TYPE.white> Your Unclaimed Rewards </TYPE.white>
               <TYPE.white>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔓
                 </span>
                 {stakingInfo
                   ? stakingInfo.active
-                    ? `${stakingInfo.unlockedEarnedAmount.toSignificant(4, { groupSeparator: ',' })} ${
-                        govToken?.symbol
-                      } / $${
+                    ? `${stakingInfo.earnedAmount.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
                         govTokenPrice
-                          ? stakingInfo.unlockedEarnedAmount
+                          ? stakingInfo.earnedAmount
                               .multiply(govTokenPrice?.raw)
                               .toSignificant(2, { groupSeparator: ',' })
                           : '0'
@@ -184,18 +182,16 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               </TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white> Your Locked Rewards </TYPE.white>
+              <TYPE.white> Your Claimed Rewards </TYPE.white>
               <TYPE.white>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                  🔒
+                  ✅
                 </span>
                 {stakingInfo
                   ? stakingInfo.active
-                    ? `${stakingInfo.lockedEarnedAmount.toSignificant(4, { groupSeparator: ',' })} ${
-                        govToken?.symbol
-                      } / $${
+                    ? `${stakingInfo.rewardDebt?.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
                         govTokenPrice
-                          ? stakingInfo.lockedEarnedAmount
+                          ? stakingInfo.rewardDebt
                               .multiply(govTokenPrice?.raw)
                               .toSignificant(2, { groupSeparator: ',' })
                           : '0'
@@ -217,9 +213,11 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               </span>
               {stakingInfo
                 ? stakingInfo.active
-                  ? `${stakingInfo.earnedAmount.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${
+                  ? `${stakingInfo.allClaimedRewards.toSignificant(4, { groupSeparator: ',' })} ${
+                      govToken?.symbol
+                    } / $${
                       govTokenPrice
-                        ? stakingInfo.earnedAmount
+                        ? stakingInfo.allClaimedRewards
                             .multiply(govTokenPrice?.raw)
                             .toSignificant(2, { groupSeparator: ',' })
                         : '0'

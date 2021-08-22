@@ -1,4 +1,4 @@
-import { Currency, ETHER, HARMONY, BINANCE_COIN, Token } from '@venomswap/sdk'
+import { Currency, ETHER, HARMONY, BINANCE_COIN, Token } from '@fatex-dao/sdk'
 import React, { KeyboardEvent, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'

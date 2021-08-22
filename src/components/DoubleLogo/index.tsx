@@ -1,4 +1,4 @@
-import { Currency } from '@venomswap/sdk'
+import { Currency } from '@fatex-dao/sdk'
 import React from 'react'
 import styled from 'styled-components'
 import CurrencyLogo from '../CurrencyLogo'

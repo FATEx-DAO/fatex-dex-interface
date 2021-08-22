@@ -32,6 +32,20 @@ export const SectionBreak = styled.div`
 
 export const BottomGrouping = styled.div`
   margin-top: 1rem;
+  background-color: ${({ theme }) => theme.bg1};
+
+  button {
+    border: 3px solid ${({ theme }) => theme.text1};
+    background-color: ${({ theme }) => theme.bg1};
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: ${({ theme }) => theme.text1};
+
+    :hover {
+      background-color: ${({ theme }) => theme.bg6};
+    }
+  }
 `
 
 export const ErrorText = styled(Text)<{ severity?: 0 | 1 | 2 | 3 | 4 }>`

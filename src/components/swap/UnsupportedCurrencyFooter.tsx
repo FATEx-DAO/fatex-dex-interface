@@ -9,7 +9,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useActiveWeb3React } from 'hooks'
 import { getEtherscanLink } from 'utils'
-import { Currency, Token } from '@venomswap/sdk'
+import { Currency, Token } from '@fatex-dao/sdk'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { useUnsupportedTokens } from '../../hooks/Tokens'
 

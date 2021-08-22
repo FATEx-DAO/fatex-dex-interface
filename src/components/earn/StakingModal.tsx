@@ -8,7 +8,7 @@ import { TYPE, CloseIcon } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Pair } from '@venomswap/sdk'
+import { TokenAmount, Pair } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { usePairContract } from '../../hooks/useContract'
@@ -18,8 +18,7 @@ import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { useMasterBreederContract } from '../../hooks/useContract'
-import { ZERO_ADDRESS } from '../../constants'
+import { useFateRewardController } from '../../hooks/useContract'
 import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
@@ -74,8 +73,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     onDismiss()
   }, [onDismiss])
 
-  const masterBreeder = useMasterBreederContract()
-  const referral = ZERO_ADDRESS
+  const fateRewardController = useFateRewardController()
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
@@ -84,18 +82,18 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // approval data for stake
   const deadline = useTransactionDeadline()
   const [signatureData, setSignatureData] = useState<{ v: number; r: string; s: string; deadline: number } | null>(null)
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, masterBreeder?.address)
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, fateRewardController?.address)
 
   async function onStake() {
     setAttempting(true)
-    if (masterBreeder && parsedAmount && deadline) {
+    if (fateRewardController && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
         const formattedAmount = `0x${parsedAmount.raw.toString(16)}`
 
-        const estimatedGas = await masterBreeder.estimateGas.deposit(stakingInfo.pid, formattedAmount, referral)
+        const estimatedGas = await fateRewardController.estimateGas.deposit(stakingInfo.pid, formattedAmount)
 
-        await masterBreeder
-          .deposit(stakingInfo.pid, formattedAmount, referral, {
+        await fateRewardController
+          .deposit(stakingInfo.pid, formattedAmount, {
             gasLimit: calculateGasMargin(estimatedGas)
           })
           .then((response: TransactionResponse) => {
@@ -153,7 +151,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    <b>Important:</b> The deposit fee is now <b>0%</b>!
+                    💡 There is <b>no</b> deposit fee!
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
@@ -197,7 +195,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -205,7 +203,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

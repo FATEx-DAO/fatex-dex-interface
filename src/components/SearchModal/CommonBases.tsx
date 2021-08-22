@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'rebass'
-import { ChainId, Currency, currencyEquals, Token } from '@venomswap/sdk'
+import { ChainId, Currency, currencyEquals, Token } from '@fatex-dao/sdk'
 import styled from 'styled-components'
 
 import { SUGGESTED_BASES } from '../../constants'

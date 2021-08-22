@@ -3,52 +3,38 @@ import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon, ExternalLink } from '../../theme'
+import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { TokenAmount, Pair, Blockchain } from '@venomswap/sdk'
-import { useActiveWeb3React } from '../../hooks'
+import { TokenAmount, Pair } from '@fatex-dao/sdk'
 import { StakingInfo, useDerivedUnstakeInfo } from '../../state/stake/hooks'
-//import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { ZERO_ADDRESS } from '../../constants'
-import usePlatformName from '../../hooks/usePlatformName'
 import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
-import { useMasterBreederContract } from '../../hooks/useContract'
-import useCalculateWithdrawalFee from '../../hooks/useCalculateWithdrawalFee'
-import useBlockchain from '../../hooks/useBlockchain'
-
-/*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
-  display: flex;
-  justify-content: space-between;
-  padding-right: 20px;
-  padding-left: 20px;
-
-  opacity: ${({ dim }) => (dim ? 0.5 : 1)};
-`*/
+import { useFateRewardController } from '../../hooks/useContract'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
   padding: 1rem;
 `
 
-const Separator = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.bg2};
-  margin: 10px 0px;
-`
-
-const WithdrawalFee = styled.div`
-  margin: 10px 0px 0px 0px;
-  text-align: center;
-  font-size: 40px;
-`
+// const Separator = styled.div`
+//   width: 100%;
+//   height: 1px;
+//   background-color: ${({ theme }) => theme.bg2};
+//   margin: 10px 0;
+// `
+//
+// const WithdrawalFee = styled.div`
+//   margin: 10px 0 0 0;
+//   text-align: center;
+//   font-size: 40px;
+// `
 
 interface StakingModalProps {
   isOpen: boolean
@@ -57,9 +43,6 @@ interface StakingModalProps {
 }
 
 export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
-  const { account } = useActiveWeb3React()
-  const blockchain = useBlockchain()
-
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedUnstakeInfo(typedValue, stakingInfo.stakedAmount)
@@ -86,29 +69,21 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
     onDismiss()
   }, [onDismiss])
 
-  const platformName = usePlatformName()
-  const masterBreeder = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
   const referral = ZERO_ADDRESS
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
 
-  const { lastActionBlock, withdrawalFee } = useCalculateWithdrawalFee(stakingInfo.pid, account)
-
-  let feeInfoUrl = ''
-  if (blockchain == Blockchain.HARMONY) {
-    feeInfoUrl = 'https://docs.venomdao.org/viper/fees'
-  }
-
   async function onWithdraw() {
-    if (masterBreeder && stakingInfo?.stakedAmount) {
+    if (fateRewardController && stakingInfo?.stakedAmount) {
       setAttempting(true)
 
       const formattedAmount = `0x${parsedAmount?.raw.toString(16)}`
-      const estimatedGas = await masterBreeder.estimateGas.withdraw(stakingInfo.pid, formattedAmount, referral)
+      const estimatedGas = await fateRewardController.estimateGas.withdraw(stakingInfo.pid, formattedAmount, referral)
 
-      await masterBreeder
-        .withdraw(stakingInfo.pid, formattedAmount, referral, {
+      await fateRewardController
+        .withdraw(stakingInfo.pid, formattedAmount, {
           gasLimit: calculateGasMargin(estimatedGas)
         })
         .then((response: TransactionResponse) => {
@@ -154,32 +129,8 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    <b>Important:</b> {platformName} utilizes LP withdrawal fees to disincentivize short term farming
-                    and selling.
+                    💡 There is <b>no</b> withdrawal fee!
                   </TYPE.link>
-                  {feeInfoUrl && (
-                    <TYPE.link fontWeight={400} fontSize={12} color={'text1'}>
-                      <ExternalLink href={feeInfoUrl}>Read more about the fees here.</ExternalLink>
-                    </TYPE.link>
-                  )}
-                  {withdrawalFee && (
-                    <>
-                      <Separator />
-                      <TYPE.link fontWeight={400} color={'text1'}>
-                        <b>Your current withdrawal fee:</b>
-                        <br />
-                        <WithdrawalFee>{withdrawalFee.toSignificant(2)}%</WithdrawalFee>
-                      </TYPE.link>
-                    </>
-                  )}
-                  {lastActionBlock && (
-                    <TYPE.link fontWeight={400} fontSize={10} color={'text1'}>
-                      <em>
-                        * You first deposited funds or last withdrew funds at block <b>{lastActionBlock?.toString()}</b>
-                        .
-                      </em>
-                    </TYPE.link>
-                  )}
                 </AutoColumn>
               </BlueCard>
             </ColumnCenter>
@@ -210,7 +161,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Withdrawing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -218,7 +169,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} FATE-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

@@ -1,4 +1,4 @@
-import { ChainId } from '@venomswap/sdk'
+import { ChainId } from '@fatex-dao/sdk'
 import MULTICALL_ABI from './abi.json'
 
 const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
@@ -10,7 +10,8 @@ const MULTICALL_NETWORKS: { [chainId in ChainId]: string } = {
   [ChainId.BSC_MAINNET]: '0xe348b292e8eA5FAB54340656f3D374b259D658b8',
   [ChainId.BSC_TESTNET]: '0xe348b292e8eA5FAB54340656f3D374b259D658b8',
   [ChainId.HARMONY_MAINNET]: '0xFE4980f62D708c2A84D3929859Ea226340759320',
-  [ChainId.HARMONY_TESTNET]: '0xbcd3451992B923531615293Cb2b2c38ba8DE9529'
+  // [ChainId.HARMONY_TESTNET]: '0x8d730FbD1f7A0046B033F9124fa5aA7800D49A73'
+  [ChainId.HARMONY_TESTNET]: '0x26f7455668f04D84a7eCe240e403af2FCf635216'
 }
 
 export { MULTICALL_ABI, MULTICALL_NETWORKS }

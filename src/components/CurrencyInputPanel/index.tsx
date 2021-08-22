@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Pair } from '@venomswap/sdk'
+import { Currency, CurrencyAmount, Pair } from '@fatex-dao/sdk'
 import React, { useState, useCallback } from 'react'
 import styled from 'styled-components/macro'
 import { darken } from 'polished'

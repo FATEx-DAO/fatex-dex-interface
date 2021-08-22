@@ -11,7 +11,7 @@ import { Text, TextProps } from 'rebass'
 import { Colors } from './styled'
 
 import useBlockchain from '../hooks/useBlockchain'
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 
 export * from './components'
 

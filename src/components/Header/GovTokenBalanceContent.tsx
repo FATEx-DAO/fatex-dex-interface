@@ -1,4 +1,4 @@
-import { TokenAmount, Blockchain } from '@venomswap/sdk'
+import { TokenAmount, Blockchain } from '@fatex-dao/sdk'
 import React from 'react'
 //import React, { useMemo } from 'react'
 import { X } from 'react-feather'
@@ -8,7 +8,7 @@ import { useGovTokenSupply } from '../../data/TotalSupply'
 import { useActiveWeb3React } from '../../hooks'
 //import { useMerkleDistributorContract } from '../../hooks/useContract'
 //import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
-import { useTotalLockedGovTokensEarned, useTotalUnlockedGovTokensEarned } from '../../state/stake/hooks'
+import { useTotalLockedGovTokensEarned, useTotalClaimedAndEarnedGovTokens } from '../../state/stake/hooks'
 import { useAggregateGovTokenBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { StyledInternalLink, TYPE, UniTokenAnimated } from '../../theme'
 //import { computeUniCirculation } from '../../utils/computeUniCirculation'
@@ -17,7 +17,7 @@ import { AutoColumn } from '../Column'
 import { RowBetween } from '../Row'
 import { Break, CardBGImage, CardNoise, CardSection, DataCard } from '../earn/styled'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import { GOVERNANCE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
+import { FATE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
 import { MouseoverTooltip } from '../Tooltip'
 import useBlockchain from '../../hooks/useBlockchain'
 
@@ -58,22 +58,22 @@ export default function GovTokenBalanceContent({ setShowUniBalanceModal }: { set
     account ?? undefined,
     govToken,
     'balanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const govTokenLockedBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     govToken,
     'lockOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const govTokenTotalBalance: TokenAmount | undefined = useTokenBalance(
     account ?? undefined,
     govToken,
     'totalBalanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
   const lockedGovTokensToClaim: TokenAmount | undefined = useTotalLockedGovTokensEarned()
-  const unlockedGovTokensToClaim: TokenAmount | undefined = useTotalUnlockedGovTokensEarned()
+  const unlockedGovTokensToClaim: TokenAmount | undefined = useTotalClaimedAndEarnedGovTokens()
   const totalSupply: TokenAmount | undefined = useGovTokenSupply()
   const totalUnlockedSupply: TokenAmount | undefined = useGovTokenSupply('unlockedSupply')
   const govTokenPrice = useBUSDPrice(govToken)

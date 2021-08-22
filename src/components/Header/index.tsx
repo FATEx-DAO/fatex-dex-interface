@@ -1,4 +1,4 @@
-import { ChainId /*, TokenAmount*/ } from '@venomswap/sdk'
+import { ChainId } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
 import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
@@ -14,7 +14,6 @@ import { useETHBalances /*, useAggregateGovTokenBalance*/ } from '../../state/wa
 //import { CountUp } from 'use-count-up'
 //import { TYPE } from '../../theme'
 
-import { YellowCard } from '../Card'
 import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
 
@@ -29,7 +28,7 @@ import Modal from '../Modal'
 import GovTokenBalanceContent from './GovTokenBalanceContent'
 //import usePrevious from '../../hooks/usePrevious'
 import { BASE_CURRENCY } from '../../connectors'
-import { PIT_SETTINGS } from '../../constants'
+import Card from '../Card'
 //import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 const HeaderFrame = styled.div`
@@ -162,9 +161,14 @@ const HideSmall = styled.span`
   `};
 `
 
-const NetworkCard = styled(YellowCard)`
+const NetworkCard = styled(Card)`
+  text-align: center;
+  color: ${({ theme }) => theme.text1};
+  background: ${({ theme }) => theme.bg3};
+  padding: 7px 18px 7px 18px;
   border-radius: 8px;
-  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 14px;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     margin: 0;
     margin-right: 0.5rem;
@@ -298,7 +302,8 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.HARMONY_TESTNET]: 'Harmony Testnet'
 }
 
 export default function Header() {
@@ -306,7 +311,6 @@ export default function Header() {
   const { t } = useTranslation()
 
   //const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -354,7 +358,7 @@ export default function Header() {
           <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
             Staking
           </StyledNavLink>
-          <StyledNavLink id={`xfatee-nav-link`} to={`${pitSettings?.path}`}>
+          <StyledNavLink id={`xfatee-nav-link`} to={`${'/xFATE'}`}>
             xFATE
           </StyledNavLink>
           <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>

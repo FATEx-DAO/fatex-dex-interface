@@ -1,5 +1,5 @@
 import { PRELOADED_PROPOSALS } from './../../constants/index'
-import { TokenAmount } from '@venomswap/sdk'
+import { ChainId, TokenAmount } from '@fatex-dao/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
@@ -8,8 +8,8 @@ import { ethers, utils } from 'ethers'
 import { calculateGasMargin } from '../../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
-import { useState, useEffect, useCallback } from 'react'
-import { abi as GOV_ABI } from '@uniswap/governance/build/GovernorAlpha.json'
+import { useCallback, useEffect, useState } from 'react'
+import { abi as GOV_ABI } from '../../constants/abis/governor-alpha.json'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 interface ProposalDetail {
@@ -37,8 +37,8 @@ const enumerateProposalState = (state: number) => {
 }
 
 // get count of all proposals made
-export function useProposalCount(): number | undefined {
-  const gov = useGovernanceContract()
+export function useProposalCount(chainId: ChainId): number | undefined {
+  const gov = useGovernanceContract(chainId)
   const res = useSingleCallResult(gov, 'proposalCount')
   if (res.result && !res.loading) {
     return parseInt(res.result[0])
@@ -51,9 +51,9 @@ export function useProposalCount(): number | undefined {
  * new proposal event.
  */
 export function useDataFromEventLogs() {
-  const { library } = useActiveWeb3React()
+  const { library, chainId } = useActiveWeb3React()
   const [formattedEvents, setFormattedEvents] = useState<any>()
-  const govContract = useGovernanceContract()
+  const govContract = useGovernanceContract(chainId ?? ChainId.MAINNET)
 
   // create filter for these specific events
   const filter = { ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }
@@ -95,9 +95,9 @@ export function useDataFromEventLogs() {
 }
 
 // get data for all past and active proposals
-export function useAllProposalData() {
-  const proposalCount = useProposalCount()
-  const govContract = useGovernanceContract()
+export function useAllProposalData(chainId: ChainId) {
+  const proposalCount = useProposalCount(chainId)
+  const govContract = useGovernanceContract(chainId)
 
   const proposalIndexes = []
   for (let i = 1; i <= (proposalCount ?? 0); i++) {
@@ -142,8 +142,8 @@ export function useAllProposalData() {
   }
 }
 
-export function useProposalData(id: string): ProposalData | undefined {
-  const allProposalData = useAllProposalData()
+export function useProposalData(id: string, chainId: ChainId): ProposalData | undefined {
+  const allProposalData = useAllProposalData(chainId)
   return allProposalData?.find(p => p.id === id)
 }
 
@@ -207,9 +207,9 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
 export function useVoteCallback(): {
   voteCallback: (proposalId: string | undefined, support: boolean) => undefined | Promise<string>
 } {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
 
-  const govContract = useGovernanceContract()
+  const govContract = useGovernanceContract(chainId ?? ChainId.MAINNET)
   const addTransaction = useTransactionAdder()
 
   const voteCallback = useCallback(

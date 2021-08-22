@@ -1,4 +1,4 @@
-import { CurrencyAmount, JSBI, Token, Trade } from '@venomswap/sdk'
+import { CurrencyAmount, JSBI, Token, Trade } from '@fatex-dao/sdk'
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -407,7 +407,9 @@ export default function Swap() {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ButtonLight onClick={toggleWalletModal}>Connect Wallet</ButtonLight>
+              <ButtonLight onClick={toggleWalletModal} style={{ width: '100%', padding: '18px', color: theme.text1 }}>
+                Connect Wallet
+              </ButtonLight>
             ) : showWrap ? (
               <ButtonPrimary disabled={Boolean(wrapInputError)} onClick={onWrap}>
                 {wrapInputError ??

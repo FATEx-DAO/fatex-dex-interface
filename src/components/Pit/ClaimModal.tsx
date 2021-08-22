@@ -5,17 +5,17 @@ import styled from 'styled-components'
 import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
-import { usePitBreederContract } from '../../hooks/useContract'
+import { useFeeTokenConverterToFateContract } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
-import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { toV2LiquidityToken } from '../../state/user/hooks'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
 import { PIT_POOLS } from '../../constants/pit'
@@ -45,7 +45,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
 
   const blockchain = useBlockchain()
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()
@@ -60,7 +60,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
     onDismiss()
   }
 
-  const pitBreeder = usePitBreederContract()
+  const feeTokenConverterToFate = useFeeTokenConverterToFateContract()
   const stakingPools = useMemo(() => (chainId ? PIT_POOLS[chainId] : []), [chainId])
 
   const liquidityTokenAddresses = useMemo(
@@ -74,7 +74,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   ).filter(address => address !== undefined)
 
   const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, PAIR_INTERFACE, 'balanceOf', [
-    pitBreeder?.address
+    feeTokenConverterToFate?.address
   ])
 
   const [claimFrom, claimTo] = useEligiblePitPools(stakingPools, balanceResults)
@@ -82,13 +82,13 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   const rewardsAreClaimable = claimFrom.length > 0 && claimTo.length > 0
 
   async function onClaimRewards() {
-    if (pitBreeder) {
+    if (feeTokenConverterToFate) {
       setAttempting(true)
 
       try {
-        const estimatedGas = await pitBreeder.estimateGas.convertMultiple(claimFrom, claimTo)
+        const estimatedGas = await feeTokenConverterToFate.estimateGas.convertMultiple(claimFrom, claimTo)
 
-        await pitBreeder
+        await feeTokenConverterToFate
           .convertMultiple(claimFrom, claimTo, {
             gasLimit: calculateGasMargin(estimatedGas)
           })

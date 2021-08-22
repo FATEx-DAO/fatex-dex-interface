@@ -7,16 +7,16 @@ import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { TokenAmount, Token } from '@venomswap/sdk'
+import { TokenAmount, Token } from '@fatex-dao/sdk'
 import { useDerivedUnstakeInfo } from '../../state/stake/hooks'
 //import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useActiveWeb3React } from '../../hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { usePitContract } from '../../hooks/useContract'
+import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import usePitToken from '../../hooks/usePitToken'
 
@@ -66,8 +66,8 @@ export default function ModifiedStakingModal({
   }, [onDismiss])
 
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
-  const pit = usePitContract()
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const pit = useXFateContract()
   const pitToken = usePitToken()
 
   async function onWithdraw() {

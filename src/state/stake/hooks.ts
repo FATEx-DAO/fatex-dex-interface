@@ -1,11 +1,11 @@
-import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@venomswap/sdk'
+import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
 import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
-import { useMultipleContractSingleData } from '../../state/multicall/hooks'
-import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
+import { useFateRewardController } from '../../hooks/useContract'
+import { useMultipleContractSingleData } from '../multicall/hooks'
+import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
@@ -22,6 +22,10 @@ const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 export const STAKING_GENESIS = 6502000
 
 export const REWARDS_DURATION_DAYS = 60
+
+/// rewards are locked 80% initially, meaning they receive 4 times the amount later on
+export const REWARD_MULTIPLIER = '4'
+
 export interface StakingInfo {
   // the pool id (pid) of the pool
   pid: number
@@ -55,10 +59,10 @@ export interface StakingInfo {
   stakedRatio: Fraction
   // the amount of reward token earned by the active account, or undefined if no account
   earnedAmount: TokenAmount
-  // the amount of reward token earned by the active account, or undefined if no account - which will be locked
-  lockedEarnedAmount: TokenAmount
-  // the amount of reward token earned by the active account, or undefined if no account - which will be unlocked
-  unlockedEarnedAmount: TokenAmount
+  // the amount of reward token claimed by the active account, or undefined if no account
+  rewardDebt: TokenAmount
+  // the addition of earnedAmount and rewardDebt
+  allClaimedRewards: TokenAmount
   // value of total staked amount, measured in weth
   valueOfTotalStakedAmountInWeth: TokenAmount | Fraction | undefined
   // value of total staked amount, measured in a USD stable coin (busd, usdt, usdc or a mix thereof)
@@ -72,7 +76,7 @@ export interface StakingInfo {
 // gets the staking info from the network for the active chain id
 export function useStakingInfo(active: boolean | undefined = undefined, pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
-  const masterBreederContract = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
   const masterInfo = useFilterStakingRewardsInfo(chainId, active, pairToFilterBy)
 
@@ -92,11 +96,11 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     [masterInfo, account]
   )
 
-  const pendingRewards = useSingleContractMultipleData(masterBreederContract, 'pendingReward', pidAccountMapping)
-  const userInfos = useSingleContractMultipleData(masterBreederContract, 'userInfo', pidAccountMapping)
+  const pendingRewards = useSingleContractMultipleData(fateRewardController, 'pendingFate', pidAccountMapping)
+  const userInfos = useSingleContractMultipleData(fateRewardController, 'userInfo', pidAccountMapping)
 
   const poolInfos = useSingleContractMultipleData(
-    masterBreederContract,
+    fateRewardController,
     'poolInfo',
     pids.map(pids => [pids])
   )
@@ -114,25 +118,22 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const lpTokenTotalSupplies = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'totalSupply')
   const lpTokenReserves = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'getReserves')
   const lpTokenBalances = useMultipleContractSingleData(lpTokenAddresses, PAIR_INTERFACE, 'balanceOf', [
-    masterBreederContract?.address
+    fateRewardController?.address
   ])
 
   // getNewRewardPerBlock uses pid = 0 to return the base rewards
   // poolIds have to be +1'd to map to their actual pid
-  // also include pid 0 to get the base emission rate
+  // also include pid 0 to get the base reward rate
   let adjustedPids = pids.map(pid => pid + 1)
   adjustedPids = [...[0], ...adjustedPids]
 
   const poolRewardsPerBlock = useSingleContractMultipleData(
-    masterBreederContract,
+    fateRewardController,
     'getNewRewardPerBlock',
     adjustedPids.map(adjustedPids => [adjustedPids])
   )
 
-  //const poolLength = useSingleCallResult(masterBreederContract, 'poolLength')
-  const startBlock = useSingleCallResult(masterBreederContract, 'START_BLOCK')
-  const lockRewardsRatio = useSingleCallResult(masterBreederContract, 'PERCENT_LOCK_BONUS_REWARD')
-  //const rewardPerBlock = useSingleCallResult(masterBreederContract, 'REWARD_PER_BLOCK')
+  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
 
   return useMemo(() => {
     if (!chainId || !weth || !govToken) return []
@@ -160,7 +161,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           userInfo,
           baseRewardsPerBlock,
           specificPoolRewardsPerBlock,
-          lockRewardsRatio,
           lpTokenTotalSupply,
           lpTokenReserve,
           lpTokenBalance,
@@ -175,18 +175,10 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
 
         const poolShare = new Fraction(poolBlockRewards.raw, baseBlockRewards.raw)
 
-        const lockedRewardsPercentageUnits = Number(lockRewardsRatio.result?.[0] ?? 0)
-        const unlockedRewardsPercentageUnits = 100 - lockedRewardsPercentageUnits
+        const lockedRewardsPercentageUnits = 0
+        const unlockedRewardsPercentageUnits = 100
 
         const calculatedTotalPendingRewards = JSBI.BigInt(pendingReward?.result?.[0] ?? 0)
-        const calculatedLockedPendingRewards = JSBI.divide(
-          JSBI.multiply(calculatedTotalPendingRewards, JSBI.BigInt(lockedRewardsPercentageUnits)),
-          JSBI.BigInt(100)
-        )
-        const calculatedUnlockedPendingRewards = JSBI.divide(
-          JSBI.multiply(calculatedTotalPendingRewards, JSBI.BigInt(unlockedRewardsPercentageUnits)),
-          JSBI.BigInt(100)
-        )
 
         const dummyPair = new Pair(new TokenAmount(tokens[0], '0'), new TokenAmount(tokens[1], '0'))
         const stakedAmount = new TokenAmount(dummyPair.liquidityToken, JSBI.BigInt(userInfo?.result?.[0] ?? 0))
@@ -201,14 +193,13 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.BigInt(lpTokenTotalSupply.result?.[0] ?? 0)
         )
         const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
-        const totalPendingLockedRewardAmount = new TokenAmount(govToken, calculatedLockedPendingRewards)
-        const totalPendingUnlockedRewardAmount = new TokenAmount(govToken, calculatedUnlockedPendingRewards)
+        const totalRewardDebt = new TokenAmount(govToken, JSBI.BigInt(userInfo?.result?.[1] ?? 0))
         const startsAtBlock = startBlock.result?.[0] ?? 0
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result
         const allocPoint = JSBI.BigInt(poolInfoResult && poolInfoResult[1])
-        const active = poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0) ? true : false
+        const active = !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0))
 
         const baseToken = determineBaseToken(tokensWithPrices, tokens)
 
@@ -246,8 +237,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           stakedAmount: stakedAmount,
           stakedRatio: stakedRatio,
           earnedAmount: totalPendingRewardAmount,
-          lockedEarnedAmount: totalPendingLockedRewardAmount,
-          unlockedEarnedAmount: totalPendingUnlockedRewardAmount,
+          rewardDebt: totalRewardDebt,
+          allClaimedRewards: totalPendingRewardAmount.add(totalRewardDebt),
           valueOfTotalStakedAmountInWeth: totalStakedAmountWETH,
           valueOfTotalStakedAmountInUsd: totalStakedAmountBUSD,
           apr: apr,
@@ -274,7 +265,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     lpTokenBalances,
     blocksPerYear,
     startBlock,
-    lockRewardsRatio,
     poolRewardsPerBlock
   ])
 }
@@ -302,14 +292,20 @@ export function useTotalLockedGovTokensEarned(): TokenAmount | undefined {
     if (!govToken) return undefined
     return (
       stakingInfos?.reduce(
-        (accumulator, stakingInfo) => accumulator.add(stakingInfo.lockedEarnedAmount),
+        (accumulator, stakingInfo) =>
+          accumulator.add(
+            new TokenAmount(
+              govToken,
+              stakingInfo.earnedAmount.add(stakingInfo.rewardDebt).multiply(REWARD_MULTIPLIER).quotient
+            )
+          ),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )
   }, [stakingInfos, govToken])
 }
 
-export function useTotalUnlockedGovTokensEarned(): TokenAmount | undefined {
+export function useTotalClaimedAndEarnedGovTokens(): TokenAmount | undefined {
   const govToken = useGovernanceToken()
   const stakingInfos = useStakingInfo(true)
 
@@ -317,7 +313,7 @@ export function useTotalUnlockedGovTokensEarned(): TokenAmount | undefined {
     if (!govToken) return undefined
     return (
       stakingInfos?.reduce(
-        (accumulator, stakingInfo) => accumulator.add(stakingInfo.unlockedEarnedAmount),
+        (accumulator, stakingInfo) => accumulator.add(stakingInfo.earnedAmount.add(stakingInfo.rewardDebt)),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )

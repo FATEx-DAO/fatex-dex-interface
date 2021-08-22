@@ -1,5 +1,5 @@
 import { ZERO_PERCENT, ONE_HUNDRED_PERCENT } from './../constants/index'
-import { Trade, Percent, currencyEquals } from '@venomswap/sdk'
+import { Trade, Percent, currencyEquals } from '@fatex-dao/sdk'
 
 // returns whether tradeB is better than tradeA by at least a threshold percentage amount
 export function isTradeBetter(

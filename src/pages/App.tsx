@@ -1,7 +1,6 @@
 import React, { Suspense, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import styled from 'styled-components'
-import GoogleAnalyticsReporter from '../components/analytics/GoogleAnalyticsReporter'
 import AddressClaimModal from '../components/claim/AddressClaimModal'
 import Header from '../components/Header'
 import Polling from '../components/Header/Polling'
@@ -20,7 +19,7 @@ import {
 import Earn from './Earn'
 import EarnArchived from './Earn/Archived'
 import Manage from './Earn/Manage'
-import Pit from './Pit'
+import Pit from './XFate'
 import Migrate from './Migrate'
 import MigrateV1 from './MigrateV1'
 import MigrateV1Exchange from './MigrateV1/MigrateV1Exchange'
@@ -33,11 +32,9 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
-import { PIT_SETTINGS } from '../constants'
-import { useActiveWeb3React } from '../hooks'
 import usePlatformName from '../hooks/usePlatformName'
 
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 import useBlockchain from '../hooks/useBlockchain'
 
 const AppWrapper = styled.div`
@@ -83,9 +80,7 @@ function TopLevelModals() {
 }
 
 export default function App() {
-  const { chainId } = useActiveWeb3React()
   const blockchain = useBlockchain()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
   const platformName = usePlatformName()
 
   useEffect(() => {
@@ -94,7 +89,6 @@ export default function App() {
 
   return (
     <Suspense fallback={null}>
-      <Route component={GoogleAnalyticsReporter} />
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
         <HeaderWrapper>
@@ -115,7 +109,7 @@ export default function App() {
               <Route exact strict path="/staking" component={Earn} />
               <Route exact strict path="/migrate" component={Migrate} />
               <Route exact strict path="/staking/archived" component={EarnArchived} />
-              <Route exact strict path={pitSettings?.path} component={Pit} />
+              <Route exact strict path={'/xFATE'} component={Pit} />
               {blockchain === Blockchain.ETHEREUM && <Route exact strict path="/vote" component={Vote} />}
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
               <Route exact path="/add" component={AddLiquidity} />

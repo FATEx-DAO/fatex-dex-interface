@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, Token, TokenAmount, WETH, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { ChainId, Currency, CurrencyAmount, Token, TokenAmount, WETH, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 
 import baseCurrencies from '../utils/baseCurrencies'
 

@@ -1,4 +1,4 @@
-import { Token, TokenAmount, Pair, JSBI } from '@venomswap/sdk'
+import { Token, TokenAmount, Pair, JSBI } from '@fatex-dao/sdk'
 
 export default function calculateTotalStakedAmount(
   baseToken: Token,
@@ -6,6 +6,10 @@ export default function calculateTotalStakedAmount(
   totalStakedAmount: TokenAmount,
   totalLpTokenSupply: TokenAmount
 ): TokenAmount {
+  if (totalLpTokenSupply.equalTo('0')) {
+    return new TokenAmount(baseToken, '0')
+  }
+
   // take the total amount of LP tokens staked, multiply by ETH value of all LP tokens, divide by all LP tokens
   return new TokenAmount(
     baseToken,

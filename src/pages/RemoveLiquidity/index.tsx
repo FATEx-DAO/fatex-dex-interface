@@ -1,7 +1,7 @@
 import { splitSignature } from '@ethersproject/bytes'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Blockchain, Currency, currencyEquals, Percent, WETH, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { Blockchain, Currency, currencyEquals, Percent, WETH, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 import React, { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -132,7 +132,7 @@ export default function RemoveLiquidity({
       ]
 
       const domain = {
-        name: 'Venom LP Token',
+        name: 'FATExDAO LP Token',
         version: '1',
         chainId: chainId,
         verifyingContract: pair.liquidityToken.address

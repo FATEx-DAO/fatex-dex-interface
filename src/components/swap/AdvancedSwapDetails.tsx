@@ -1,4 +1,4 @@
-import { Blockchain, Trade, TradeType } from '@venomswap/sdk'
+import { Blockchain, Trade, TradeType } from '@fatex-dao/sdk'
 import React, { useContext } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import { Field } from '../../state/swap/actions'
@@ -13,7 +13,7 @@ import SwapRoute from './SwapRoute'
 import useBlockchain from '../../hooks/useBlockchain'
 import getBlockchainAdjustedCurrency from '../../utils/getBlockchainAdjustedCurrency'
 import { useActiveWeb3React } from '../../hooks'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 
 const InfoLink = styled(ExternalLink)`
   width: 100%;
@@ -27,7 +27,7 @@ const InfoLink = styled(ExternalLink)`
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const { chainId } = useActiveWeb3React()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const blockchain = useBlockchain()
 
   const theme = useContext(ThemeContext)

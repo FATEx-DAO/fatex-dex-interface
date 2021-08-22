@@ -1,4 +1,4 @@
-import { Currency, Token, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { Currency, Token, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 import { BASE_CURRENCY } from '../connectors'
 
 export function currencyId(currency: Currency): string {

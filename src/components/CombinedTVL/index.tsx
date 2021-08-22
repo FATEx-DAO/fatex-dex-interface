@@ -3,12 +3,12 @@ import { useStakingInfo } from '../../state/stake/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
 import { CustomMouseoverTooltip } from '../Tooltip/custom'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 
 export default function CombinedTVL({}) {
   const { chainId } = useActiveWeb3React()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const isActive = true
   const filteredStakingInfos = useFilterStakingInfos(useStakingInfo(isActive), isActive)
   const TVLs = useTotalCombinedTVL(filteredStakingInfos)

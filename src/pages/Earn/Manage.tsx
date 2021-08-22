@@ -3,7 +3,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-import { JSBI } from '@venomswap/sdk'
+import { JSBI } from '@fatex-dao/sdk'
 import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
@@ -178,7 +178,7 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Total Deposits</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
+              {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd?.greaterThan('0')
                 ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(0, { groupSeparator: ',' })}`
                 : '-'}
             </TYPE.body>
@@ -186,7 +186,7 @@ export default function Manage({
         </PoolData>
         <PoolData>
           <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>Emission Rate</TYPE.body>
+            <TYPE.body style={{ margin: 0 }}>Reward Rate</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo
                 ? stakingInfo.active
@@ -206,11 +206,11 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get FATE-LP Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>Step 1. Get FATEx-LP Liquidity tokens</TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`FATE-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  {`FATEx-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -265,7 +265,7 @@ export default function Manage({
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
                   <TYPE.white>
-                    FATE-LP {currencyA?.symbol}-{currencyB?.symbol}
+                    FATEx-LP {currencyA?.symbol}-{currencyB?.symbol}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -315,12 +315,21 @@ export default function Manage({
               </span>
               When you deposit or withdraw the contract will automatically claim {govToken?.symbol} on your behalf.
               <br />
+              <br />
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above is your total rewards -
+              The unclaimed {govToken?.symbol} amount listed above represents 20% of your rewards.
               <br />
-              when claiming 95% will be locked and 5% will be immediately accessible.
+              The other 80% can be claimed later, once this 13 week epoch period is over. Learn more{' '}
+              <a
+                href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
+                target={'_blank'}
+                rel="noreferrer"
+              >
+                here
+              </a>
+              .
             </TYPE.main>
           )}
         </>
@@ -329,7 +338,7 @@ export default function Manage({
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && stakingInfo.active && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit VENOM-LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATEx-LP Tokens'}
               </ButtonPrimary>
             )}
 
@@ -359,7 +368,7 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>You have {userLiquidityUnstaked.toSignificant(6)} FATE-LP tokens available to deposit</TYPE.main>
+          <TYPE.main>You have {userLiquidityUnstaked.toSignificant(6)} FATEx-LP tokens available to deposit</TYPE.main>
         )}
       </PositionInfo>
     </PageWrapper>

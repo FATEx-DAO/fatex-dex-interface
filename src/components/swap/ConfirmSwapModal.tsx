@@ -1,4 +1,4 @@
-import { currencyEquals, Trade } from '@venomswap/sdk'
+import { currencyEquals, Trade } from '@fatex-dao/sdk'
 import React, { useCallback, useMemo } from 'react'
 import TransactionConfirmationModal, {
   ConfirmationModalContent,

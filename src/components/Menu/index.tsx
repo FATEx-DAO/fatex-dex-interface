@@ -12,7 +12,7 @@ import { ButtonPrimary } from '../Button'
 
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
-import { Blockchain } from '@venomswap/sdk'
+import { Blockchain, ChainId } from '@fatex-dao/sdk'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -91,10 +91,10 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const CODE_LINK = 'https://github.com/VenomProtocol'
+const CODE_LINK = 'https://github.com/FATEx-DAO'
 
 export default function Menu() {
-  const { account } = useActiveWeb3React()
+  const { account, chainId } = useActiveWeb3React()
   const blockchain = useBlockchain()
   const govToken = useGovernanceToken()
 
@@ -113,15 +113,17 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          <MenuItem id="link" href="https://info.viper.exchange">
-            <PieChart size={14} />
-            Analytics
-          </MenuItem>
-          <MenuItem id="link" href="https://discord.viper.exchange">
+          {chainId == ChainId.HARMONY_MAINNET && (
+            <MenuItem id="link" href="https://info.fatex.io">
+              <PieChart size={14} />
+              Analytics
+            </MenuItem>
+          )}
+          <MenuItem id="link" href="https://discord.com/invite/22CXCEPB3E">
             <MessageSquare size={14} />
             Discord
           </MenuItem>
-          <MenuItem id="link" href="https://t.me/VenomDAO">
+          <MenuItem id="link" href="https://t.me/FATExDAO">
             <Send size={14} />
             Telegram
           </MenuItem>

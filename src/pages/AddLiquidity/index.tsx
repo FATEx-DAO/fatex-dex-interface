@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionResponse } from '@ethersproject/providers'
-import { Currency, currencyEquals, TokenAmount, WETH, DEFAULT_CURRENCIES } from '@venomswap/sdk'
+import { Currency, currencyEquals, TokenAmount, WETH, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
 import React, { useCallback, useContext, useState } from 'react'
 import { Plus } from 'react-feather'
 import ReactGA from 'react-ga'
@@ -351,7 +351,7 @@ export default function AddLiquidity({
                         The ratio of tokens you add will set the price of this pool.
                       </TYPE.link>
                       <TYPE.link fontWeight={400} color={'text1'}>
-                        Once you are happy with the rate click supply to review.
+                        Once you are done setting the rate, click supply to review.
                       </TYPE.link>
                     </AutoColumn>
                   </BlueCard>

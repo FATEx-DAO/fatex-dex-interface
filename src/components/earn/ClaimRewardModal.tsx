@@ -6,7 +6,7 @@ import { RowBetween } from '../Row'
 import { TYPE, CloseIcon } from '../../theme'
 import { ButtonError } from '../Button'
 import { StakingInfo } from '../../state/stake/hooks'
-import { useMasterBreederContract } from '../../hooks/useContract'
+import { useFateRewardController } from '../../hooks/useContract'
 import { SubmittedView, LoadingView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -43,15 +43,15 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
     onDismiss()
   }
 
-  const masterBreeder = useMasterBreederContract()
+  const fateRewardController = useFateRewardController()
 
   async function onClaimReward() {
-    if (masterBreeder && stakingInfo?.stakedAmount) {
+    if (fateRewardController && stakingInfo?.stakedAmount) {
       setAttempting(true)
 
-      const estimatedGas = await masterBreeder.estimateGas.claimReward(stakingInfo.pid)
+      const estimatedGas = await fateRewardController.estimateGas.claimReward(stakingInfo.pid)
 
-      await masterBreeder
+      await fateRewardController
         .claimReward(stakingInfo.pid, {
           gasLimit: calculateGasMargin(estimatedGas)
         })

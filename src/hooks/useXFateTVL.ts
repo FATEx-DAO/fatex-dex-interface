@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { TokenAmount, Fraction } from '@venomswap/sdk'
+import { TokenAmount, Fraction } from '@fatex-dao/sdk'
 import { useTokenBalance } from '../state/wallet/hooks'
 import useBUSDPrice from './useBUSDPrice'
 import usePitToken from './usePitToken'
-import { GOVERNANCE_TOKEN_INTERFACE } from '../constants/abis/governanceToken'
+import { FATE_TOKEN_INTERFACE } from '../constants/abis/governanceToken'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 
-export default function usePitTVL(): Fraction | undefined {
+export default function useXFateTVL(): Fraction | undefined {
   const govToken = useGovernanceToken()
   const govTokenBusdPrice = useBUSDPrice(govToken)
   const pit = usePitToken()
@@ -14,7 +14,7 @@ export default function usePitTVL(): Fraction | undefined {
     pit && pit.address,
     govToken,
     'balanceOf',
-    GOVERNANCE_TOKEN_INTERFACE
+    FATE_TOKEN_INTERFACE
   )
 
   return useMemo(() => {

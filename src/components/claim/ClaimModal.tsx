@@ -1,4 +1,4 @@
-import { JSBI, TokenAmount } from '@venomswap/sdk'
+import { JSBI, TokenAmount } from '@fatex-dao/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useEffect, useState } from 'react'
 import { Text } from 'rebass'
@@ -28,7 +28,7 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);*/
   background: ${({ theme }) => theme.bg3};
 `
@@ -82,7 +82,7 @@ export default function ClaimModal() {
       })
   }
 
-  // once confirmed txn is found, if modal is closed open, mark as not attempting regradless
+  // once confirmed txn is found, if modal is closed open, mark as not attempting regardless
   useEffect(() => {
     if (claimConfirmed && claimSubmitted && attempting) {
       setAttempting(false)
@@ -148,9 +148,10 @@ export default function ClaimModal() {
             </CardSection>
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
+            {/*TODO add this when 8/10 vesting is finished in 3 months*/}
             <TYPE.subHeader fontWeight={500}>
-              As a member of the Venomswap community you may claim {govToken?.symbol} to be used for voting and
-              governance. <br /> <br />
+              As a member of the FATEx community you may claim {govToken?.symbol} to be used for voting and governance.{' '}
+              <br /> <br />
               <ExternalLink href="https://uniswap.org/blog/uni">Read more about {govToken?.symbol}</ExternalLink>
             </TYPE.subHeader>
             <ButtonPrimary

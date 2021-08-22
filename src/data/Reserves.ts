@@ -1,6 +1,6 @@
-import { TokenAmount, Pair, Currency } from '@venomswap/sdk'
+import { TokenAmount, Pair, Currency } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
-import { abi as IUniswapV2PairABI } from '@venomswap/core/build/IUniswapV2Pair.json'
+import { abi as IUniswapV2PairABI } from '../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import { useActiveWeb3React } from '../hooks'
 

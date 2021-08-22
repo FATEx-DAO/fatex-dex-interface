@@ -1,4 +1,4 @@
-import { Token } from '@venomswap/sdk'
+import { Token } from '@fatex-dao/sdk'
 import React, { useCallback } from 'react'
 import Modal from '../Modal'
 import { ImportToken } from 'components/SearchModal/ImportToken'

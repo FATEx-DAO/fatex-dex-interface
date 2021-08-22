@@ -1,4 +1,4 @@
-import { ChainId, WETH, Token, Blockchain } from '@venomswap/sdk'
+import { ChainId, WETH, Token, Blockchain } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import useGovernanceToken from './useGovernanceToken'
 import useTokenWETHPrice from './useTokenWETHPrice'

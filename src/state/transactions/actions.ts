@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
-import { ChainId } from '@venomswap/sdk'
+import { ChainId } from '@fatex-dao/sdk'
 
 export interface SerializableTransactionReceipt {
   to: string

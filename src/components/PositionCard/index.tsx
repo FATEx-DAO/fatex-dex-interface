@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, TokenAmount } from '@venomswap/sdk'
+import { JSBI, Pair, Percent, TokenAmount } from '@fatex-dao/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -297,7 +297,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               <RowBetween marginTop="10px">
                 <ButtonPrimary
                   padding="8px"
-                  borderRadius="8px"
                   as={Link}
                   to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}
                   width="48%"
@@ -306,7 +305,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 </ButtonPrimary>
                 <ButtonPrimary
                   padding="8px"
-                  borderRadius="8px"
                   as={Link}
                   width="48%"
                   to={`/remove/${currencyId(currency0)}/${currencyId(currency1)}`}
@@ -318,7 +316,6 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             {stakedBalance && JSBI.greaterThan(stakedBalance.raw, BIG_INT_ZERO) && (
               <ButtonPrimary
                 padding="8px"
-                borderRadius="8px"
                 as={Link}
                 to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"

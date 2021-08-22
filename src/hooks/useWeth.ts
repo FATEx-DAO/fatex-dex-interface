@@ -1,4 +1,4 @@
-import { WETH, Token } from '@venomswap/sdk'
+import { WETH, Token } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from './index'
 
 export default function useWeth(): Token | undefined {

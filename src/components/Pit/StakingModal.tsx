@@ -8,7 +8,7 @@ import { TYPE, CloseIcon } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Token } from '@venomswap/sdk'
+import { TokenAmount, Token } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
@@ -17,9 +17,9 @@ import { useDerivedStakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { usePitContract } from '../../hooks/useContract'
+import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
-import { PIT_SETTINGS } from '../../constants'
+import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
@@ -51,7 +51,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingToken, userLiquidityUnstaked)
 
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? PIT_SETTINGS[chainId] : undefined
+  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // state for pending and submitted txn views
   const addTransaction = useTransactionAdder()
@@ -65,7 +65,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
     onDismiss()
   }, [onDismiss])
 
-  const pit = usePitContract()
+  const pit = useXFateContract()
 
   // approval data for stake
   const deadline = useTransactionDeadline()
