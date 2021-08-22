@@ -1,6 +1,7 @@
 import { ChainId, Currency, ETHER, HARMONY, BINANCE_COIN, WETH } from '@fatex-dao/sdk'
-import { NETWORK_CHAIN_ID } from '../connectors'
-// import getTokenWithDefault from './getTokenWithDefault'
+import { GOVERNANCE_TOKEN } from '../constants/governance-token'
+
+const NETWORK_CHAIN_ID: number = parseInt(process.env.REACT_APP_CHAIN_ID ?? '1')
 
 export default function baseCurrencies(chainId: ChainId | undefined): Currency[] {
   const currencies: Currency[] = []
@@ -15,8 +16,8 @@ export default function baseCurrencies(chainId: ChainId | undefined): Currency[]
       case 1666600000:
       case 1666700000:
         currencies.push(HARMONY)
-        // currencies.push(getTokenWithDefault(chainId, 'FATE'))
         currencies.push(WETH[chainId])
+        currencies.push(GOVERNANCE_TOKEN[chainId])
         break
       default:
         currencies.push(ETHER)
