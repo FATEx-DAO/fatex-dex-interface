@@ -1,18 +1,17 @@
 import React, { useContext, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { Pair } from '@venomswap/sdk'
+import { PairType } from '@fatex-dao/sdk'
 
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
-import { ExternalLink, TYPE, HideSmall } from '../../theme'
+import { HideSmall, TYPE } from '../../theme'
 import Card from '../../components/Card'
 import { RowBetween } from '../../components/Row'
-//import { ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import { AutoColumn } from '../../components/Column'
 
 import { useActiveWeb3React } from '../../hooks'
 import { usePairs } from '../../data/Reserves'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { Dots } from '../../components/swap/styleds'
 import Web3Status from '../../components/Web3Status'
 
@@ -55,7 +54,7 @@ const WalletConnectWrapper = styled.div`
 const ViperswapLPPair = styled.div<{ selected: boolean }>`
   display: block;
   width: 100%;
-  border 3px solid ${({ theme, selected }) => (selected ? theme.text1 : theme.text3)};
+  border: 3px solid ${({ theme, selected }) => (selected ? theme.text1 : theme.text3)};
   border-radius: 10px;
   padding: 20px 25px;
   margin-bottom: 10px;
@@ -112,7 +111,7 @@ const MigrateButton = styled.div<{ disabled?: boolean }>`
   text-align: center;
   display: block;
   width: 100%;
-  border 3px solid ${({ theme, disabled }) => (disabled ? theme.text3 : theme.text1)};
+  border: 3px solid ${({ theme, disabled }) => (disabled ? theme.text3 : theme.text1)};
   border-radius: 10px;
   padding: 20px 25px;
   margin-bottom: 10px;
@@ -122,26 +121,45 @@ const MigrateButton = styled.div<{ disabled?: boolean }>`
     background-color: ${({ theme, disabled }) => (disabled ? 'none' : theme.text1)};
     ${({ theme, disabled }) => !disabled && `color: ${theme.text6};`}
   }
-  
 `
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
-  const [selectedLPPair, setSelectedLPPair] = useState<number | null>(null)
+  const [selectedPairIndex, setSelectedPairIndex] = useState<number | null>(null)
   const selectedLPUnlocked = useState(false)[0]
   const [unlocking, setUnlocking] = useState(false)
   const [migrating, setMigrating] = useState(false)
 
   const trackedTokenPairs = useTrackedTokenPairs()
+
+  const sushiPairs = usePairs(trackedTokenPairs, PairType.SUSHI)
+  const sushiLpTokens = useMemo(() => sushiPairs.map(([, pair]) => pair?.liquidityToken), [sushiPairs])
+  const [sushiBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    sushiLpTokens
+  )
+
+  const viperPairs = usePairs(trackedTokenPairs, PairType.VIPER)
+  const viperLpTokens = useMemo(() => viperPairs.map(([, pair]) => pair?.liquidityToken), [viperPairs])
+  const [viperBalances] = useTokenBalancesWithLoadingIndicator(
+    account ?? undefined,
+    viperLpTokens
+  )
+
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map(tokens => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
     [trackedTokenPairs]
   )
-  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(tpwlt => tpwlt.liquidityToken), [
+  const liquidityTokens = useMemo(() => tokenPairsWithLiquidityTokens.map(value => value.liquidityToken), [
     tokenPairsWithLiquidityTokens
   ])
+
+  // const selectedLiquidityToken = useMemo(() => {
+  //   return selectedPairIndex ? liquidityTokens[selectedPairIndex] : undefined
+  // }, [selectedPairIndex, liquidityTokens])
+
   const [v2PairsBalances, fetchingV2PairBalances] = useTokenBalancesWithLoadingIndicator(
     account ?? undefined,
     liquidityTokens
@@ -155,17 +173,11 @@ export default function Pool() {
     [tokenPairsWithLiquidityTokens, v2PairsBalances]
   )
 
-  const v2Pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
+  const pairs = usePairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
   const v2IsLoading =
-    fetchingV2PairBalances || v2Pairs?.length < liquidityTokensWithBalances.length || v2Pairs?.some(V2Pair => !V2Pair)
+    fetchingV2PairBalances || pairs?.length < liquidityTokensWithBalances.length || pairs?.some(V2Pair => !V2Pair)
 
-  const allV2PairsWithLiquidity = v2Pairs.map(([, pair]) => pair).filter((v2Pair): v2Pair is Pair => Boolean(v2Pair))
-
-  if (allV2PairsWithLiquidity) {
-    console.log('V2PAIRS LOADED') //TODO -remove
-  }
-
-  const userViperswapLPTokens = [
+  const viperSwapPairs = [
     {
       primary: 'ONE',
       secondary: 'USDC',
@@ -201,16 +213,9 @@ export default function Pool() {
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Migrate your Viperswap LP tokenss to FATExDEX LP tokens with just a couple of clicks.`}
+                  {`Migrate your Viperswap or Sushi LP tokens to FATExDEX LP tokens with just a couple of clicks.`}
                 </TYPE.white>
               </RowBetween>
-              <ExternalLink
-                style={{ color: 'white', textDecoration: 'underline' }}
-                target="_blank"
-                href="https://uniswap.org/docs/v2/core-concepts/pools/"
-              >
-                <TYPE.white fontSize={14}>Read more about migrating liquidity</TYPE.white>
-              </ExternalLink>
             </AutoColumn>
           </CardSection>
           <CardBGImage />
@@ -241,13 +246,13 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : /*allV2PairsWithLiquidity?.length > 0*/ userViperswapLPTokens.length > 0 ? (
+            ) : /*allV2PairsWithLiquidity?.length > 0*/ viperSwapPairs.length > 0 ? (
               <LPPairsWrapper>
-                {userViperswapLPTokens.map((pair, index) => (
+                {viperSwapPairs.map((pair, index) => (
                   <ViperswapLPPair
                     key={index}
-                    selected={selectedLPPair === index}
-                    onClick={() => setSelectedLPPair(index)}
+                    selected={selectedPairIndex === index}
+                    onClick={() => setSelectedPairIndex(index)}
                   >
                     <PairIcons>()()</PairIcons>
                     <PairName>
@@ -264,13 +269,13 @@ export default function Pool() {
                 </TYPE.body>
               </EmptyProposals>
             )}
-            {userViperswapLPTokens.length > 0 && selectedLPPair !== null && (
+            {viperSwapPairs.length > 0 && selectedPairIndex !== null && (
               <SubmitMigration>
                 <MigrationSummary>
                   <MigrationLPName>
-                    {userViperswapLPTokens[selectedLPPair].primary}-{userViperswapLPTokens[selectedLPPair].secondary}
+                    {viperSwapPairs[selectedPairIndex].primary}-{viperSwapPairs[selectedPairIndex].secondary}
                   </MigrationLPName>
-                  <MigrationAmount>{userViperswapLPTokens[selectedLPPair].amount}</MigrationAmount>
+                  <MigrationAmount>{viperSwapPairs[selectedPairIndex].amount}</MigrationAmount>
                 </MigrationSummary>
                 <MigrateButtonWrapper>
                   {selectedLPUnlocked ? (
@@ -278,16 +283,15 @@ export default function Pool() {
                       <MigrateButton disabled={true}>Migrating...</MigrateButton>
                     ) : (
                       <MigrateButton onClick={() => onMigrate()}>
-                        Migrate {userViperswapLPTokens[selectedLPPair].primary}-
-                        {userViperswapLPTokens[selectedLPPair].secondary}
+                        Migrate {viperSwapPairs[selectedPairIndex].primary}-
+                        {viperSwapPairs[selectedPairIndex].secondary}
                       </MigrateButton>
                     )
                   ) : unlocking ? (
                     <MigrateButton disabled={true}>Unlocking...</MigrateButton>
                   ) : (
                     <MigrateButton onClick={() => onUnlock()}>
-                      Unlock {userViperswapLPTokens[selectedLPPair].primary}-
-                      {userViperswapLPTokens[selectedLPPair].secondary}
+                      Unlock {viperSwapPairs[selectedPairIndex].primary}-{viperSwapPairs[selectedPairIndex].secondary}
                     </MigrateButton>
                   )}
                 </MigrateButtonWrapper>
