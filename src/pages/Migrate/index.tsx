@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react'
+import React, { useContext, useMemo, useState, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
 import { PairType } from '@fatex-dao/sdk'
 
@@ -14,6 +14,7 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import { Dots } from '../../components/swap/styleds'
 import Web3Status from '../../components/Web3Status'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 500px;
@@ -123,14 +124,39 @@ const MigrateButton = styled.div<{ disabled?: boolean }>`
   }
 `
 
+const SwapTabs = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+`
+
+const SwapTab = styled.div<{ selected: boolean }>`
+  width: 150px;
+  padding: 15px 25px;
+  border 3px solid ${({ theme, selected }) => (selected ? theme.text1 : theme.text3)};
+  background: none;
+  color: ${({ theme }) => theme.text1};
+  cursor: pointer;
+  display: inline-block;
+  text-align: center;
+  border-radius: 8px;
+
+  :hover {
+    border-color: ${({ theme }) => theme.text1};
+  }
+`
+
+const swapNames = ['Viperswap', 'Sushiswap']
+
 export default function Pool() {
   const theme = useContext(ThemeContext)
   const { account } = useActiveWeb3React()
 
   const [selectedPairIndex, setSelectedPairIndex] = useState<number | null>(null)
-  const selectedLPUnlocked = useState(false)[0]
+  const [selectedLPUnlocked, setSelectedLPUnlocked] = useState(false)
   const [unlocking, setUnlocking] = useState(false)
   const [migrating, setMigrating] = useState(false)
+  const [selectedSwap, setSelectedSwap] = useState(0)
 
   const trackedTokenPairs = useTrackedTokenPairs()
 
@@ -190,13 +216,30 @@ export default function Pool() {
     }
   ]
 
+  const userSushiswapLPTokens = [
+    {
+      primary: 'ONE',
+      secondary: 'USDC',
+      amount: '111.11'
+    },
+    {
+      primary: 'ONE',
+      secondary: 'DAI',
+      amount: '222.22'
+    }
+  ]
+
+  useEffect(() => {
+    setSelectedLPUnlocked(false) //TODO - Corey: When an LP Pair is selected, check allowance and appropriately set this
+  }, [selectedLPPair])
+
   const onUnlock = () => {
-    setUnlocking(true)
+    setUnlocking(true) //TODO - Corey: Begin unlock transaction, when completed use callback to set state to reflect unlock
     console.log('unlock')
   }
 
   const onMigrate = () => {
-    setMigrating(true)
+    setMigrating(true) //TODO - Corey: Begin migrate transaction, when completed use callback to set state to reflect migrate
     console.log('migrate')
   }
 
@@ -209,7 +252,7 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Migrate Viperswap Liquidity</TYPE.white>
+                <TYPE.white fontWeight={600}>Migrate Liquidity</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
@@ -226,7 +269,22 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your Venomswap Liquidity
+                  Liquidity Source
+                </TYPE.mediumHeader>
+              </HideSmall>
+            </TitleRow>
+            <SwapTabs>
+              <SwapTab onClick={() => setSelectedSwap(0)} selected={selectedSwap === 0}>
+                {swapNames[0]}
+              </SwapTab>
+              <SwapTab onClick={() => setSelectedSwap(1)} selected={selectedSwap === 1}>
+                {swapNames[1]}
+              </SwapTab>
+            </SwapTabs>
+            <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
+              <HideSmall>
+                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                  Your {swapNames[selectedSwap]} Liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
             </TitleRow>
@@ -254,7 +312,10 @@ export default function Pool() {
                     selected={selectedPairIndex === index}
                     onClick={() => setSelectedPairIndex(index)}
                   >
-                    <PairIcons>()()</PairIcons>
+                    <PairIcons>
+                      {/* TODO - Corey: when you have the currency objects, use them here for the icons */}
+                      <DoubleCurrencyLogo currency0={undefined} currency1={undefined} size={24} />
+                    </PairIcons>
                     <PairName>
                       {pair.primary}-{pair.secondary}
                     </PairName>
