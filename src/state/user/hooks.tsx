@@ -1,4 +1,4 @@
-import { ChainId, Pair, Token } from '@fatex-dao/sdk'
+import { ChainId, Pair, PairType, Token } from '@fatex-dao/sdk'
 import flatMap from 'lodash.flatmap'
 import ReactGA from 'react-ga'
 import { useCallback, useMemo } from 'react'
@@ -14,12 +14,12 @@ import {
   removeSerializedToken,
   SerializedPair,
   SerializedToken,
+  toggleURLWarning,
   updateUserDarkMode,
   updateUserDeadline,
   updateUserExpertMode,
-  updateUserSlippageTolerance,
-  toggleURLWarning,
-  updateUserSingleHopOnly
+  updateUserSingleHopOnly,
+  updateUserSlippageTolerance
 } from './actions'
 
 function serializeToken(token: Token): SerializedToken {
@@ -197,9 +197,10 @@ export function useURLWarningToggle(): () => void {
  * Given two tokens return the liquidity token that represents its liquidity shares
  * @param tokenA one of the two tokens
  * @param tokenB the other token
+ * @param pairType the type of pair to compute
  */
-export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB), 18, 'FATEx-LP', 'FATExDAO LP Token')
+export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token], pairType: PairType = PairType.FATE): Token {
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB, pairType), 18, 'FATEx-LP', 'FATExDAO LP Token')
 }
 
 /**
