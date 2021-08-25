@@ -5,7 +5,7 @@
   "private": true,
   "devDependencies": {
     "@ethersproject/experimental": "^5.1.2",
-    "@fatex-dao/sdk": "^1.0.8",
+    "@fatex-dao/sdk": "^1.0.10",
     "@popperjs/core": "^2.4.4",
     "@reach/dialog": "^0.10.3",
     "@reach/portal": "^0.10.3",
@@ -125,6 +125,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@fatex-dao/sdk-extra": "^1.0.9"
+    "@fatex-dao/sdk-extra": "^1.0.11"
   }
 }

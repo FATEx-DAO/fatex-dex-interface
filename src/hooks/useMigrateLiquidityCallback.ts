@@ -77,37 +77,22 @@ export function useMigrateLiquidityCallback(
     const currencyAmount0Min = calculateSlippageAmount(currencyAmount0, allowedSlippage)[0]
     const currencyAmount1Min = calculateSlippageAmount(currencyAmount1, allowedSlippage)[0]
 
-    //     function migrate(
-    //         address tokenA,
-    //         address tokenB,
-    //         uint256 liquidity,
-    //         uint256 amountAMin,
-    //         uint256 amountBMin,
-    //         uint256 deadline
-    //     )
-
-    const {
-      estimatedGas,
-      error
-    }: { estimatedGas: BigNumber; error: Error | undefined } = await contract.estimateGas.migrate(
+    const args = [
       pair.token0.address,
       pair.token1.address,
       amount.raw.toString(),
-      currencyAmount0Min,
-      currencyAmount1Min,
-      deadline
-    ).then(estimatedGas => ({ estimatedGas, error: undefined }))
+      currencyAmount0Min.toString(),
+      currencyAmount1Min.toString(),
+      deadline?.toString() ?? '0'
+    ]
+
+    const { estimatedGas, error }: { estimatedGas: BigNumber; error: Error | undefined } = await contract.estimateGas
+      .migrate(...args)
+      .then(estimatedGas => ({ estimatedGas, error: undefined }))
       .catch(gasError => {
-        console.debug('Gas estimate failed, trying eth_call to extract error')
-        return contract.callStatic.migrate(
-          pair.token0.address,
-          pair.token1.address,
-          amount.raw.toString(),
-          currencyAmount0Min,
-          currencyAmount1Min,
-          deadline
-        ).then(result => {
-          console.debug('Unexpected successful call after failed estimate gas', gasError, result)
+        console.debug('Gas estimate failed, trying eth_call to extract error: ', gasError)
+        return contract.callStatic['migrate'](...args).then(result => {
+          console.debug('Unexpected successful call after failed estimate gas', result)
           return {
             error: new Error('Unexpected issue with estimating the gas. Please try again.'),
             estimatedGas: BigNumber.from('0')
@@ -116,27 +101,19 @@ export function useMigrateLiquidityCallback(
       })
 
     if (error) {
-      console.error('Found error ', error)
-      return
+      throw error
     }
 
-    return contract
-      .migrate(
-        pair.token0.address,
-        pair.token1.address,
-        amount.raw.toString(),
-        currencyAmount0Min,
-        currencyAmount1Min,
-        deadline,
-        { gasLimit: calculateGasMargin(estimatedGas) }
-      )
+    return contract['migrate'](...args, { gasLimit: calculateGasMargin(estimatedGas) })
       .then((response: TransactionResponse) => {
+        const token0Symbol = pair.token0.symbol
+        const token1Symbol = pair.token1.symbol
         addTransaction(response, {
-          summary: 'Migrate ' + pair.token0.symbol + '-' + pair.token1.symbol + ' liquidity from ' + pairTypeToString(pairType),
+          summary: 'Migrate ' + token0Symbol + '-' + token1Symbol + ' liquidity from ' + pairTypeToString(pairType)
         })
       })
       .catch((error: Error) => {
-        console.debug('Failed to approve token', error)
+        console.debug('Failed to migrate LP token', error)
         throw error
       })
   }, [pair, pairType, amount, contract, addTransaction])

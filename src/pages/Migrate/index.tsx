@@ -18,6 +18,8 @@ import { useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
 import { useTokenAllowance } from '../../data/Allowances'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useMigrateLiquidityCallback } from '../../hooks/useMigrateLiquidityCallback'
+import { useBurnActionHandlers } from '../../state/burn/hooks'
+import { Field } from '../../state/burn/actions'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 500px;
@@ -166,14 +168,9 @@ export default function Pool() {
   const sushiLpTokens = useMemo(() => {
     return trackedTokenPairs.map(tokenPair => toV2LiquidityToken(tokenPair, PairType.SUSHI))
   }, [trackedTokenPairs])
-  const [sushiBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    sushiLpTokens
-  )
+  const [sushiBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, sushiLpTokens)
   const sushiPairsWithBalances = useMemo(() => {
-    return sushiPairs.filter(([, pair]) =>
-      pair && sushiBalances[pair.liquidityToken.address]?.greaterThan('0')
-    )
+    return sushiPairs.filter(([, pair]) => pair && sushiBalances[pair.liquidityToken.address]?.greaterThan('0'))
   }, [sushiLpTokens])
   const sushiMigratorContract = useSushiMigrator()
 
@@ -181,14 +178,11 @@ export default function Pool() {
   const viperLpTokens = useMemo(() => {
     return trackedTokenPairs.map(tokenPair => toV2LiquidityToken(tokenPair, PairType.VIPER))
   }, [trackedTokenPairs])
-  const [viperBalances] = useTokenBalancesWithLoadingIndicator(
-    account ?? undefined,
-    viperLpTokens
-  )
+  const [viperBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, viperLpTokens)
   const viperPairsWithBalances = useMemo(() => {
-    return viperPairs.filter(([, pair]) =>
-      pair && viperBalances[pair.liquidityToken.address]?.greaterThan('0')
-    )
+    return viperPairs.filter(([, pair]) => {
+      return pair && viperBalances[pair.liquidityToken.address]?.greaterThan('0')
+    })
   }, [viperLpTokens])
   const viperMigratorContract = useViperMigrator()
 
@@ -198,37 +192,52 @@ export default function Pool() {
     } else {
       return sushiPairsWithBalances
     }
-  }, [selectedTabIndex])
-  const selectedPairsWithBalancesMap = useMemo(() => {
+  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
+  const selectedPairBalances = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperBalances
     } else {
       return sushiBalances
     }
-  }, [selectedTabIndex])
+  }, [selectedTabIndex, viperBalances, sushiBalances])
+  const selectedPairsWithBalancesMap = useMemo(() => {
+    if (selectedTabIndex === 0) {
+      return viperPairsWithBalances
+    } else {
+      return sushiPairsWithBalances
+    }
+  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
   const selectedPair = useMemo(() => {
-    if (selectedPairIndex && selectedPairIndex < selectedPairsToMigrate.length) {
+    if (typeof selectedPairIndex === 'number' && selectedPairIndex < selectedPairsToMigrate.length) {
       return selectedPairsToMigrate[selectedPairIndex][1]
     }
-    return null
+    return undefined
   }, [selectedPairIndex, selectedPairsToMigrate])
+  const selectedPairBalance = useMemo(() => {
+    if (selectedPair) {
+      return selectedPairBalances[selectedPair.liquidityToken.address]
+    }
+    return undefined
+  }, [selectedPair, selectedPairsWithBalancesMap])
   const selectedMigratorContract = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperMigratorContract
     } else {
       return sushiMigratorContract
     }
-  }, [viperMigratorContract, sushiMigratorContract])
-  const allowance = useTokenAllowance(selectedPair?.liquidityToken, account ?? undefined, selectedMigratorContract?.address)
+  }, [selectedTabIndex, viperMigratorContract, sushiMigratorContract])
+  const allowance = useTokenAllowance(
+    selectedPair?.liquidityToken,
+    account ?? undefined,
+    selectedMigratorContract?.address
+  )
+  const { onUserInput } = useBurnActionHandlers()
 
   useEffect(() => {
     setSelectedPairIndex(null)
-  }, [selectedTabIndex, sushiBalances, viperBalances])
+  }, [selectedTabIndex])
 
-  const [approvalState, promiseCallback] = useApproveCallback(
-    selectedPairsWithBalancesMap[selectedPair?.liquidityToken.address ?? ''],
-    selectedMigratorContract?.address
-  )
+  const [approvalState, promiseCallback] = useApproveCallback(selectedPairBalance, selectedMigratorContract?.address)
   useEffect(() => {
     setUnlocking(approvalState === ApprovalState.PENDING)
   }, [approvalState])
@@ -247,23 +256,28 @@ export default function Pool() {
   const migrateCallback = useMigrateLiquidityCallback(
     selectedPair ?? undefined,
     selectedPairType,
-    selectedPairsWithBalancesMap[selectedPair?.liquidityToken.address ?? ''],
+    selectedPairBalance,
     selectedMigratorContract ?? undefined
   )
 
   const onUnlock = () => {
-    promiseCallback()
-      .catch(error => {
-        console.error('Caught error while unlocking: ', error)
-        setUnlocking(false)
-      })
+    promiseCallback().catch(error => {
+      console.error('Caught error while unlocking: ', error)
+      setUnlocking(false)
+    })
   }
 
   const onMigrate = () => {
     setMigrating(true)
     migrateCallback()
-      .then(() => setMigrating(false))
-      .catch(() => setMigrating(false))
+      .then(() => {
+        setMigrating(false)
+        setSelectedPairIndex(null)
+      })
+      .catch(error => {
+        console.error('Migration Error: ', error)
+        setMigrating(false)
+      })
   }
 
   return (
@@ -273,7 +287,7 @@ export default function Pool() {
           <CardBGImage />
           <CardNoise />
           <CardSection>
-            <AutoColumn gap='md'>
+            <AutoColumn gap={'md'}>
               <RowBetween>
                 <TYPE.white fontWeight={600}>Migrate Liquidity</TYPE.white>
               </RowBetween>
@@ -287,8 +301,8 @@ export default function Pool() {
           <CardBGImage />
           <CardNoise />
         </VoteCard>
-        <AutoColumn gap='lg' justify='center'>
-          <AutoColumn gap='lg' style={{ width: '100%' }}>
+        <AutoColumn gap={'lg'} justify={'center'}>
+          <AutoColumn gap={'lg'} style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
@@ -313,8 +327,8 @@ export default function Pool() {
             </TitleRow>
 
             {!account ? (
-              <Card padding='15px 40px'>
-                <TYPE.body color={theme.text3} textAlign='center'>
+              <Card padding={'15px 40px'}>
+                <TYPE.body color={theme.text3} textAlign={'center'}>
                   Connect to a wallet to view your LP tokens.
                 </TYPE.body>
                 <WalletConnectWrapper>
@@ -322,30 +336,31 @@ export default function Pool() {
                 </WalletConnectWrapper>
               </Card>
             ) : Object.values(selectedPairsWithBalancesMap).length > 0 ? (
-              (
-                <LPPairsWrapper>
-                  {selectedPairsToMigrate.map(([, pair], index) => {
-                    return (
-                      <ViperswapLPPair
-                        key={index}
-                        selected={selectedPairIndex === index}
-                        onClick={() => setSelectedPairIndex(index)}
-                      >
-                        <PairIcons>
-                          <DoubleCurrencyLogo currency0={pair?.token0} currency1={pair?.token1} size={24} />
-                        </PairIcons>
-                        <PairName>
-                          {pair?.token0.symbol}-{pair?.token1.symbol}
-                        </PairName>
-                        <PairAmount>{selectedPairsWithBalancesMap[pair?.liquidityToken.address ?? ''] ?? '0'}</PairAmount>
-                      </ViperswapLPPair>
-                    )
-                  })}
-                </LPPairsWrapper>
-              )
+              <LPPairsWrapper>
+                {selectedPairsToMigrate.map(([, pair], index) => {
+                  return (
+                    <ViperswapLPPair
+                      key={index}
+                      selected={selectedPairIndex === index}
+                      onClick={() => {
+                        onUserInput(Field.LIQUIDITY_PERCENT, '100')
+                        setSelectedPairIndex(index)
+                      }}
+                    >
+                      <PairIcons>
+                        <DoubleCurrencyLogo currency0={pair?.token0} currency1={pair?.token1} size={24} />
+                      </PairIcons>
+                      <PairName>
+                        {pair?.token0.symbol}-{pair?.token1.symbol}
+                      </PairName>
+                      <PairAmount>{selectedPairBalance?.toFixed(6) ?? '0'}</PairAmount>
+                    </ViperswapLPPair>
+                  )
+                })}
+              </LPPairsWrapper>
             ) : (
               <EmptyProposals>
-                <TYPE.body color={theme.text3} textAlign='center'>
+                <TYPE.body color={theme.text3} textAlign={'center'}>
                   No liquidity found.
                 </TYPE.body>
               </EmptyProposals>
@@ -356,12 +371,10 @@ export default function Pool() {
                   <MigrationLPName>
                     {selectedPair?.token0.symbol}-{selectedPair?.token1.symbol}
                   </MigrationLPName>
-                  <MigrationAmount>
-                    {selectedPairsWithBalancesMap[selectedPair?.liquidityToken.address ?? '']?.toFixed(6)}
-                  </MigrationAmount>
+                  <MigrationAmount>{selectedPairBalance?.toFixed(6)}</MigrationAmount>
                 </MigrationSummary>
                 <MigrateButtonWrapper>
-                  {selectedPairsWithBalancesMap[selectedPair?.liquidityToken.address ?? '']?.lessThan(allowance || '0') ? (
+                  {selectedPairBalance?.lessThan(allowance || '0') ? (
                     migrating ? (
                       <MigrateButton disabled={true}>Migrating...</MigrateButton>
                     ) : (
@@ -371,6 +384,8 @@ export default function Pool() {
                     )
                   ) : unlocking ? (
                     <MigrateButton disabled={true}>Unlocking...</MigrateButton>
+                  ) : approvalState === ApprovalState.UNKNOWN ? (
+                    <MigrateButton disabled={true}>Loading...</MigrateButton>
                   ) : (
                     <MigrateButton onClick={() => onUnlock()}>
                       Unlock {selectedPair?.token0.symbol}-{selectedPair?.token1.symbol}
