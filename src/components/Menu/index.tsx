@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Send, Code, MessageSquare, PieChart } from 'react-feather'
+import { Send, Code, MessageSquare, PieChart, Book } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -58,10 +58,10 @@ const StyledMenu = styled.div`
 `
 
 const MenuFlyout = styled.span`
-  min-width: 8.125rem;
+  min-width: 10rem;
   background-color: ${({ theme }) => theme.bg2};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
+    0 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 8px;
   padding: 0.5rem;
   display: flex;
@@ -90,8 +90,6 @@ const MenuItem = styled(ExternalLink)`
     margin-right: 8px;
   }
 `
-
-const CODE_LINK = 'https://github.com/FATEx-DAO'
 
 export default function Menu() {
   const { account, chainId } = useActiveWeb3React()
@@ -127,7 +125,11 @@ export default function Menu() {
             <Send size={14} />
             Telegram
           </MenuItem>
-          <MenuItem id="link" href={CODE_LINK}>
+          <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/'}>
+            <Book size={14} />
+            FAQ
+          </MenuItem>
+          <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
             <Code size={14} />
             Code
           </MenuItem>
