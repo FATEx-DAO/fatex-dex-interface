@@ -123,7 +123,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
 
   // getNewRewardPerBlock uses pid = 0 to return the base rewards
   // poolIds have to be +1'd to map to their actual pid
-  // also include pid 0 to get the base emission rate
+  // also include pid 0 to get the base reward rate
   let adjustedPids = pids.map(pid => pid + 1)
   adjustedPids = [...[0], ...adjustedPids]
 

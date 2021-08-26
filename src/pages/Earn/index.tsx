@@ -17,7 +17,7 @@ import { useActiveWeb3React } from '../../hooks'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useCalculateStakingInfoMembers from '../../hooks/useCalculateStakingInfoMembers'
 import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
-import useBaseStakingRewardsEmission from '../../hooks/useBaseStakingRewardsEmission'
+import useBaseStakingRewardsSchedule from '../../hooks/useBaseStakingRewardsSchedule'
 import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
@@ -77,10 +77,10 @@ export default function Earn() {
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
-  const baseEmissions = useBaseStakingRewardsEmission()
+  const baseRewards = useBaseStakingRewardsSchedule()
   const blocksPerMinute = blockchainSettings?.blockTime ? 60 / blockchainSettings.blockTime : 0
-  const emissionsPerMinute =
-    baseEmissions && blockchainSettings ? baseEmissions.multiply(JSBI.BigInt(blocksPerMinute)) : undefined
+  const rewardsPerMinute =
+    baseRewards && blockchainSettings ? baseRewards.multiply(JSBI.BigInt(blocksPerMinute)) : undefined
 
   const activeStakingInfos = useFilterStakingInfos(stakingInfos, activePoolsOnly)
   const inactiveStakingInfos = useFilterStakingInfos(stakingInfos, false)
@@ -101,7 +101,7 @@ export default function Earn() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>{govToken?.symbol} liquidity mining</TYPE.white>
+                <TYPE.white fontWeight={600}>{govToken?.symbol} liquidity staking</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
@@ -175,22 +175,22 @@ export default function Earn() {
           )}
         </PoolSection>
 
-        {stakingRewardsExist && baseEmissions && (
+        {stakingRewardsExist && baseRewards && (
           <TYPE.main style={{ textAlign: 'center' }} fontSize={14}>
             <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
               ☁️
             </span>
-            The base emission rate is currently <b>{baseEmissions.toSignificant(4, { groupSeparator: ',' })}</b>{' '}
-            {govToken?.symbol} per block.
+            The base rewards rate is currently <b>{baseRewards.toSignificant(4, { groupSeparator: ',' })}</b>{' '}
+            {govToken?.symbol} per block.w
             <br />
-            <b>{emissionsPerMinute?.toSignificant(4, { groupSeparator: ',' })}</b> {govToken?.symbol} will be minted
-            every minute given the current emission schedule.
+            <b>{rewardsPerMinute?.toSignificant(4, { groupSeparator: ',' })}</b> {govToken?.symbol}
+            will be minted every minute given the current rewards schedule.
             <br />
             <br />
             <TYPE.small style={{ textAlign: 'center' }} fontSize={10}>
               * = The APR is calculated using a very simplified formula, it might not fully represent the exact APR
               <br />
-              when factoring in the dynamic emission schedule and the locked/unlocked rewards vesting system.
+              when factoring in the dynamic rewards schedule and the locked/unlocked rewards vesting system.
             </TYPE.small>
           </TYPE.main>
         )}

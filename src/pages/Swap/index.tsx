@@ -407,7 +407,7 @@ export default function Swap() {
                 <TYPE.main mb="4px">Unsupported Asset</TYPE.main>
               </ButtonPrimary>
             ) : !account ? (
-              <ButtonLight onClick={toggleWalletModal} style={{ width: '100%', padding: '18px' }}>
+              <ButtonLight onClick={toggleWalletModal} style={{ width: '100%', padding: '18px', color: theme.text1 }}>
                 Connect Wallet
               </ButtonLight>
             ) : showWrap ? (

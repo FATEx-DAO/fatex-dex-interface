@@ -1,4 +1,4 @@
-import { TokenAmount, Pair, Currency } from '@fatex-dao/sdk'
+import { Currency, Pair, PairType, TokenAmount } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { abi as IUniswapV2PairABI } from '../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
@@ -16,7 +16,10 @@ export enum PairState {
   INVALID
 }
 
-export function usePairs(currencies: [Currency | undefined, Currency | undefined][]): [PairState, Pair | null][] {
+export function usePairs(
+  currencies: [Currency | undefined, Currency | undefined][],
+  pairType: PairType = PairType.FATE
+): [PairState, Pair | null][] {
   const { chainId } = useActiveWeb3React()
 
   const tokens = useMemo(
@@ -31,7 +34,7 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
   const pairAddresses = useMemo(
     () =>
       tokens.map(([tokenA, tokenB]) => {
-        return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB) : undefined
+        return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB, pairType) : undefined
       }),
     [tokens]
   )
@@ -51,12 +54,16 @@ export function usePairs(currencies: [Currency | undefined, Currency | undefined
       const [token0, token1] = tokenA.sortsBefore(tokenB) ? [tokenA, tokenB] : [tokenB, tokenA]
       return [
         PairState.EXISTS,
-        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()))
+        new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()), pairType)
       ]
     })
   }, [results, tokens])
 }
 
-export function usePair(tokenA?: Currency, tokenB?: Currency): [PairState, Pair | null] {
-  return usePairs([[tokenA, tokenB]])[0]
+export function usePair(
+  tokenA?: Currency,
+  tokenB?: Currency,
+  pairType: PairType = PairType.FATE
+): [PairState, Pair | null] {
+  return usePairs([[tokenA, tokenB]], pairType)[0]
 }

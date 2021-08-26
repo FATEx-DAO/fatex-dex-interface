@@ -2,8 +2,8 @@ import { Contract } from '@ethersproject/contracts'
 import { abi as GOVERNANCE_ABI } from '../constants/abis/governor-alpha.json'
 import { abi as UNI_ABI } from '../constants/abis/fate-token.json'
 import { abi as GOVERNANCE_TOKEN_ABI } from '../constants/abis/fate-token.json'
-// import { abi as STAKING_REWARDS_ABI } from '@uniswap/liquidity-staker/build/StakingRewards.json'
 import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/fate-reward-controller.json'
+import { abi as LIQUIDITY_MIGRATOR_ABI } from '../constants/abis/liquidity-migrator.json'
 import { abi as X_FATE_ABI } from '../constants/abis/xfate-token.json'
 import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/fee-token-converter-to-fate.json'
 import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
@@ -15,7 +15,9 @@ import {
   MERKLE_DISTRIBUTOR_ADDRESS,
   FATE_REWARD_CONTROLLER,
   X_FATE,
-  FEE_TOKEN_CONVERTER
+  FEE_TOKEN_CONVERTER,
+  SUSHI_MIGRATOR,
+  VIPER_MIGRATOR
 } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -157,4 +159,16 @@ export function useSocksController(): Contract | null {
     UNISOCKS_ABI,
     false
   )
+}
+
+export function useSushiMigrator(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId && SUSHI_MIGRATOR[chainId]
+  return useContract(address, LIQUIDITY_MIGRATOR_ABI, true)
+}
+
+export function useViperMigrator(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId && VIPER_MIGRATOR[chainId]
+  return useContract(address, LIQUIDITY_MIGRATOR_ABI, true)
 }

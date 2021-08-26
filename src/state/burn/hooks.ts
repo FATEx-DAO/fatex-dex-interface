@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, JSBI, Pair, Percent, TokenAmount } from '@fatex-dao/sdk'
+import { Currency, CurrencyAmount, JSBI, Pair, PairType, Percent, TokenAmount } from '@fatex-dao/sdk'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { usePair } from '../../data/Reserves'
@@ -17,7 +17,8 @@ export function useBurnState(): AppState['burn'] {
 
 export function useDerivedBurnInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined
+  currencyB: Currency | undefined,
+  pairType: PairType = PairType.FATE
 ): {
   pair?: Pair | null
   parsedAmounts: {
@@ -33,7 +34,7 @@ export function useDerivedBurnInfo(
   const { independentField, typedValue } = useBurnState()
 
   // pair + totalsupply
-  const [, pair] = usePair(currencyA, currencyB)
+  const [, pair] = usePair(currencyA, currencyB, pairType)
 
   // balances
   const relevantTokenBalances = useTokenBalances(account ?? undefined, [pair?.liquidityToken])

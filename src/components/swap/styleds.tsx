@@ -40,6 +40,7 @@ export const BottomGrouping = styled.div`
     border-radius: 10px;
     font-size: 20px;
     cursor: pointer;
+    color: ${({ theme }) => theme.text1};
 
     :hover {
       background-color: ${({ theme }) => theme.bg6};

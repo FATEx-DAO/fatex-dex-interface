@@ -1,12 +1,14 @@
 import { ChainId, JSBI, Percent, Token, WETH } from '@fatex-dao/sdk'
 import { AbstractConnector } from '@web3-react/abstract-connector'
-
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
+import { GOVERNANCE_TOKEN as INTERNAL_GOVERNANCE_TOKEN } from './governance-token'
 
 import getTokenWithDefault from '../utils/getTokenWithDefault'
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 export const ZERO_ONE_ADDRESS = '0x0000000000000000000000000000000000000001'
+
+export const GOVERNANCE_TOKEN = INTERNAL_GOVERNANCE_TOKEN
 
 export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
@@ -16,8 +18,8 @@ export const ROUTER_ADDRESSES: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_MAINNET]: '0x21cBD8eae18Dc95CAe7C245D10259D1f00b30Ec3',
-  [ChainId.HARMONY_TESTNET]: '0x21cBD8eae18Dc95CAe7C245D10259D1f00b30Ec3'
+  [ChainId.HARMONY_MAINNET]: '0x82145037096870BA3a5f7beE4C3602BD36e27Bff',
+  [ChainId.HARMONY_TESTNET]: '0x82145037096870BA3a5f7beE4C3602BD36e27Bff'
 }
 
 export const GOVERNANCE_ADDRESS: { [chainId in ChainId]: string } = {
@@ -28,8 +30,8 @@ export const GOVERNANCE_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_MAINNET]: '0xCc82a3D7A768Bbc0D4d288C274df191e6a7B5bA5',
-  [ChainId.HARMONY_TESTNET]: '0xCc82a3D7A768Bbc0D4d288C274df191e6a7B5bA5'
+  [ChainId.HARMONY_MAINNET]: '0x5C445091402923739f6681FCe86212e63cDA9553',
+  [ChainId.HARMONY_TESTNET]: '0x5C445091402923739f6681FCe86212e63cDA9553'
 }
 
 export const TIMELOCK_ADDRESS = {
@@ -40,32 +42,8 @@ export const TIMELOCK_ADDRESS = {
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_MAINNET]: '0x3cDB9Ff1c3e62946a34dfcAA95c56534Cc1f19CA',
-  [ChainId.HARMONY_TESTNET]: '0x3cDB9Ff1c3e62946a34dfcAA95c56534Cc1f19CA'
-}
-
-export const GOVERNANCE_TOKEN: { [chainId in ChainId]: Token } = {
-  [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
-  [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
-  [ChainId.ROPSTEN]: new Token(ChainId.ROPSTEN, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
-  [ChainId.GÖRLI]: new Token(ChainId.GÖRLI, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
-  [ChainId.KOVAN]: new Token(ChainId.KOVAN, ZERO_ONE_ADDRESS, 18, 'FATE', 'Fate'),
-  [ChainId.BSC_MAINNET]: new Token(ChainId.BSC_MAINNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Cobra'),
-  [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, ZERO_ONE_ADDRESS, 18, 'FATE', 'Cobra'),
-  [ChainId.HARMONY_MAINNET]: new Token(
-    ChainId.HARMONY_MAINNET,
-    '0x95dA53B9D7124AC16C26a15944A231F709Ff8674',
-    18,
-    'FATE',
-    'Fate'
-  ),
-  [ChainId.HARMONY_TESTNET]: new Token(
-    ChainId.HARMONY_TESTNET,
-    '0x95dA53B9D7124AC16C26a15944A231F709Ff8674',
-    18,
-    'FATE',
-    'Fate'
-  )
+  [ChainId.HARMONY_MAINNET]: '0x6B7A6163714d3D3244A74be798E0194df6650D6A',
+  [ChainId.HARMONY_TESTNET]: '0x6B7A6163714d3D3244A74be798E0194df6650D6A'
 }
 
 export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
@@ -76,8 +54,8 @@ export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_MAINNET]: '0x5F6614f7e871CFE416c45a9C053341697D806133',
-  [ChainId.HARMONY_TESTNET]: '0x5F6614f7e871CFE416c45a9C053341697D806133'
+  [ChainId.HARMONY_MAINNET]: '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27',
+  [ChainId.HARMONY_TESTNET]: '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27'
 }
 
 export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
@@ -88,8 +66,32 @@ export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
   [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
-  [ChainId.HARMONY_MAINNET]: '0xc1C510E87a3f4FeD9921b3Eb0D21FA6A9AeeCe6f',
-  [ChainId.HARMONY_TESTNET]: '0xc1C510E87a3f4FeD9921b3Eb0D21FA6A9AeeCe6f'
+  [ChainId.HARMONY_MAINNET]: '0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1',
+  [ChainId.HARMONY_TESTNET]: '0x1C2A867593Ed6c6782f1cDf47237fF3EE66bDbE1'
+}
+
+export const SUSHI_MIGRATOR: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: '0x4FA5f948785510035B8316Dab2FA67e31ce278F7',
+  [ChainId.HARMONY_TESTNET]: '0x4FA5f948785510035B8316Dab2FA67e31ce278F7'
+}
+
+export const VIPER_MIGRATOR: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: '0xd50D8901aB7F455494cE50eb7665DFB263B0a962',
+  [ChainId.HARMONY_TESTNET]: '0xd50D8901aB7F455494cE50eb7665DFB263B0a962'
 }
 
 export const X_FATE: { [chainId in ChainId]: Token } = {
@@ -102,14 +104,14 @@ export const X_FATE: { [chainId in ChainId]: Token } = {
   [ChainId.BSC_TESTNET]: new Token(ChainId.BSC_TESTNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'xFATE Token'),
   [ChainId.HARMONY_MAINNET]: new Token(
     ChainId.HARMONY_MAINNET,
-    '0x22575877E6823970936D752cC7DF9471453B21B6',
+    '0x6f4078cb47438157c914409d10358a0Cf4b06AB7',
     18,
     'xFATE',
     'xFATE Token'
   ),
   [ChainId.HARMONY_TESTNET]: new Token(
     ChainId.HARMONY_TESTNET,
-    '0x22575877E6823970936D752cC7DF9471453B21B6',
+    '0x6f4078cb47438157c914409d10358a0Cf4b06AB7',
     18,
     'xFATE',
     'xFATE Token'

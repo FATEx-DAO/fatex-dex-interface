@@ -170,15 +170,17 @@ export default function CurrencyList({
   breakIndex: number | undefined
 }) {
   const { chainId } = useActiveWeb3React()
-  const baseCurrency = baseCurrencies(chainId)[0]
+  const baseCurrencyList = baseCurrencies(chainId)
 
   const itemData: (Currency | undefined)[] = useMemo(() => {
-    let formatted: (Currency | undefined)[] = showETH ? [baseCurrency, ...currencies] : currencies
+    let formatted: (Currency | undefined)[] = showETH
+      ? [baseCurrencyList[0], baseCurrencyList[1], ...currencies]
+      : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
-  }, [breakIndex, baseCurrency, currencies, showETH])
+  }, [breakIndex, baseCurrencyList, currencies, showETH])
 
   const theme = useTheme()
 
