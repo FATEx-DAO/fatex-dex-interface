@@ -8,11 +8,7 @@
       "jsx": true
     }
   },
-  "ignorePatterns": [
-    "node_modules/**/*",
-    "build/**/*",
-    "dist/**/*"
-  ],
+  "ignorePatterns": ["node_modules/**/*", "build/**/*", "dist/**/*"],
   "settings": {
     "react": {
       "version": "detect"
