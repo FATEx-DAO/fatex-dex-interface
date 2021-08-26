@@ -13,12 +13,12 @@ export const STAKING_REWARDS_INFO: {
   [ChainId.HARMONY_MAINNET]: [
     {
       pid: 0,
-      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'FATE/WONE'),
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/WONE'),
       active: true
     },
     {
       pid: 1,
-      tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'ONE/USDC'),
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/1USDC'),
       active: true
     }
   ],
@@ -31,18 +31,6 @@ export const STAKING_REWARDS_INFO: {
     {
       pid: 1,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'WONE/1BUSD'),
-      active: true
-    }
-  ],
-  [ChainId.BSC_TESTNET]: [
-    {
-      pid: 0,
-      tokens: getPairTokensWithDefaults(ChainId.BSC_TESTNET, 'WBNB/BUSD'),
-      active: true
-    },
-    {
-      pid: 1,
-      tokens: getPairTokensWithDefaults(ChainId.BSC_TESTNET, 'WBNB/COBRA'),
       active: true
     }
   ]

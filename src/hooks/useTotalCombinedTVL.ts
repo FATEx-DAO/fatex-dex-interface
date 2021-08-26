@@ -5,13 +5,13 @@ import useXFateTVL from './useXFateTVL'
 
 export default function useTotalCombinedTVL(stakingInfos: StakingInfo[]): Record<string, any> {
   const totalStakingPoolTVL = useTotalTVL(stakingInfos)
-  const totalPitTVL = useXFateTVL()
+  const totalXFateTVL = useXFateTVL()
 
   return useMemo(() => {
     return {
       stakingPoolTVL: totalStakingPoolTVL ? totalStakingPoolTVL : undefined,
-      totalPitTVL: totalPitTVL ? totalPitTVL : undefined,
-      totalCombinedTVL: totalStakingPoolTVL && totalPitTVL ? totalStakingPoolTVL.add(totalPitTVL) : undefined
+      totalXFateTVL: totalXFateTVL ? totalXFateTVL : undefined,
+      totalCombinedTVL: totalStakingPoolTVL && totalXFateTVL ? totalStakingPoolTVL.add(totalXFateTVL) : undefined
     }
-  }, [stakingInfos, totalStakingPoolTVL, totalPitTVL])
+  }, [stakingInfos, totalStakingPoolTVL, totalXFateTVL])
 }
