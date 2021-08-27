@@ -39,7 +39,10 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
     if (wrapped.equals(WETH[chainId])) {
       if (busdPair) {
         const price = busdPair.priceOf(WETH[chainId])
-        return busd ? new Price(currency, busd, price.denominator, price.numerator) : undefined
+        // TODO replace when 1USDC is replaced with BUSD
+        return busd
+          ? new Price(currency, busd, price.denominator, JSBI.multiply(price.numerator, JSBI.BigInt('1000000000000')))
+          : undefined
       } else {
         return undefined
       }
@@ -76,7 +79,12 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
         const ethUsdcPrice = busdEthPair.priceOf(busd)
         const currencyEthPrice = ethPair.priceOf(WETH[chainId])
         const usdcPrice = ethUsdcPrice.multiply(currencyEthPrice).invert()
-        return new Price(currency, busd, usdcPrice.denominator, usdcPrice.numerator)
+        return new Price(
+          currency,
+          busd,
+          usdcPrice.denominator,
+          JSBI.multiply(usdcPrice.numerator, JSBI.BigInt('1000000000000'))
+        )
       }
     }
     return undefined

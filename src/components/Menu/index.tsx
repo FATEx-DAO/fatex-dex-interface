@@ -12,7 +12,7 @@ import { ButtonPrimary } from '../Button'
 
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
-import { Blockchain, ChainId } from '@fatex-dao/sdk'
+import { Blockchain } from '@fatex-dao/sdk'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -92,7 +92,7 @@ const MenuItem = styled(ExternalLink)`
 `
 
 export default function Menu() {
-  const { account, chainId } = useActiveWeb3React()
+  const { account } = useActiveWeb3React()
   const blockchain = useBlockchain()
   const govToken = useGovernanceToken()
 
@@ -111,7 +111,8 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          {chainId == ChainId.HARMONY_MAINNET && (
+          {/*{chainId == ChainId.HARMONY_MAINNET && (*/}
+          {false && (
             <MenuItem id="link" href="https://info.fatex.io">
               <PieChart size={14} />
               Analytics
