@@ -48,7 +48,9 @@ export default function calculateWethAdjustedTotalStakedAmount(
   totalStakedAmount: TokenAmount,
   lpTokenReserves: Result | undefined
 ): TokenAmount | Fraction | undefined {
-  if (!baseToken || !lpTokenReserves || !totalLpTokenSupply) return undefined
+  if (!baseToken || !lpTokenReserves || !totalLpTokenSupply) {
+    return undefined
+  }
 
   const reserve0 = lpTokenReserves?.reserve0
   const reserve1 = lpTokenReserves?.reserve1
@@ -59,7 +61,9 @@ export default function calculateWethAdjustedTotalStakedAmount(
     reserve0,
     reserve1
   )
-  if (!stakingTokenPair) return undefined
+  if (!stakingTokenPair) {
+    return undefined
+  }
 
   const valueOfTotalStakedAmountInPairCurrency = calculateTotalStakedAmount(
     baseToken,
@@ -67,7 +71,9 @@ export default function calculateWethAdjustedTotalStakedAmount(
     totalStakedAmount,
     totalLpTokenSupply
   )
-  if (!valueOfTotalStakedAmountInPairCurrency) return undefined
+  if (!valueOfTotalStakedAmountInPairCurrency) {
+    return undefined
+  }
 
   return pairCurrencyAmountInWeth(baseToken, tokenData, valueOfTotalStakedAmountInPairCurrency)
 }

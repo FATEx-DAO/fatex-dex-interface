@@ -11,17 +11,13 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
-import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
-import { Interface } from '@ethersproject/abi'
 import { useMultipleContractSingleData } from '../../state/multicall/hooks'
-import { toV2LiquidityToken } from '../../state/user/hooks'
+import { useTrackedTokenPairs } from '../../state/user/hooks'
 import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import useBlockchain from '../../hooks/useBlockchain'
-import { PIT_POOLS } from '../../constants/pit'
-import useEligiblePitPools from '../../hooks/useEligiblePitPools'
-
-const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
+import useEligibleXFatePools from '../../hooks/useEligibleXFatePools'
+import { usePairs } from '../../data/Reserves'
+import ERC20_INTERFACE from '../../constants/abis/erc20'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -43,9 +39,8 @@ interface ClaimModalProps {
 export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   const { account, chainId } = useActiveWeb3React()
 
-  const blockchain = useBlockchain()
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()
@@ -61,40 +56,38 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   }
 
   const feeTokenConverterToFate = useFeeTokenConverterToFateContract()
-  const stakingPools = useMemo(() => (chainId ? PIT_POOLS[chainId] : []), [chainId])
+  const trackedPairs = useTrackedTokenPairs()
+  const pairsWithState = usePairs(trackedPairs)
+  const pairs = useMemo(() => {
+    return pairsWithState.map(([, pair]) => pair).filter(pair => !!pair)
+  }, [pairsWithState])
 
-  const liquidityTokenAddresses = useMemo(
-    () =>
-      stakingPools
-        ? stakingPools.map(item => {
-            return blockchain && chainId && item ? toV2LiquidityToken(item.tokens)?.address : undefined
-          })
-        : [],
-    [blockchain, chainId, stakingPools]
-  ).filter(address => address !== undefined)
+  const liquidityTokenAddresses = useMemo(() => {
+    return pairs.map(pair => pair?.liquidityToken.address).filter(address => !!address)
+  }, [pairs])
 
-  const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, PAIR_INTERFACE, 'balanceOf', [
+  const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, ERC20_INTERFACE, 'balanceOf', [
     feeTokenConverterToFate?.address
   ])
 
-  const [claimFrom, claimTo] = useEligiblePitPools(stakingPools, balanceResults)
+  const [token0s, token1s] = useEligibleXFatePools(pairs, balanceResults)
 
-  const rewardsAreClaimable = claimFrom.length > 0 && claimTo.length > 0
+  const rewardsAreClaimable = token0s.length > 0 && token1s.length > 0
 
   async function onClaimRewards() {
     if (feeTokenConverterToFate) {
       setAttempting(true)
 
       try {
-        const estimatedGas = await feeTokenConverterToFate.estimateGas.convertMultiple(claimFrom, claimTo)
+        const estimatedGas = await feeTokenConverterToFate.estimateGas.convertMultiple(token0s, token1s)
 
         await feeTokenConverterToFate
-          .convertMultiple(claimFrom, claimTo, {
+          .convertMultiple(token0s, token1s, {
             gasLimit: calculateGasMargin(estimatedGas)
           })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Claim ${pitSettings?.name} rewards`
+              summary: `Convert ${xFateSettings?.name} rewards`
             })
             setHash(response.hash)
           })
@@ -137,8 +130,8 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
                 When you claim rewards, collected LP fees will be used to market buy {govToken?.symbol}.
                 <br />
                 <br />
-                The purchased {govToken?.symbol} tokens will then be distributed to the {pitSettings?.name} stakers as a
-                reward.
+                The purchased {govToken?.symbol} tokens will then be distributed to the {xFateSettings?.name} stakers as
+                a reward.
               </TYPE.body>
               <ButtonError disabled={!!error} error={!!error} onClick={onClaimRewards}>
                 {error ?? 'Claim'}
@@ -160,7 +153,7 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
       {attempting && !hash && !failed && (
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
-            <TYPE.body fontSize={20}>Claiming {pitSettings?.name} rewards</TYPE.body>
+            <TYPE.body fontSize={20}>Claiming {xFateSettings?.name} rewards</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}

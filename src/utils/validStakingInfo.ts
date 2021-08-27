@@ -11,7 +11,8 @@ export default function validStakingInfo(
   lpTokenTotalSupply: CallState,
   lpTokenReserve: CallState,
   lpTokenBalance: CallState,
-  startBlock: CallState
+  startBlock: CallState,
+  currentBlock: number | undefined
 ): boolean {
   if (
     tokens &&
@@ -50,7 +51,8 @@ export default function validStakingInfo(
     startBlock &&
     !startBlock.error &&
     !startBlock.loading &&
-    startBlock?.result?.[0] !== undefined
+    startBlock?.result?.[0] !== undefined &&
+    currentBlock !== undefined
   ) {
     return true
   }
