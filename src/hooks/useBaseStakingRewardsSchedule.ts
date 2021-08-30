@@ -5,7 +5,6 @@ import useGovernanceToken from './useGovernanceToken'
 
 export default function useBaseStakingRewardsSchedule(): TokenAmount | undefined {
   const govToken = useGovernanceToken()
-  // const masterBreederContract = useMasterBreederContract()
 
   // const result = useSingleCallResult(masterBreederContract, 'getNewRewardPerBlock', [0])
   const result = { loading: true, result: '0' }

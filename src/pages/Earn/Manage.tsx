@@ -302,7 +302,7 @@ export default function Manage({
                     duration={1}
                   />
                 </TYPE.largeHeader>
-                <TYPE.black fontSize={16} fontWeight={500}></TYPE.black>
+                <TYPE.black fontSize={16} fontWeight={500} />
               </RowBetween>
             </AutoColumn>
           </StyledBottomCard>

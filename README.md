@@ -1,6 +1,6 @@
 # FATEx Interface
 
-fatex-dex![Lint](https://github.com/FATEx-DAO/fatex-dex-interface/workflows/Lint/badge.svg)](https://github.com/FATEx-DAO/fatex-dex-interface/actions?query=workflow%3ALint)
+[![Lint](https://github.com/FATEx-DAO/fatex-dex-interface/workflows/Lint/badge.svg)](https://github.com/FATEx-DAO/fatex-dex-interface/actions?query=workflow%3ALint)
 [![Tests](https://github.com/FATEx-DAO/fatex-dex-interface/workflows/Tests/badge.svg)](https://github.com/FATEx-DAO/fatex-dex-interface/actions?query=workflow%3ATests)
 [![Styled With Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://prettier.io/)
 

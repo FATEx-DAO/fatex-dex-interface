@@ -12,7 +12,6 @@ import { StakingInfo, useDerivedUnstakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { ZERO_ADDRESS } from '../../constants'
 import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
@@ -70,7 +69,6 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
   }, [onDismiss])
 
   const fateRewardController = useFateRewardController()
-  const referral = ZERO_ADDRESS
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
@@ -80,7 +78,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
       setAttempting(true)
 
       const formattedAmount = `0x${parsedAmount?.raw.toString(16)}`
-      const estimatedGas = await fateRewardController.estimateGas.withdraw(stakingInfo.pid, formattedAmount, referral)
+      const estimatedGas = await fateRewardController.estimateGas.withdraw(stakingInfo.pid, formattedAmount)
 
       await fateRewardController
         .withdraw(stakingInfo.pid, formattedAmount, {

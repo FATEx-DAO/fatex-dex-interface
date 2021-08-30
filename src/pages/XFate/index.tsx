@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { TokenAmount } from '@fatex-dao/sdk'
+import { Fraction } from '@fatex-dao/sdk'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 
@@ -22,8 +22,6 @@ import { BlueCard } from '../../components/Card'
 import usePrevious from '../../hooks/usePrevious'
 
 import { X_FATE, X_FATE_SETTINGS } from '../../constants'
-import { FATE_TOKEN_INTERFACE } from '../../constants/abis/governanceToken'
-import { X_FATE_INTERFACE } from '../../constants/abis/xfate-token'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
 import useXFateRatio from '../../hooks/useXFateRatio'
@@ -66,8 +64,7 @@ const StyledBottomCard = styled(DataCard)<{ dim: any }>`
   background: ${({ theme }) => theme.bg3};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
-  padding: 0 1.25rem 1rem 1.25rem;
-  padding-top: 32px;
+  padding: 32px 1.25rem 1rem;
   z-index: 1;
 `
 
@@ -121,21 +118,11 @@ export default function Pit({
   const TVLs = useTotalCombinedTVL(filteredStakingInfos)
 
   const govToken = useGovernanceToken()
-  const govTokenBalance: TokenAmount | undefined = useTokenBalance(
-    account ?? undefined,
-    govToken,
-    'balanceOf',
-    FATE_TOKEN_INTERFACE
-  )
+  const govTokenBalance = useTokenBalance(account ?? undefined, govToken)
 
   const xFate = chainId ? X_FATE[chainId] : undefined
   const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
-  const xFateBalance: TokenAmount | undefined = useTokenBalance(
-    account ?? undefined,
-    xFate,
-    'balanceOf',
-    X_FATE_INTERFACE
-  )
+  const xFateBalance = useTokenBalance(account ?? undefined, xFate)
   const govTokenStakedTokenRatio = useXFateRatio()
   const adjustedStakedBalance = govTokenStakedTokenRatio ? xFateBalance?.multiply(govTokenStakedTokenRatio) : undefined
 
@@ -255,8 +242,8 @@ export default function Pit({
 
         {account && (!adjustedStakedBalance || adjustedStakedBalance?.equalTo('0')) && (
           <TYPE.main>
-            You have {govTokenBalance?.toFixed(2, { groupSeparator: ',' })} {govToken?.symbol} tokens available to
-            deposit to the {xFateSettings?.name}.
+            You have {(govTokenBalance ?? new Fraction('0')).toFixed(2, { groupSeparator: ',' })} {govToken?.symbol}{' '}
+            tokens available to deposit to the {xFateSettings?.name}.
           </TYPE.main>
         )}
 

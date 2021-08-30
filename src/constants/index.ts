@@ -124,10 +124,10 @@ export const X_FATE_SETTINGS: { [chainId in ChainId]: Record<string, string> } =
   [ChainId.ROPSTEN]: { name: '', path: '' },
   [ChainId.GÖRLI]: { name: '', path: '' },
   [ChainId.KOVAN]: { name: '', path: '' },
-  [ChainId.BSC_MAINNET]: { name: 'CobraDen', path: '' },
-  [ChainId.BSC_TESTNET]: { name: 'CobraDen', path: '' },
-  [ChainId.HARMONY_MAINNET]: { name: 'Fate', path: '/xfate' },
-  [ChainId.HARMONY_TESTNET]: { name: 'Fate', path: '/xfate' }
+  [ChainId.BSC_MAINNET]: { name: '', path: '' },
+  [ChainId.BSC_TESTNET]: { name: '', path: '' },
+  [ChainId.HARMONY_MAINNET]: { name: 'xFate Pool', path: '/xfate' },
+  [ChainId.HARMONY_TESTNET]: { name: 'xFate Pool', path: '/xfate' }
 }
 
 export const WEB_INTERFACES: { [chainId in ChainId]: string[] } = {

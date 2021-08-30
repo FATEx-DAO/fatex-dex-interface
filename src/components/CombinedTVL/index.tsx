@@ -8,7 +8,7 @@ import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 
 export default function CombinedTVL({}) {
   const { chainId } = useActiveWeb3React()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const isActive = true
   const filteredStakingInfos = useFilterStakingInfos(useStakingInfo(isActive), isActive)
   const TVLs = useTotalCombinedTVL(filteredStakingInfos)
@@ -28,9 +28,9 @@ export default function CombinedTVL({}) {
                   <br />
                 </>
               )}
-              {TVLs.totalPitTVL?.greaterThan('0') && (
+              {TVLs.totalXFateTVL?.greaterThan('0') && (
                 <>
-                  <b>{pitSettings?.name}:</b> ${TVLs.totalPitTVL.toSignificant(8, { groupSeparator: ',' })}
+                  <b>{xFateSettings?.name}:</b> ${TVLs.totalXFateTVL.toSignificant(8, { groupSeparator: ',' })}
                   <br />
                 </>
               )}

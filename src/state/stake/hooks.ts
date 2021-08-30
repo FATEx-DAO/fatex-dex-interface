@@ -16,6 +16,7 @@ import calculateWethAdjustedTotalStakedAmount from '../../utils/calculateWethAdj
 import calculateApr from '../../utils/calculateApr'
 import validStakingInfo from '../../utils/validStakingInfo'
 import determineBaseToken from '../../utils/determineBaseToken'
+import { useBlockNumber } from '../application/hooks'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -134,6 +135,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   )
 
   const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+  const currentBlock = useBlockNumber()
 
   return useMemo(() => {
     if (!chainId || !weth || !govToken) return []
@@ -164,13 +166,28 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           lpTokenTotalSupply,
           lpTokenReserve,
           lpTokenBalance,
-          startBlock
+          startBlock,
+          currentBlock
         )
       ) {
-        const baseBlockRewards = new TokenAmount(govToken, JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0))
+        const startsAtBlock = parseInt(startBlock.result?.[0].toString() ?? '0')
+        const index = JSBI.divide(
+          JSBI.subtract(JSBI.BigInt(currentBlock ?? 0), JSBI.BigInt(startsAtBlock)),
+          JSBI.BigInt(302400)
+        )
+        const multiplier = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('5') : JSBI.BigInt('1')
 
+        const baseBlockRewards = new TokenAmount(
+          govToken,
+          JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+        )
+
+        // 428,338
         const poolBlockRewards = specificPoolRewardsPerBlock?.result?.[0]
-          ? new TokenAmount(govToken, JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0))
+          ? new TokenAmount(
+              govToken,
+              JSBI.multiply(JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+            )
           : baseBlockRewards
 
         const poolShare = new Fraction(poolBlockRewards.raw, baseBlockRewards.raw)
@@ -194,7 +211,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         )
         const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
         const totalRewardDebt = new TokenAmount(govToken, JSBI.BigInt(userInfo?.result?.[1] ?? 0))
-        const startsAtBlock = startBlock.result?.[0] ?? 0
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result

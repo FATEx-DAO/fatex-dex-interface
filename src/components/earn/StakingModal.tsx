@@ -151,7 +151,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    💡 There is <b>no</b> deposit fee!
+                    💡 There is <b>no</b> deposit or withdrawal fee!
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
