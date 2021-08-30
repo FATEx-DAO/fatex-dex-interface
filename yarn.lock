@@ -2004,24 +2004,29 @@
     "@ethersproject/properties" "^5.2.0"
     "@ethersproject/strings" "^5.2.0"
 
-"@fatex-dao/default-token-list@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-4.0.0.tgz#405f5ce7c56547e90f70ec97a5ae4cc2565bfba2"
-  integrity sha512-SYKPE7clm4JpmEorMIeOkDQI1oPl1Vr7eY1E+BfXPubvsMIpNhmCCzykkLjHaewfJdtAvsaDr7QXKZkjupcF+A==
+"@fatex-dao/community-token-list@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/community-token-list/-/community-token-list-3.0.0.tgz#f95677d48b806af7f122275aa97553ce44d0e461"
+  integrity sha512-5t18zRyjZY5N7qx9twpboFMYiJKzMhb+BHen0tazxRC1IB1xxjC9e8g1R3LFLt8mCJpUIAuiepoQG0djv3lPDA==
 
-"@fatex-dao/sdk-extra@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-1.0.12.tgz#daef23b844606012f6405b05927302d654748e52"
-  integrity sha512-z7HTHl5kpZexNwc67XYLAourgRi+SHKJp/cJ2f3MiF18rl3HXzmjRXqUOA9bqYGoqfJhjTLP+dpHfu2Soa2JMg==
+"@fatex-dao/default-token-list@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-5.0.0.tgz#ac7f084b1b177fd60d6454ad421cc0d8472e4877"
+  integrity sha512-Br5Tw+8IgYJnGarGPlvX5YFIzcDxyc1PmGK6bX3nkjtv8/HzKULf1JH/6u7n7zLy7pDlEfgk3x2ZiSMMGA9yvw==
+
+"@fatex-dao/sdk-extra@^1.0.15":
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-1.0.15.tgz#90ed6367f2d2717b74d2c5a9ba607b63fbddbc8d"
+  integrity sha512-xUdSai6q+3PBqKMnEdvq+o47KgaaeURAW4G9tt+DDOWrnOatmlqNOt1gkqw59uq893HS8wzPlWy6J09PZy4LkA==
   dependencies:
     "@ethersproject/address" "^5.3.0"
     "@ethersproject/contracts" "^5.3.0"
     "@ethersproject/providers" "^5.3.0"
     "@ethersproject/solidity" "^5.3.0"
-    "@fatex-dao/default-token-list" "^4.0.0"
+    "@fatex-dao/community-token-list" "^3.0.0"
+    "@fatex-dao/default-token-list" "^5.0.0"
     "@fatex-dao/sdk" "^1.0.10"
     "@types/lodash.random" "^3.2.6"
-    "@venomswap/community-token-list" "^2.2.0"
     lodash.random "^3.2.0"
 
 "@fatex-dao/sdk@^1.0.10":
@@ -3475,11 +3480,6 @@
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@uniswap/v2-core/-/v2-core-1.0.1.tgz#af8f508bf183204779938969e2e54043e147d425"
   integrity sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==
-
-"@venomswap/community-token-list@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@venomswap/community-token-list/-/community-token-list-2.2.0.tgz#63414c2b7bf51b5a34f5e77590fd951bd8021c2b"
-  integrity sha512-Gq+juu0H/0cJPKecgDTL5yjRqXWHHtS2IJHqyzlk/FTlttloH+faSc0yfkwpmTTy5yqlc5hsbwsrn4HMH1myCg==
 
 "@walletconnect/browser-utils@^1.4.1":
   version "1.4.1"
