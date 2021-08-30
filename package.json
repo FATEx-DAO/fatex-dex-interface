@@ -125,6 +125,6 @@
   },
   "license": "GPL-3.0-or-later",
   "dependencies": {
-    "@fatex-dao/sdk-extra": "^1.0.14"
+    "@fatex-dao/sdk-extra": "^1.0.15"
   }
 }
