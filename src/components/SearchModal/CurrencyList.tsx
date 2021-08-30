@@ -1,15 +1,15 @@
-import { Currency, CurrencyAmount, currencyEquals, Token } from '@fatex-dao/sdk'
+import { ChainId, Currency, CurrencyAmount, currencyEquals, Token, WETH } from '@fatex-dao/sdk'
 import React, { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
-import { WrappedTokenInfo, useCombinedActiveList } from '../../state/lists/hooks'
+import { useCombinedActiveList, WrappedTokenInfo } from '../../state/lists/hooks'
 import { useCurrencyBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
-import { useIsUserAddedToken, useAllInactiveTokens } from '../../hooks/Tokens'
+import { useAllInactiveTokens, useIsUserAddedToken } from '../../hooks/Tokens'
 import Column from '../Column'
-import { RowFixed, RowBetween } from '../Row'
+import { RowBetween, RowFixed } from '../Row'
 import CurrencyLogo from '../CurrencyLogo'
 import { MouseoverTooltip } from '../Tooltip'
 import { MenuItem } from './styleds'
@@ -173,8 +173,14 @@ export default function CurrencyList({
   const baseCurrencyList = baseCurrencies(chainId)
 
   const itemData: (Currency | undefined)[] = useMemo(() => {
+    const wethToSlice = showETH
+      ? currencies.find(currency => {
+          return currency instanceof Token && currency.address === WETH[chainId ?? ChainId.HARMONY_MAINNET].address
+        })
+      : undefined
+    // if showETH is true, we don't want to include WETH twice in here, if it's `currencies` and `baseCurrencyList`
     let formatted: (Currency | undefined)[] = showETH
-      ? [baseCurrencyList[0], baseCurrencyList[1], ...currencies]
+      ? [baseCurrencyList[0], baseCurrencyList[1], ...currencies.filter(currency => currency !== wethToSlice)]
       : currencies
     if (breakIndex !== undefined) {
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
