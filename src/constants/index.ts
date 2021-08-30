@@ -161,8 +161,6 @@ export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C
 export const AVERAGE_BLOCK_TIME_IN_SECS = 2
 
 export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]: { [address: string]: string } } = {
-  // [GOVERNANCE_ADDRESS]: 'Governance',
-  // [TIMELOCK_ADDRESS]: 'Timelock'
   [ChainId.MAINNET]: {
     [GOVERNANCE_ADDRESS[ChainId.MAINNET]]: 'Governance',
     [TIMELOCK_ADDRESS[ChainId.MAINNET]]: 'Timelock'
