@@ -203,10 +203,10 @@ export default function Pool() {
               </EmptyProposals>
             ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
-                {blockchain === Blockchain.ETHEREUM && (
+                {blockchain === Blockchain.HARMONY && (
                   <ButtonSecondary>
                     <RowBetween>
-                      <ExternalLink href={'https://uniswap.info/account/' + account}>
+                      <ExternalLink href={'https://info.fatex.io/account/' + account}>
                         Account analytics and accrued fees
                       </ExternalLink>
                       <span> ↗</span>

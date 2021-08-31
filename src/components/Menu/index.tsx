@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Send, Code, MessageSquare, PieChart, Book } from 'react-feather'
+import { Book, Code, MessageSquare, PieChart, Send } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -111,8 +111,7 @@ export default function Menu() {
 
       {open && (
         <MenuFlyout>
-          {/*{chainId == ChainId.HARMONY_MAINNET && (*/}
-          {false && (
+          {blockchain === Blockchain.HARMONY && (
             <MenuItem id="link" href="https://info.fatex.io">
               <PieChart size={14} />
               Analytics

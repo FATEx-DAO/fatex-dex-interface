@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "fatex-dex-info",
+    "site": "fatex-dao",
     "public": "build",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "headers": [
