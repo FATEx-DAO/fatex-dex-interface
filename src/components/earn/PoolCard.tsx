@@ -77,22 +77,22 @@ const TopSection = styled.div`
   }
 `
 
-// const BottomSection = styled.div<{ showBackground: boolean }>`
-//   padding: 12px 16px;
-//   opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
-//   border-radius: 0 0 12px 12px;
-//   display: flex;
-//   flex-direction: row;
-//   align-items: baseline;
-//   justify-content: space-between;
-//   z-index: 1;
-// `
+const BottomSection = styled.div<{ showBackground: boolean }>`
+  padding: 12px 16px;
+  opacity: ${({ showBackground }) => (showBackground ? '1' : '0.4')};
+  border-radius: 0 0 12px 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
+  z-index: 1;
+`
 
 export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: StakingInfo; isArchived: boolean }) {
   const govToken = useGovernanceToken()
   const govTokenPrice = useBUSDPrice(govToken)
 
-  const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0'))
+  const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0') || stakingInfo.rewardDebt.greaterThan('0'))
   const poolSharePercentage = stakingInfo.poolShare.multiply(JSBI.BigInt(100))
 
   // get the color of the token
@@ -163,7 +163,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <Break />
           <StatContainerTop>
             <RowBetween>
-              <TYPE.white> Your Unclaimed Rewards </TYPE.white>
+              <TYPE.white>Unclaimed Rewards</TYPE.white>
               <TYPE.white>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔓
@@ -181,50 +181,50 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
                   : '-'}
               </TYPE.white>
             </RowBetween>
-            {/*<RowBetween>*/}
-            {/*  <TYPE.white> Your Claimed Rewards </TYPE.white>*/}
-            {/*  <TYPE.white>*/}
-            {/*    <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>*/}
-            {/*      ✅*/}
-            {/*    </span>*/}
-            {/*    {stakingInfo*/}
-            {/*      ? stakingInfo.active*/}
-            {/*        ? `${stakingInfo.rewardDebt?.toSignificant(4, { groupSeparator: ',' })} ${govToken?.symbol} / $${*/}
-            {/*            govTokenPrice*/}
-            {/*              ? stakingInfo.rewardDebt*/}
-            {/*                  .multiply(govTokenPrice?.raw)*/}
-            {/*                  .toSignificant(2, { groupSeparator: ',' })*/}
-            {/*              : '0'*/}
-            {/*          }`*/}
-            {/*        : `0 ${govToken?.symbol}`*/}
-            {/*      : '-'}*/}
-            {/*  </TYPE.white>*/}
-            {/*</RowBetween>*/}
+            <RowBetween>
+              <TYPE.white>Locked Rewards</TYPE.white>
+              <TYPE.white>
+                <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                  🔒
+                </span>
+                {stakingInfo
+                  ? stakingInfo.active
+                    ? `${stakingInfo.rewardDebt?.toSignificant(6, { groupSeparator: ',' })} ${govToken?.symbol} / $${
+                        govTokenPrice
+                          ? stakingInfo.rewardDebt
+                              .multiply(govTokenPrice?.raw)
+                              .toSignificant(2, { groupSeparator: ',' })
+                          : '0'
+                      }`
+                    : `0 ${govToken?.symbol}`
+                  : '-'}
+              </TYPE.white>
+            </RowBetween>
           </StatContainerTop>
-          {/*<Break />*/}
-          {/*<BottomSection showBackground={true}>*/}
-          {/*  <TYPE.black color={'white'} fontWeight={500}>*/}
-          {/*    <span>Your Total Rewards</span>*/}
-          {/*  </TYPE.black>*/}
-          {/*  <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>*/}
-          {/*    <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>*/}
-          {/*      ⚡*/}
-          {/*    </span>*/}
-          {/*    {stakingInfo*/}
-          {/*      ? stakingInfo.active*/}
-          {/*        ? `${stakingInfo.allClaimedRewards.toSignificant(4, { groupSeparator: ',' })} ${*/}
-          {/*            govToken?.symbol*/}
-          {/*          } / $${*/}
-          {/*            govTokenPrice*/}
-          {/*              ? stakingInfo.allClaimedRewards*/}
-          {/*                  .multiply(govTokenPrice?.raw)*/}
-          {/*                  .toSignificant(2, { groupSeparator: ',' })*/}
-          {/*              : '0'*/}
-          {/*          }`*/}
-          {/*        : `0 ${govToken?.symbol}`*/}
-          {/*      : '-'}*/}
-          {/*  </TYPE.black>*/}
-          {/*</BottomSection>*/}
+          <Break />
+          <BottomSection showBackground={true}>
+            <TYPE.black color={'white'} fontWeight={500}>
+              <span>Total Unclaimed & Locked Rewards</span>
+            </TYPE.black>
+            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
+                ⚡
+              </span>
+              {stakingInfo
+                ? stakingInfo.active
+                  ? `${stakingInfo.allClaimedRewards.toSignificant(6, { groupSeparator: ',' })} ${
+                      govToken?.symbol
+                    } / $${
+                      govTokenPrice
+                        ? stakingInfo.allClaimedRewards
+                            .multiply(govTokenPrice?.raw)
+                            .toSignificant(2, { groupSeparator: ',' })
+                        : '0'
+                    }`
+                  : `0 ${govToken?.symbol}`
+                : '-'}
+            </TYPE.black>
+          </BottomSection>
         </>
       )}
     </Wrapper>

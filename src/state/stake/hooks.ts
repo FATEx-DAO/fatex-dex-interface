@@ -17,6 +17,9 @@ import calculateApr from '../../utils/calculateApr'
 import validStakingInfo from '../../utils/validStakingInfo'
 import determineBaseToken from '../../utils/determineBaseToken'
 import { useBlockNumber } from '../application/hooks'
+import { useQuery } from 'react-apollo'
+import { lockedRewardsByPool } from '../../apollo/queries'
+import { BIG_INT_ZERO } from '../../constants'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -78,6 +81,20 @@ export interface StakingInfo {
 export function useStakingInfo(active: boolean | undefined = undefined, pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
   const fateRewardController = useFateRewardController()
+
+  const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
+    // fetchPolicy: 'network-only',
+    pollInterval: 10_000,
+    variables: {
+      account: account ?? ''
+    }
+  })
+  const lockedRewardsMap = useMemo(() => {
+    return lockedRewards?.userEpoch0TotalLockedRewardByPools.reduce((memo: { [key: string]: any }, rewardInfo: any) => {
+      memo[rewardInfo.poolId] = rewardInfo
+      return memo
+    }, {})
+  }, [lockedRewards])
 
   const masterInfo = useFilterStakingRewardsInfo(chainId, active, pairToFilterBy)
 
@@ -210,7 +227,16 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.BigInt(lpTokenTotalSupply.result?.[0] ?? 0)
         )
         const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
-        const totalRewardDebt = new TokenAmount(govToken, JSBI.BigInt(userInfo?.result?.[1] ?? 0))
+        const rewardDebtDecimal = lockedRewardsMap?.[pid.toString()]?.amountFate
+        const totalRewardDebt = new TokenAmount(
+          govToken,
+          rewardDebtDecimal
+            ? JSBI.add(
+                tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
+                JSBI.multiply(totalPendingRewardAmount.raw, JSBI.BigInt('4'))
+              )
+            : '0'
+        )
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result
@@ -309,12 +335,7 @@ export function useTotalLockedGovTokensEarned(): TokenAmount | undefined {
     return (
       stakingInfos?.reduce(
         (accumulator, stakingInfo) =>
-          accumulator.add(
-            new TokenAmount(
-              govToken,
-              stakingInfo.earnedAmount.add(stakingInfo.rewardDebt).multiply(REWARD_MULTIPLIER).quotient
-            )
-          ),
+          accumulator.add(new TokenAmount(govToken, stakingInfo.earnedAmount.add(stakingInfo.rewardDebt).quotient)),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )
