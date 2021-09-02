@@ -230,12 +230,10 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         const rewardDebtDecimal = lockedRewardsMap?.[pid.toString()]?.amountFate
         const totalRewardDebt = new TokenAmount(
           govToken,
-          rewardDebtDecimal
-            ? JSBI.add(
-                tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
-                JSBI.multiply(totalPendingRewardAmount.raw, JSBI.BigInt('4'))
-              )
-            : '0'
+          JSBI.add(
+            tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
+            JSBI.multiply(totalPendingRewardAmount.raw, JSBI.BigInt('4'))
+          )
         )
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
