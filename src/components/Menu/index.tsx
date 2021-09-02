@@ -125,9 +125,9 @@ export default function Menu() {
             <Send size={14} />
             Telegram
           </MenuItem>
-          <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/'}>
+          <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
             <Book size={14} />
-            FAQ
+            Green Paper
           </MenuItem>
           <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
             <Code size={14} />
