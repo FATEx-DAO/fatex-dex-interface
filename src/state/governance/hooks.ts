@@ -155,6 +155,22 @@ export function useUserDelegatee(): string {
   return result?.[0] ?? undefined
 }
 
+export function useQuorum(): TokenAmount | undefined {
+  const { chainId } = useActiveWeb3React()
+  const contract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
+  const govToken = useGovernanceToken()
+  const quorum = useSingleCallResult(contract, 'quorumVotes', [])?.result?.[0]
+  return govToken && quorum ? new TokenAmount(govToken, quorum) : undefined
+}
+
+export function useProposalThreshold(): TokenAmount | undefined {
+  const { chainId } = useActiveWeb3React()
+  const contract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
+  const govToken = useGovernanceToken()
+  const quorum = useSingleCallResult(contract, 'proposalThreshold', [])?.result?.[0]
+  return govToken && quorum ? new TokenAmount(govToken, quorum) : undefined
+}
+
 // gets the users current votes
 export function useUserVotes(): TokenAmount | undefined {
   const { account } = useActiveWeb3React()

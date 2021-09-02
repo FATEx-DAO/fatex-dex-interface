@@ -197,7 +197,7 @@ export default function VotePage({
           {proposalData && proposalData.status === 'active' && !showVotingButtons && (
             <GreyCard>
               <TYPE.black>
-                Only UNI votes that were self delegated or delegated to another address before block{' '}
+                Only FATE votes that were self delegated or delegated to another address before block{' '}
                 {proposalData.startBlock} are eligible for voting.{' '}
                 {showLinkForUnlock && (
                   <span>

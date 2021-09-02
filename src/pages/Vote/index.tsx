@@ -10,18 +10,25 @@ import { ButtonPrimary } from '../../components/Button'
 import { Button } from 'rebass/styled-components'
 import { darken } from 'polished'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
-import { ProposalData, useAllProposalData, useUserDelegatee, useUserVotes } from '../../state/governance/hooks'
+import {
+  ProposalData,
+  useAllProposalData,
+  useProposalThreshold,
+  useUserDelegatee,
+  useUserVotes
+} from '../../state/governance/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { useTokenBalance } from '../../state/wallet/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { ZERO_ADDRESS } from '../../constants'
-import { ChainId, JSBI, TokenAmount } from '@fatex-dao/sdk'
+import { ChainId, JSBI, Percent, TokenAmount } from '@fatex-dao/sdk'
 import { getEtherscanLink, shortenAddress } from '../../utils'
 import Loader from '../../components/Loader'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import { useModalOpen, useToggleDelegateModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { useTotalSupply } from '../../data/TotalSupply'
 
 const PageWrapper = styled(AutoColumn)``
 
@@ -109,6 +116,11 @@ export default function Vote() {
 
   const govToken = useGovernanceToken()
 
+  const proposalThreshold = useProposalThreshold()
+  const totalSupply = useTotalSupply(govToken)
+  const proposalThresholdPercentage =
+    proposalThreshold && totalSupply ? new Percent(proposalThreshold.raw, totalSupply.raw) : new Percent('0')
+
   // toggle for showing delegation modal
   const showDelegateModal = useModalOpen(ApplicationModal.DELEGATE)
   const toggleDelegateModal = useToggleDelegateModal()
@@ -140,7 +152,7 @@ export default function Vote() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Viper Governance</TYPE.white>
+                <TYPE.white fontWeight={600}>FATExDAO Governance</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
@@ -150,7 +162,7 @@ export default function Vote() {
               </RowBetween>
               <ExternalLink
                 style={{ color: 'white', textDecoration: 'underline' }}
-                href="https://uniswap.org/blog/uni"
+                href="https://fatexdao.gitbook.io/fatexdao/governance/fate-supply/7-day-fate-rewards-schedule-voting-process"
                 target="_blank"
               >
                 <TYPE.white fontSize={14}>Read more about {govToken?.symbol} governance</TYPE.white>
@@ -233,7 +245,8 @@ export default function Vote() {
         })}
       </TopSection>
       <TYPE.subHeader color="text3">
-        A minimum threshhold of 1% of the total {govToken?.symbol} supply is required to submit proposals
+        A minimum threshold of {proposalThresholdPercentage.toSignificant(4)}% of the total
+        {govToken?.symbol} supply is required to submit proposals
       </TYPE.subHeader>
     </PageWrapper>
   )
