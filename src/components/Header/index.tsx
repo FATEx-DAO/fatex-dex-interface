@@ -198,11 +198,17 @@ const Title = styled.a`
   margin-top: -18px;
   line-height: 32px;
   margin-left: 8px;
+  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
-  :hover {
-    cursor: pointer;
+
+  @media screen and (max-width: 960px) {
+    margin-top: 4px;
+  }
+
+  @media screen and (max-width: 600px) {
+    margin-top: -20px;
   }
 `
 
@@ -265,6 +271,27 @@ const StyledNavLink = styled(NavLink).attrs({
       display: none;
 `}
 `*/
+
+const DesktopHeader = styled.div`
+  display: contents;
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+`
+
+const MobileHeader = styled.div`
+  display: none;
+  @media screen and (max-width: 600px) {
+    display: contents;
+  }
+`
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  align-items: flex-end;
+`
 
 export const StyledMenuButton = styled.button`
   position: relative;
@@ -338,36 +365,74 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">x</Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-            Staking
-          </StyledNavLink>
-          <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
-            xFATE
-          </StyledNavLink>
-          <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
-            Vote
-          </StyledNavLink>
-          <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-            Migrate
-          </StyledNavLink>
-        </HeaderLinks>
+        <MobileHeader>
+          <HeaderLinks>
+            <Column>
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('swap')}
+              </StyledNavLink>
+              <StyledNavLink
+                id={`pool-nav-link`}
+                to={'/pool'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add') ||
+                  pathname.startsWith('/remove') ||
+                  pathname.startsWith('/create') ||
+                  pathname.startsWith('/find')
+                }
+              >
+                {t('pool')}
+              </StyledNavLink>
+              <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
+                Staking
+              </StyledNavLink>
+            </Column>
+            <Column>
+              <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+                xFATE
+              </StyledNavLink>
+              <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
+                Vote
+              </StyledNavLink>
+              <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
+                Migrate
+              </StyledNavLink>
+            </Column>
+          </HeaderLinks>
+        </MobileHeader>
+        <DesktopHeader>
+          <HeaderLinks>
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
+            </StyledNavLink>
+            <StyledNavLink
+              id={`pool-nav-link`}
+              to={'/pool'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                pathname.startsWith('/find')
+              }
+            >
+              {t('pool')}
+            </StyledNavLink>
+            <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
+              Staking
+            </StyledNavLink>
+            <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+              xFATE
+            </StyledNavLink>
+            <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
+              Vote
+            </StyledNavLink>
+            <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
+              Migrate
+            </StyledNavLink>
+          </HeaderLinks>
+        </DesktopHeader>
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
