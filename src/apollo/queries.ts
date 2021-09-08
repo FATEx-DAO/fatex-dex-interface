@@ -9,3 +9,16 @@ export const lockedRewardsByPool = gql`
     }
   }
 `
+
+export const proposalDescriptions = gql`
+  query latestProposals {
+    proposals(orderBy: id, orderDirection: desc) {
+      id
+      description
+      targets
+      signatures
+      calldatas
+      values
+    }
+  }
+`

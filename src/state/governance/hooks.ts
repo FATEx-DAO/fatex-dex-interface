@@ -8,9 +8,13 @@ import { ethers, utils } from 'ethers'
 import { calculateGasMargin } from '../../utils'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../transactions/hooks'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { abi as GOV_ABI } from '../../constants/abis/governor-alpha.json'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { useQuery } from 'react-apollo'
+import { proposalDescriptions } from '../../apollo/queries'
+import { governanceClient } from '../../apollo/client'
+import { BigNumber } from '@ethersproject/bignumber'
 
 interface ProposalDetail {
   target: string
@@ -27,8 +31,16 @@ export interface ProposalData {
   forCount: number
   againstCount: number
   startBlock: number
-  endBlock: number
+  endTimestamp: number
   details: ProposalDetail[]
+}
+
+interface GqlProposalDetail {
+  description: string
+  targets: string[]
+  values: BigNumber[]
+  signatures: BigNumber[]
+  calldatas: BigNumber[]
 }
 
 const enumerateProposalState = (state: number) => {
@@ -58,7 +70,6 @@ export function useDataFromEventLogs() {
   // create filter for these specific events
   const filter = {
     ...govContract?.filters?.['ProposalCreated'](),
-    // fromBlock: GOVERNANCE_START_BLOCK[chainId ?? ChainId.HARMONY_MAINNET],
     fromBlock: 0,
     toBlock: 'latest'
   }
@@ -91,6 +102,7 @@ export function useDataFromEventLogs() {
         .reverse()
       setFormattedEvents(formattedEventData)
     }
+
     if (!formattedEvents) {
       fetchData()
     }
@@ -110,7 +122,23 @@ export function useAllProposalData(chainId: ChainId) {
   }
 
   // get metadata from past events
-  const formattedEvents = useDataFromEventLogs()
+  const { data: proposalsWithDescriptions } = useQuery(proposalDescriptions, {
+    // fetchPolicy: 'network-only',
+    pollInterval: 10_000,
+    client: governanceClient
+  })
+  const proposalDataMap = useMemo(() => {
+    return proposalsWithDescriptions?.proposals?.reduce((memo: { [id: string]: GqlProposalDetail }, proposal: any) => {
+      memo[proposal.id] = {
+        description: proposal.description,
+        targets: proposal.targets,
+        values: proposal.values,
+        signatures: proposal.signatures,
+        calldatas: proposal.calldatas
+      }
+      return memo
+    }, {})
+  }, [proposalsWithDescriptions])
 
   // get all proposal entities
   const allProposals = useSingleContractMultipleData(govContract, 'proposals', proposalIndexes)
@@ -118,16 +146,17 @@ export function useAllProposalData(chainId: ChainId) {
   // get all proposal states
   const allProposalStates = useSingleContractMultipleData(govContract, 'state', proposalIndexes)
 
-  if (formattedEvents && allProposals && allProposalStates) {
+  if (proposalsWithDescriptions && allProposals && allProposalStates) {
     allProposals.reverse()
     allProposalStates.reverse()
 
     return allProposals
       .filter((p, i) => {
-        return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(formattedEvents[i])
+        return Boolean(p.result) && Boolean(allProposalStates[i]?.result) && Boolean(proposalDataMap)
       })
       .map((p, i) => {
-        const description = PRELOADED_PROPOSALS.get(allProposals.length - i - 1) || formattedEvents[i].description
+        const description =
+          PRELOADED_PROPOSALS.get(allProposals.length - i - 1) || proposalDataMap[i.toString()]?.description
         const formattedProposal: ProposalData = {
           id: allProposals[i]?.result?.id.toString(),
           title: description?.split(/# |\n/g)[1] || 'Untitled',
@@ -137,8 +166,12 @@ export function useAllProposalData(chainId: ChainId) {
           forCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.forVotes.toString(), 18)),
           againstCount: parseFloat(ethers.utils.formatUnits(allProposals[i]?.result?.againstVotes.toString(), 18)),
           startBlock: parseInt(allProposals[i]?.result?.startBlock?.toString()),
-          endBlock: parseInt(allProposals[i]?.result?.endBlock?.toString()),
-          details: formattedEvents[i].details
+          endTimestamp: parseInt(allProposals[i]?.result?.endTimestamp?.toString()),
+          details: proposalDataMap[i.toString()]?.targets?.map((target: string, index: number) => ({
+            target: target,
+            functionSig: proposalDataMap[i.toString()]?.signatures[index],
+            callData: proposalDataMap[i.toString()]?.calldatas[index]
+          }))
         }
         return formattedProposal
       })
