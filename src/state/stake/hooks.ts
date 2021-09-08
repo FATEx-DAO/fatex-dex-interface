@@ -199,7 +199,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier)
         )
 
-        // 428,338
         const poolBlockRewards = specificPoolRewardsPerBlock?.result?.[0]
           ? new TokenAmount(
               govToken,

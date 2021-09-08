@@ -30,6 +30,21 @@ export const STAKING_REWARDS_INFO: {
       pid: 3,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/1ETH'),
       active: true
+    },
+    // {
+    //   pid: 4,
+    //   tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1WBTC/FATE'),
+    //   active: true
+    // },
+    {
+      pid: 5,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1ETH'),
+      active: true
+    },
+    {
+      pid: 6,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1WBTC'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
