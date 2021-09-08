@@ -53,16 +53,21 @@ export function useProposalCount(chainId: ChainId): number | undefined {
 export function useDataFromEventLogs() {
   const { library, chainId } = useActiveWeb3React()
   const [formattedEvents, setFormattedEvents] = useState<any>()
-  const govContract = useGovernanceContract(chainId ?? ChainId.MAINNET)
+  const govContract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
 
   // create filter for these specific events
-  const filter = { ...govContract?.filters?.['ProposalCreated'](), fromBlock: 0, toBlock: 'latest' }
+  const filter = {
+    ...govContract?.filters?.['ProposalCreated'](),
+    // fromBlock: GOVERNANCE_START_BLOCK[chainId ?? ChainId.HARMONY_MAINNET],
+    fromBlock: 0,
+    toBlock: 'latest'
+  }
   const eventParser = new ethers.utils.Interface(GOV_ABI)
 
   useEffect(() => {
     async function fetchData() {
       const pastEvents = await library?.getLogs(filter)
-      // reverse events to get them from newest to odlest
+      // reverse events to get them from newest to oldest
       const formattedEventData = pastEvents
         ?.map(event => {
           const eventParsed = eventParser.parseLog(event).args
@@ -153,6 +158,22 @@ export function useUserDelegatee(): string {
   const uniContract = useUniContract()
   const { result } = useSingleCallResult(uniContract, 'delegates', [account ?? undefined])
   return result?.[0] ?? undefined
+}
+
+export function useQuorum(): TokenAmount | undefined {
+  const { chainId } = useActiveWeb3React()
+  const contract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
+  const govToken = useGovernanceToken()
+  const quorum = useSingleCallResult(contract, 'quorumVotes', [])?.result?.[0]
+  return govToken && quorum ? new TokenAmount(govToken, quorum) : undefined
+}
+
+export function useProposalThreshold(): TokenAmount | undefined {
+  const { chainId } = useActiveWeb3React()
+  const contract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
+  const govToken = useGovernanceToken()
+  const quorum = useSingleCallResult(contract, 'proposalThreshold', [])?.result?.[0]
+  return govToken && quorum ? new TokenAmount(govToken, quorum) : undefined
 }
 
 // gets the users current votes
