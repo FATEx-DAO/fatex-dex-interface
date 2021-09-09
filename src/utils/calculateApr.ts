@@ -1,5 +1,4 @@
-import { Price, Fraction, TokenAmount, JSBI } from '@fatex-dao/sdk'
-import { utils } from 'ethers'
+import { Fraction, JSBI, Price, TokenAmount } from '@fatex-dao/sdk'
 
 export default function calculateApr(
   govTokenWethPrice: Price | undefined,
@@ -18,7 +17,6 @@ export default function calculateApr(
 
   if (multiplied && valueOfTotalStakedAmountInPairCurrency.greaterThan('0')) {
     if (valueOfTotalStakedAmountInPairCurrency instanceof TokenAmount) {
-      // apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency?.raw)
       if (valueOfTotalStakedAmountInPairCurrency.greaterThan(multiplied)) {
         apr = new Fraction(valueOfTotalStakedAmountInPairCurrency.raw)
           .subtract(multiplied)
@@ -27,15 +25,10 @@ export default function calculateApr(
         apr = multiplied.subtract(valueOfTotalStakedAmountInPairCurrency).divide(valueOfTotalStakedAmountInPairCurrency)
       }
     } else {
-      // Somehow a Fraction/Fraction division has to be further divided by 1 ETH to get the correct number?
-      // apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency).divide(utils.parseEther('1').toString())
       if (valueOfTotalStakedAmountInPairCurrency.greaterThan(multiplied)) {
-        apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency).divide(utils.parseEther('1').toString())
+        apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency)
       } else {
-        apr = multiplied
-          .subtract(valueOfTotalStakedAmountInPairCurrency)
-          .divide(valueOfTotalStakedAmountInPairCurrency)
-          .divide(utils.parseEther('1').toString())
+        apr = multiplied.subtract(valueOfTotalStakedAmountInPairCurrency).divide(valueOfTotalStakedAmountInPairCurrency)
       }
     }
 
