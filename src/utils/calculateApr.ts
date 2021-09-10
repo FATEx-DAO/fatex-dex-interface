@@ -17,19 +17,9 @@ export default function calculateApr(
 
   if (multiplied && valueOfTotalStakedAmountInPairCurrency.greaterThan('0')) {
     if (valueOfTotalStakedAmountInPairCurrency instanceof TokenAmount) {
-      if (valueOfTotalStakedAmountInPairCurrency.greaterThan(multiplied)) {
-        apr = new Fraction(valueOfTotalStakedAmountInPairCurrency.raw)
-          .subtract(multiplied)
-          .divide(valueOfTotalStakedAmountInPairCurrency)
-      } else {
-        apr = multiplied.subtract(valueOfTotalStakedAmountInPairCurrency).divide(valueOfTotalStakedAmountInPairCurrency)
-      }
+      apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency)
     } else {
-      if (valueOfTotalStakedAmountInPairCurrency.greaterThan(multiplied)) {
-        apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency)
-      } else {
-        apr = multiplied.subtract(valueOfTotalStakedAmountInPairCurrency).divide(valueOfTotalStakedAmountInPairCurrency)
-      }
+      apr = multiplied.divide(valueOfTotalStakedAmountInPairCurrency)
     }
 
     return apr
