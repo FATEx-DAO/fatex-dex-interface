@@ -12,8 +12,6 @@ import { currencyId } from '../../utils/currencyId'
 import { Break, CardNoise, CardBGImage } from './styled'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
-//import useUSDCPrice from '../../utils/useUSDCPrice'
-//import { BIG_INT_SECONDS_IN_WEEK } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 const StatContainer = styled.div`
