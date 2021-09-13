@@ -13,6 +13,7 @@ import { ButtonPrimary } from '../Button'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
 import { Blockchain } from '@fatex-dao/sdk'
+import DiscourseLogo from '../../assets/images/discourse-logo.svg'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -89,6 +90,12 @@ const MenuItem = styled(ExternalLink)`
   > svg {
     margin-right: 8px;
   }
+  img {
+    filter: invert(1);
+    opacity: 0.6;
+    margin-right: 8px;
+    width: 14px;
+  }
 `
 
 export default function Menu() {
@@ -132,6 +139,10 @@ export default function Menu() {
           <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
             <Code size={14} />
             Code
+          </MenuItem>
+          <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
+            <img src={DiscourseLogo} />
+            Discourse
           </MenuItem>
           {account && blockchain === Blockchain.ETHEREUM && (
             <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
