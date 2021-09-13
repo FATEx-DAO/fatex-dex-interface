@@ -20,6 +20,7 @@ import { useBlockNumber } from '../application/hooks'
 import { useQuery } from 'react-apollo'
 import { lockedRewardsByPool } from '../../apollo/queries'
 import { BIG_INT_ZERO } from '../../constants'
+import { rewardsClient } from '../../apollo/client'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -81,12 +82,13 @@ export interface StakingInfo {
 export function useStakingInfo(active: boolean | undefined = undefined, pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useActiveWeb3React()
   const fateRewardController = useFateRewardController()
+  const blockNumber = useBlockNumber()
 
   const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
-    // fetchPolicy: 'network-only',
-    pollInterval: 10_000,
+    client: rewardsClient,
     variables: {
-      account: account ?? ''
+      account: account ?? '',
+      blockNumber: blockNumber
     }
   })
   const lockedRewardsMap = useMemo(() => {

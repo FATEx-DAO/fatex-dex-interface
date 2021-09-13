@@ -1,7 +1,6 @@
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import 'inter-ui'
 import React, { StrictMode } from 'react'
-import { ApolloProvider } from 'react-apollo'
 import { isMobile } from 'react-device-detect'
 import ReactDOM from 'react-dom'
 import ReactGA from 'react-ga'
@@ -20,7 +19,6 @@ import TransactionUpdater from './state/transactions/updater'
 import UserUpdater from './state/user/updater'
 import ThemeProvider, { FixedGlobalStyle, ThemedGlobalStyle } from './theme'
 import getLibrary from './utils/getLibrary'
-import { rewardsClient } from './apollo/client'
 
 const Web3ProviderNetwork = createWeb3ReactRoot(NetworkContextName)
 
@@ -60,23 +58,21 @@ function Updaters() {
 ReactDOM.render(
   <StrictMode>
     <FixedGlobalStyle />
-    <ApolloProvider client={rewardsClient}>
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ProviderNetwork getLibrary={getLibrary}>
-          <Blocklist>
-            <Provider store={store}>
-              <Updaters />
-              <ThemeProvider>
-                <ThemedGlobalStyle />
-                <HashRouter>
-                  <App />
-                </HashRouter>
-              </ThemeProvider>
-            </Provider>
-          </Blocklist>
-        </Web3ProviderNetwork>
-      </Web3ReactProvider>
-    </ApolloProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Web3ProviderNetwork getLibrary={getLibrary}>
+        <Blocklist>
+          <Provider store={store}>
+            <Updaters />
+            <ThemeProvider>
+              <ThemedGlobalStyle />
+              <HashRouter>
+                <App />
+              </HashRouter>
+            </ThemeProvider>
+          </Provider>
+        </Blocklist>
+      </Web3ProviderNetwork>
+    </Web3ReactProvider>
   </StrictMode>,
   document.getElementById('root')
 )

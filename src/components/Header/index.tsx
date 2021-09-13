@@ -392,9 +392,9 @@ export default function Header() {
               <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
                 xFATE
               </StyledNavLink>
-              <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
-                Vote
-              </StyledNavLink>
+              {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
+              {/*  Vote*/}
+              {/*</StyledNavLink>*/}
               <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
                 Migrate
               </StyledNavLink>
@@ -425,9 +425,9 @@ export default function Header() {
             <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
               xFATE
             </StyledNavLink>
-            <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
-              Vote
-            </StyledNavLink>
+            {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
+            {/*  Vote*/}
+            {/*</StyledNavLink>*/}
             <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
               Migrate
             </StyledNavLink>

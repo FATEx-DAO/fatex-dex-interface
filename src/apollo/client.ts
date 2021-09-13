@@ -4,7 +4,7 @@ import { HttpLink } from 'apollo-link-http'
 
 export const rewardsClient = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://sushi.graph.t.hmny.io/subgraphs/name/fatex-dao/fatex-dao-rewards'
+    uri: 'https://graph.t.hmny.io/subgraphs/name/fatex-dao/fatex-dao-rewards'
   }),
   cache: new InMemoryCache()
 })
