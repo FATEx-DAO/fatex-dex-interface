@@ -4,6 +4,7 @@ import Vibrant from 'node-vibrant'
 import { hex } from 'wcag-contrast'
 import { Token, ChainId } from '@fatex-dao/sdk'
 import uriToHttp from 'utils/uriToHttp'
+import { getTokenFallbackLogoURL } from '../components/CurrencyLogo'
 
 async function getColorFromToken(token: Token): Promise<string | null> {
   if (token.chainId === ChainId.RINKEBY && token.address === '0xc7AD46e0b8a400Bb3C915120d284AafbA8fc4735') {
@@ -11,7 +12,7 @@ async function getColorFromToken(token: Token): Promise<string | null> {
   }
 
   const path = [56, 97, 1666600000, 1666700000].includes(token.chainId)
-    ? `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${token.symbol}.png`
+    ? getTokenFallbackLogoURL(token)
     : `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${token.address}/logo.png`
 
   return Vibrant.from(path)
