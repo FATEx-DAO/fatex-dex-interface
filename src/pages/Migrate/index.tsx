@@ -133,6 +133,7 @@ const SwapTabs = styled.div`
   width: 100%;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 `
 
 const SwapTab = styled.div<{ selected: boolean }>`
@@ -145,6 +146,7 @@ const SwapTab = styled.div<{ selected: boolean }>`
   display: inline-block;
   text-align: center;
   border-radius: 8px;
+  margin-top: 16px;
 
   :hover {
     border-color: ${({ theme }) => theme.text1};
