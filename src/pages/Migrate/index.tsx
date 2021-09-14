@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import styled, { ThemeContext } from 'styled-components/macro'
-import { PairType } from '@fatex-dao/sdk'
+import { Fraction, PairType } from '@fatex-dao/sdk'
 
 import { useTokenBalancesWithLoadingIndicator } from '../../state/wallet/hooks'
 import { HideSmall, TYPE } from '../../theme'
@@ -14,7 +14,7 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Web3Status from '../../components/Web3Status'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
+import { useFuzzMigrator, useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
 import { useTokenAllowance } from '../../data/Allowances'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useMigrateLiquidityCallback } from '../../hooks/useMigrateLiquidityCallback'
@@ -57,7 +57,7 @@ const WalletConnectWrapper = styled.div`
   margin: 10px auto;
 `
 
-const ViperswapLPPair = styled.div<{ selected: boolean }>`
+const OtherLpPair = styled.div<{ selected: boolean }>`
   display: block;
   width: 100%;
   border: 3px solid ${({ theme, selected }) => (selected ? theme.text1 : theme.text3)};
@@ -151,7 +151,7 @@ const SwapTab = styled.div<{ selected: boolean }>`
   }
 `
 
-const swapNames = ['Viperswap', 'Sushiswap']
+const swapNames = ['Viperswap', 'Sushiswap', 'FuzzSwap']
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
@@ -186,25 +186,52 @@ export default function Pool() {
   }, [viperLpTokens])
   const viperMigratorContract = useViperMigrator()
 
+  const fuzzPairs = usePairs(trackedTokenPairs, PairType.FUZZ_FI)
+  const fuzzLpTokens = useMemo(() => {
+    return trackedTokenPairs.map(tokenPair => toV2LiquidityToken(tokenPair, PairType.FUZZ_FI))
+  }, [trackedTokenPairs])
+  const [fuzzBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, fuzzLpTokens)
+  const fuzzPairsWithBalances = useMemo(() => {
+    return fuzzPairs.filter(([, pair]) => {
+      return pair && fuzzBalances[pair.liquidityToken.address]?.greaterThan('0')
+    })
+  }, [fuzzLpTokens])
+  const fuzzMigratorContract = useFuzzMigrator()
+
   const selectedPairsToMigrate = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperPairsWithBalances
-    } else {
+    } else if (selectedTabIndex == 1) {
       return sushiPairsWithBalances
+    } else if (selectedTabIndex === 2) {
+      return fuzzPairsWithBalances
+    } else {
+      console.error('invalid selectedTabIndex at selectedPairsToMigrate')
+      return []
     }
   }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
   const selectedPairBalances = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperBalances
-    } else {
+    } else if (selectedTabIndex === 1) {
       return sushiBalances
+    } else if (selectedTabIndex === 2) {
+      return fuzzBalances
+    } else {
+      console.error('invalid selectedTabIndex at selectedPairBalances')
+      return {}
     }
   }, [selectedTabIndex, viperBalances, sushiBalances])
   const selectedPairsWithBalancesMap = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperPairsWithBalances
-    } else {
+    } else if (selectedTabIndex === 1) {
       return sushiPairsWithBalances
+    } else if (selectedTabIndex === 2) {
+      return fuzzPairsWithBalances
+    } else {
+      console.error('invalid selectedTabIndex at selectedPairsToMigrate')
+      return []
     }
   }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
   const selectedPair = useMemo(() => {
@@ -222,10 +249,15 @@ export default function Pool() {
   const selectedMigratorContract = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperMigratorContract
-    } else {
+    } else if (selectedTabIndex === 1) {
       return sushiMigratorContract
+    } else if (selectedTabIndex === 2) {
+      return fuzzMigratorContract
+    } else {
+      console.error('invalid selectedTabIndex for selectedMigratorContract')
+      return null
     }
-  }, [selectedTabIndex, viperMigratorContract, sushiMigratorContract])
+  }, [selectedTabIndex, viperMigratorContract, sushiMigratorContract, fuzzMigratorContract])
   const allowance = useTokenAllowance(
     selectedPair?.liquidityToken,
     account ?? undefined,
@@ -247,6 +279,8 @@ export default function Pool() {
       return PairType.VIPER
     } else if (selectedTabIndex === 1) {
       return PairType.SUSHI
+    } else if (selectedTabIndex === 2) {
+      return PairType.FUZZ_FI
     } else {
       console.error('Invalid tab index, ', selectedTabIndex)
       return PairType.FATE
@@ -293,7 +327,7 @@ export default function Pool() {
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Migrate your Viper or Sushi LP tokens to FATEx LP tokens with just a couple of clicks.`}
+                  {`Migrate your Viper, Sushi, or FuzzSwap LP tokens to FATEx LP tokens with just a couple of clicks.`}
                 </TYPE.white>
               </RowBetween>
             </AutoColumn>
@@ -311,12 +345,17 @@ export default function Pool() {
               </HideSmall>
             </TitleRow>
             <SwapTabs>
-              <SwapTab onClick={() => setSelectedTabIndex(0)} selected={selectedTabIndex === 0}>
-                {swapNames[0]}
-              </SwapTab>
-              <SwapTab onClick={() => setSelectedTabIndex(1)} selected={selectedTabIndex === 1}>
-                {swapNames[1]}
-              </SwapTab>
+              {swapNames.map((swapName, i) => {
+                return (
+                  <SwapTab
+                    key={`swap-tab-${swapName}`}
+                    onClick={() => setSelectedTabIndex(i)}
+                    selected={selectedTabIndex === i}
+                  >
+                    {swapName}
+                  </SwapTab>
+                )
+              })}
             </SwapTabs>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
@@ -338,8 +377,9 @@ export default function Pool() {
             ) : Object.values(selectedPairsWithBalancesMap).length > 0 ? (
               <LPPairsWrapper>
                 {selectedPairsToMigrate.map(([, pair], index) => {
+                  const balance = selectedPairBalances?.[pair?.liquidityToken.address ?? '']
                   return (
-                    <ViperswapLPPair
+                    <OtherLpPair
                       key={index}
                       selected={selectedPairIndex === index}
                       onClick={() => {
@@ -353,8 +393,10 @@ export default function Pool() {
                       <PairName>
                         {pair?.token0.symbol}-{pair?.token1.symbol}
                       </PairName>
-                      <PairAmount>{selectedPairBalance?.toFixed(6) ?? '0'}</PairAmount>
-                    </ViperswapLPPair>
+                      <PairAmount>
+                        {balance?.lessThan(new Fraction('1', '1000000')) ? '>0.000001' : balance?.toFixed(6) ?? '0'}
+                      </PairAmount>
+                    </OtherLpPair>
                   )
                 })}
               </LPPairsWrapper>

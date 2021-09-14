@@ -106,6 +106,18 @@ export const VIPER_MIGRATOR: { [chainId in ChainId]: string } = {
   [ChainId.HARMONY_TESTNET]: '0xd50D8901aB7F455494cE50eb7665DFB263B0a962'
 }
 
+export const FUZZ_MIGRATOR: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: '0x5AA4cD364c87Ffa363bF82E3489f72E39E024abC',
+  [ChainId.HARMONY_TESTNET]: ZERO_ONE_ADDRESS
+}
+
 export const X_FATE: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),

@@ -23,8 +23,11 @@ function pairTypeToString(pairType: PairType) {
     return 'Sushi'
   } else if (pairType === PairType.VIPER) {
     return 'Viper'
+  } else if (pairType === PairType.FUZZ_FI) {
+    return 'FuzzSwap'
   } else {
-    throw new Error('Invalid pairType, found ' + pairType)
+    console.error('Invalid pairType, found ', pairType)
+    return ''
   }
 }
 
