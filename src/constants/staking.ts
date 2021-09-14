@@ -48,7 +48,7 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       pid: 8,
-      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/xFATE'),
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/XFATE'),
       active: true
     },
     {
