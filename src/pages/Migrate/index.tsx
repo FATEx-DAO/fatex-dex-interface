@@ -397,7 +397,7 @@ export default function Pool() {
                         {pair?.token0.symbol}-{pair?.token1.symbol}
                       </PairName>
                       <PairAmount>
-                        {balance?.lessThan(new Fraction('1', '1000000')) ? '>0.000001' : balance?.toFixed(6) ?? '0'}
+                        {balance?.lessThan(new Fraction('1', '1000000')) ? '<0.000001' : balance?.toFixed(6) ?? '0'}
                       </PairAmount>
                     </OtherLpPair>
                   )
