@@ -1,17 +1,17 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { ButtonError } from '../Button'
 import { useFeeTokenConverterToFateContract } from '../../hooks/useContract'
-import { SubmittedView, LoadingView } from '../ModalViews'
+import { LoadingView, SubmittedView } from '../ModalViews'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
-import { useMultipleContractSingleData } from '../../state/multicall/hooks'
+import { CallState, useMultipleContractSingleData } from '../../state/multicall/hooks'
 import { useTrackedTokenPairs } from '../../state/user/hooks'
 import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -31,6 +31,7 @@ const ContentWrapper = styled(AutoColumn)`
     }
   }
 `
+
 interface ClaimModalProps {
   isOpen: boolean
   onDismiss: () => void
@@ -69,8 +70,12 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, ERC20_INTERFACE, 'balanceOf', [
     feeTokenConverterToFate?.address
   ])
+  const balanceResultsMap = liquidityTokenAddresses.reduce<{ [address: string]: CallState }>((memo, address, index) => {
+    memo[address ?? ''] = balanceResults[index]
+    return memo
+  }, {})
 
-  const [token0s, token1s] = useEligibleXFatePools(pairs, balanceResults)
+  const [token0s, token1s] = useEligibleXFatePools(pairs, balanceResultsMap)
 
   const rewardsAreClaimable = token0s.length > 0 && token1s.length > 0
 
