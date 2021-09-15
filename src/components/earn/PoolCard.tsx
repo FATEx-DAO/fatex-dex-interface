@@ -13,6 +13,8 @@ import { Break, CardNoise, CardBGImage } from './styled'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { useCurrency } from '../../hooks/Tokens'
+import { ZERO_ADDRESS } from '../../constants'
 
 const StatContainer = styled.div`
   display: flex;
@@ -96,9 +98,13 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
   // get the color of the token
   const token0 = stakingInfo.tokens[0]
   const token1 = stakingInfo.tokens[1]
-  const currency0 = unwrappedToken(token0)
-  const currency1 = unwrappedToken(token1)
+  const currency0 =
+    useCurrency(unwrappedToken(token0) === token0 ? token0.address : unwrappedToken(token0).symbol) ?? undefined
+  const currency1 =
+    useCurrency(unwrappedToken(token1) === token1 ? token1.address : unwrappedToken(token1).symbol) ?? undefined
   const backgroundColor = useColor(stakingInfo?.baseToken)
+  const currencyId0 = currency0 ? currencyId(currency0) : ZERO_ADDRESS
+  const currencyId1 = currency1 ? currencyId(currency1) : ZERO_ADDRESS
 
   return (
     <Wrapper showBackground={isStaking} bgColor={backgroundColor}>
@@ -108,10 +114,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
       <TopSection>
         <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={24} />
         <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
-          {currency0.symbol}-{currency1.symbol}
+          {currency0?.symbol}-{currency1?.symbol}
         </TYPE.white>
 
-        <StyledInternalLink to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+        <StyledInternalLink to={`/staking/${currencyId0}/${currencyId1}`} style={{ width: '100%' }}>
           <ButtonPrimary padding="8px" borderRadius="8px">
             {isStaking || isArchived ? 'Manage' : 'Deposit'}
           </ButtonPrimary>

@@ -56,6 +56,9 @@ export default function CurrencyLogo({
       const logoUrlLocation = [56, 97, 1666600000, 1666700000].includes(currency.chainId)
         ? getTokenFallbackLogoURL(currency)
         : getTokenLogoURL(currency.address)
+      if (currency.symbol === '1PAXG') {
+        console.error('logoUrlLocation ', logoUrlLocation)
+      }
 
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, logoUrlLocation]

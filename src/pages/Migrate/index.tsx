@@ -153,8 +153,7 @@ const SwapTab = styled.div<{ selected: boolean }>`
   }
 `
 
-// const swapNames = ['Viperswap', 'Sushiswap', 'FuzzSwap']
-const swapNames = ['Viperswap', 'Sushiswap']
+const swapNames = ['Viperswap', 'Sushiswap', 'FuzzSwap']
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
