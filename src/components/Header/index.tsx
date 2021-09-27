@@ -10,9 +10,6 @@ import styled from 'styled-components'
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 import { useETHBalances /*, useAggregateGovTokenBalance*/ } from '../../state/wallet/hooks'
-//import { CardNoise } from '../earn/styled'
-//import { CountUp } from 'use-count-up'
-//import { TYPE } from '../../theme'
 
 import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
@@ -20,16 +17,12 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
-//import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
-//import { useUserHasAvailableClaim } from '../../state/claim/hooks'
-//import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-//import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import GovTokenBalanceContent from './GovTokenBalanceContent'
-//import usePrevious from '../../hooks/usePrevious'
 import { BASE_CURRENCY } from '../../connectors'
 import Card from '../Card'
-//import useGovernanceToken from '../../hooks/useGovernanceToken'
+import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { ExternalLink } from '../../theme'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -128,32 +121,32 @@ const AccountElement = styled.div<{ active: boolean }>`
   }
 `
 
-/*const UNIAmount = styled(AccountElement)`
-  color: white;
-  padding: 4px 8px;
-  height: 36px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(
-    76.02% 75.41% at 1.84% 0%,
-    ${({ theme }) => theme.tokenButtonGradientStart} 0%,
-    ${({ theme }) => theme.tokenButtonGradientEnd} 100%
-  );
-`
+// const UNIAmount = styled(AccountElement)`
+//   color: white;
+//   padding: 4px 8px;
+//   height: 36px;
+//   font-weight: 500;
+//   background-color: ${({ theme }) => theme.bg1};
+//   // background: radial-gradient(
+//   //   76.02% 75.41% at 1.84% 0%,
+//   //   ${({ theme }) => theme.tokenButtonGradientStart} 0%,
+//   //   ${({ theme }) => theme.tokenButtonGradientEnd} 100%
+//   // );
+// `
 
-const UNIWrapper = styled.span`
-  width: fit-content;
-  position: relative;
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.8;
-  }
-
-  :active {
-    opacity: 0.9;
-  }
-`*/
+// const UNIWrapper = styled.span`
+//   width: fit-content;
+//   position: relative;
+//   cursor: pointer;
+//
+//   :hover {
+//     opacity: 0.8;
+//   }
+//
+//   :active {
+//     opacity: 0.9;
+//   }
+// `
 
 const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -241,7 +234,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-/*const StyledExternalLink = styled(ExternalLink).attrs({
+const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
 })<{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -270,7 +263,7 @@ const StyledNavLink = styled(NavLink).attrs({
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       display: none;
 `}
-`*/
+`
 
 const DesktopHeader = styled.div`
   display: contents;
@@ -296,9 +289,7 @@ const Column = styled.div`
 export const StyledMenuButton = styled.button`
   position: relative;
   width: 100%;
-  height: 100%;
   margin: 0;
-  padding: 0;
   height: 41px;
   margin-left: 8px;
   padding: 0.15rem 0.5rem;
@@ -311,7 +302,7 @@ export const StyledMenuButton = styled.button`
   :hover {
     color: ${({ theme }) => theme.text6}
     background-color: ${({ theme }) => theme.bg6};
-    
+
     svg {
       filter: invert(1);
     }
@@ -320,6 +311,7 @@ export const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
+
   > * {
     stroke: ${({ theme }) => theme.text1};
   }
@@ -337,7 +329,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  //const govToken = useGovernanceToken()
+  const govToken = useGovernanceToken()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -345,7 +337,7 @@ export default function Header() {
 
   //const toggleClaimModal = useToggleSelfClaimModal()
 
-  //const availableClaim: boolean = useUserHasAvailableClaim(account)
+  // const availableClaim: boolean = useUserHasAvailableClaim(account)
 
   //const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
 
@@ -441,46 +433,13 @@ export default function Header() {
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
-          {/*availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? (
-                    <Dots>Claiming {govToken?.symbol}</Dots>
-                  ) : (
-                    `Claim ${govToken?.symbol}`
-                  )}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )*/}
-          {/*!availableClaim && aggregateBalance && (
-            <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                {account && (
-                  <HideSmall>
-                    <TYPE.white
-                      style={{
-                        paddingRight: '.4rem'
-                      }}
-                    >
-                      <CountUp
-                        key={countUpValue}
-                        isCounting
-                        start={parseFloat(countUpValuePrevious)}
-                        end={parseFloat(countUpValue)}
-                        thousandsSeparator={','}
-                        duration={1}
-                      />
-                    </TYPE.white>
-                  </HideSmall>
-                )}
-                {govToken?.symbol}
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )*/}
+          <StyledExternalLink href={'https://bridge.harmony.one'} style={{ margin: '0 2px 0 10px' }}>
+            Bridge
+            <span style={{ fontSize: '11px' }}>&nbsp;↗</span>
+          </StyledExternalLink>
+          <HeaderElementWrap>
+            <StyledMenuButton onClick={() => setShowUniBalanceModal(true)}>{govToken?.symbol}</StyledMenuButton>
+          </HeaderElementWrap>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>

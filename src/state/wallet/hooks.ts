@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 import ERC20_INTERFACE from '../../constants/abis/erc20'
 import { useAllTokens } from '../../hooks/Tokens'
 import { useActiveWeb3React } from '../../hooks'
-import { useMulticallContract } from '../../hooks/useContract'
+import { useMulticallContract, useTokenContract } from '../../hooks/useContract'
 import { isAddress } from '../../utils'
 import { useSingleContractMultipleData, useMultipleContractSingleData } from '../multicall/hooks'
 import { useUserUnclaimedAmount } from '../claim/hooks'
@@ -92,6 +92,47 @@ export function useTokenBalances(
   tokenInterface = ERC20_INTERFACE
 ): { [tokenAddress: string]: TokenAmount | undefined } {
   return useTokenBalancesWithLoadingIndicator(address, tokens, method, tokenInterface)[0]
+}
+
+export function useAddressesTokenBalanceWithLoadingIndicator(
+  addresses?: string[],
+  token?: Token,
+  method = 'balanceOf'
+): [{ [userAddress: string]: TokenAmount | undefined }, boolean] {
+  const contract = useTokenContract(token?.address)
+  const balances = useSingleContractMultipleData(
+    contract,
+    method,
+    useMemo(() => addresses?.map(address => [address]) ?? [], [addresses])
+  )
+
+  const anyLoading: boolean = useMemo(() => balances.some(callState => callState.loading), [balances])
+
+  return [
+    useMemo(
+      () =>
+        token && addresses
+          ? addresses.reduce<{ [userAddress: string]: TokenAmount | undefined }>((memo, userAddress, i) => {
+              const value = balances?.[i]?.result?.[0]
+              const amount = value ? JSBI.BigInt(value.toString()) : undefined
+              if (amount) {
+                memo[userAddress] = new TokenAmount(token, amount)
+              }
+              return memo
+            }, {})
+          : {},
+      [addresses, token, balances]
+    ),
+    anyLoading
+  ]
+}
+
+export function useAddressesTokenBalance(
+  addresses?: string[],
+  token?: Token,
+  method = 'balanceOf'
+): { [userAddress: string]: TokenAmount | undefined } {
+  return useAddressesTokenBalanceWithLoadingIndicator(addresses, token, method)[0]
 }
 
 // get the balance for a single token/account combo

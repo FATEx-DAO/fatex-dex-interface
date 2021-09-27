@@ -325,7 +325,7 @@ export function useTotalGovTokensEarned(): TokenAmount | undefined {
   }, [stakingInfos, govToken])
 }
 
-export function useTotalLockedGovTokensEarned(): TokenAmount | undefined {
+export function useTotalLockedGovTokens(): TokenAmount | undefined {
   const govToken = useGovernanceToken()
   const stakingInfos = useStakingInfo(true)
 
@@ -333,8 +333,7 @@ export function useTotalLockedGovTokensEarned(): TokenAmount | undefined {
     if (!govToken) return undefined
     return (
       stakingInfos?.reduce(
-        (accumulator, stakingInfo) =>
-          accumulator.add(new TokenAmount(govToken, stakingInfo.earnedAmount.add(stakingInfo.rewardDebt).quotient)),
+        (accumulator, stakingInfo) => accumulator.add(stakingInfo.rewardDebt),
         new TokenAmount(govToken, '0')
       ) ?? new TokenAmount(govToken, '0')
     )
