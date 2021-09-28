@@ -74,7 +74,8 @@ export default function GovTokenBalanceContent({ setShowUniBalanceModal }: { set
     '0xFe2976Fc317667743d72D232DCEdd4E250170f1B', // Advisor Vault
     '0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34', // Advisor Vault
     '0xFD266a3D4DA9d185A0491f71cE61C5a22014d874', // Team Vault
-    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc' // founder address?
+    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc' // founder address EOA? // has some FATE in xFATE which messes up count
+    // '0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb' // team address EOA? // has some FATE in xFATE which messes up count
   ]
   const totalLockedSupplyMap = useAddressesTokenBalance(outOfCirculationBalances, govToken)
   const totalLockedSupply = govToken
