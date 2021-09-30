@@ -14,7 +14,7 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
 import Web3Status from '../../components/Web3Status'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
-import { useFuzzMigrator, useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
+import { useDeFiKingdomsMigrator, useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
 import { useTokenAllowance } from '../../data/Allowances'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useMigrateLiquidityCallback } from '../../hooks/useMigrateLiquidityCallback'
@@ -138,7 +138,7 @@ const SwapTabs = styled.div`
 
 const SwapTab = styled.div<{ selected: boolean }>`
   width: 150px;
-  padding: 15px 25px;
+  padding: 12px 12px;
   border: 3px solid ${({ theme, selected }) => (selected ? theme.text1 : theme.text3)};
   background: none;
   color: ${({ theme }) => theme.text1};
@@ -153,7 +153,12 @@ const SwapTab = styled.div<{ selected: boolean }>`
   }
 `
 
-const swapNames = ['Viperswap', 'Sushiswap', 'FuzzSwap']
+const SwapTabText = styled.span`
+  display: inline-block;
+  vertical-align: middle;
+`
+
+const swapNames = ['Viperswap', 'Sushiswap', 'DeFi Kingdoms']
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
@@ -188,17 +193,17 @@ export default function Pool() {
   }, [viperLpTokens])
   const viperMigratorContract = useViperMigrator()
 
-  const fuzzPairs = usePairs(trackedTokenPairs, PairType.FUZZ_FI)
-  const fuzzLpTokens = useMemo(() => {
-    return trackedTokenPairs.map(tokenPair => toV2LiquidityToken(tokenPair, PairType.FUZZ_FI))
+  const kingdomPairs = usePairs(trackedTokenPairs, PairType.DEFI_KINGDOM)
+  const kingdomLpTokens = useMemo(() => {
+    return trackedTokenPairs.map(tokenPair => toV2LiquidityToken(tokenPair, PairType.DEFI_KINGDOM))
   }, [trackedTokenPairs])
-  const [fuzzBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, fuzzLpTokens)
-  const fuzzPairsWithBalances = useMemo(() => {
-    return fuzzPairs.filter(([, pair]) => {
-      return pair && fuzzBalances[pair.liquidityToken.address]?.greaterThan('0')
+  const [kingdomBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, kingdomLpTokens)
+  const kingdomPairsWithBalances = useMemo(() => {
+    return kingdomPairs.filter(([, pair]) => {
+      return pair && kingdomBalances[pair.liquidityToken.address]?.greaterThan('0')
     })
-  }, [fuzzLpTokens])
-  const fuzzMigratorContract = useFuzzMigrator()
+  }, [kingdomLpTokens])
+  const kingdomMigratorContract = useDeFiKingdomsMigrator()
 
   const selectedPairsToMigrate = useMemo(() => {
     if (selectedTabIndex === 0) {
@@ -206,7 +211,7 @@ export default function Pool() {
     } else if (selectedTabIndex == 1) {
       return sushiPairsWithBalances
     } else if (selectedTabIndex === 2) {
-      return fuzzPairsWithBalances
+      return kingdomPairsWithBalances
     } else {
       console.error('invalid selectedTabIndex at selectedPairsToMigrate')
       return []
@@ -218,7 +223,7 @@ export default function Pool() {
     } else if (selectedTabIndex === 1) {
       return sushiBalances
     } else if (selectedTabIndex === 2) {
-      return fuzzBalances
+      return kingdomBalances
     } else {
       console.error('invalid selectedTabIndex at selectedPairBalances')
       return {}
@@ -230,7 +235,7 @@ export default function Pool() {
     } else if (selectedTabIndex === 1) {
       return sushiPairsWithBalances
     } else if (selectedTabIndex === 2) {
-      return fuzzPairsWithBalances
+      return kingdomPairsWithBalances
     } else {
       console.error('invalid selectedTabIndex at selectedPairsToMigrate')
       return []
@@ -254,12 +259,12 @@ export default function Pool() {
     } else if (selectedTabIndex === 1) {
       return sushiMigratorContract
     } else if (selectedTabIndex === 2) {
-      return fuzzMigratorContract
+      return kingdomMigratorContract
     } else {
       console.error('invalid selectedTabIndex for selectedMigratorContract')
       return null
     }
-  }, [selectedTabIndex, viperMigratorContract, sushiMigratorContract, fuzzMigratorContract])
+  }, [selectedTabIndex, viperMigratorContract, sushiMigratorContract, kingdomMigratorContract])
   const allowance = useTokenAllowance(
     selectedPair?.liquidityToken,
     account ?? undefined,
@@ -282,7 +287,7 @@ export default function Pool() {
     } else if (selectedTabIndex === 1) {
       return PairType.SUSHI
     } else if (selectedTabIndex === 2) {
-      return PairType.FUZZ_FI
+      return PairType.DEFI_KINGDOM
     } else {
       console.error('Invalid tab index, ', selectedTabIndex)
       return PairType.FATE
@@ -354,7 +359,7 @@ export default function Pool() {
                     onClick={() => setSelectedTabIndex(i)}
                     selected={selectedTabIndex === i}
                   >
-                    {swapName}
+                    <SwapTabText>{swapName}</SwapTabText>
                   </SwapTab>
                 )
               })}

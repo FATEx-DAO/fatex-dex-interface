@@ -118,6 +118,18 @@ export const FUZZ_MIGRATOR: { [chainId in ChainId]: string } = {
   [ChainId.HARMONY_TESTNET]: ZERO_ONE_ADDRESS
 }
 
+export const DEFI_KINGDOMS_MIGRATOR: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: '0x3ACe48805B6baF9185833B611645a519CC8910A3',
+  [ChainId.HARMONY_TESTNET]: ZERO_ONE_ADDRESS
+}
+
 export const X_FATE: { [chainId in ChainId]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),
   [ChainId.RINKEBY]: new Token(ChainId.RINKEBY, ZERO_ONE_ADDRESS, 18, 'xFATE', 'Fate'),

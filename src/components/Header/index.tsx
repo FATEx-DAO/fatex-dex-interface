@@ -21,7 +21,6 @@ import Modal from '../Modal'
 import GovTokenBalanceContent from './GovTokenBalanceContent'
 import { BASE_CURRENCY } from '../../connectors'
 import Card from '../Card'
-import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { ExternalLink } from '../../theme'
 
 const HeaderFrame = styled.div`
@@ -29,7 +28,6 @@ const HeaderFrame = styled.div`
   grid-template-columns: 1fr 120px;
   align-items: center;
   justify-content: space-between;
-  align-items: center;
   flex-direction: row;
   width: 100%;
   top: 0;
@@ -329,7 +327,7 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  const govToken = useGovernanceToken()
+  // const govToken = useGovernanceToken()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
@@ -437,9 +435,10 @@ export default function Header() {
             Bridge
             <span style={{ fontSize: '11px' }}>&nbsp;↗</span>
           </StyledExternalLink>
-          <HeaderElementWrap>
-            <StyledMenuButton onClick={() => setShowUniBalanceModal(true)}>{govToken?.symbol}</StyledMenuButton>
-          </HeaderElementWrap>
+          {/*TODO uncomment*/}
+          {/*<HeaderElementWrap>*/}
+          {/*  <StyledMenuButton onClick={() => setShowUniBalanceModal(true)}>{govToken?.symbol}</StyledMenuButton>*/}
+          {/*</HeaderElementWrap>*/}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             {account && userEthBalance ? (
               <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
