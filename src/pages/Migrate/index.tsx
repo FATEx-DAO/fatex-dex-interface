@@ -17,7 +17,7 @@ import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useDeFiKingdomsMigrator, useSushiMigrator, useViperMigrator } from '../../hooks/useContract'
 import { useTokenAllowance } from '../../data/Allowances'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useMigrateLiquidityCallback } from '../../hooks/useMigrateLiquidityCallback'
+import { pairTypeToString, useMigrateLiquidityCallback } from '../../hooks/useMigrateLiquidityCallback'
 import { useBurnActionHandlers } from '../../state/burn/hooks'
 import { Field } from '../../state/burn/actions'
 
@@ -158,7 +158,7 @@ const SwapTabText = styled.span`
   vertical-align: middle;
 `
 
-const swapNames = ['Viperswap', 'Sushiswap', 'DeFi Kingdoms']
+const pairTypes = [PairType.VIPER, PairType.SUSHI, PairType.DEFI_KINGDOM]
 
 export default function Pool() {
   const theme = useContext(ThemeContext)
@@ -321,6 +321,14 @@ export default function Pool() {
       })
   }
 
+  let migrationNames = ''
+  for (let i = 0; i < pairTypes.length; i++) {
+    if (i < pairTypes.length - 1) {
+      migrationNames = migrationNames + pairTypeToString(pairTypes[i]) + ', '
+    } else {
+      migrationNames = migrationNames + 'or ' + pairTypeToString(pairTypes[i])
+    }
+  }
   return (
     <>
       <PageWrapper>
@@ -334,7 +342,7 @@ export default function Pool() {
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  {`Migrate your Viper, Sushi, or FuzzSwap LP tokens to FATEx LP tokens with just a couple of clicks.`}
+                  {`Migrate your ${migrationNames} LP tokens to FATEx LP tokens with just a couple of clicks.`}
                 </TYPE.white>
               </RowBetween>
             </AutoColumn>
@@ -352,14 +360,14 @@ export default function Pool() {
               </HideSmall>
             </TitleRow>
             <SwapTabs>
-              {swapNames.map((swapName, i) => {
+              {pairTypes.map((pairType, i) => {
                 return (
                   <SwapTab
-                    key={`swap-tab-${swapName}`}
+                    key={`swap-tab-${pairType}`}
                     onClick={() => setSelectedTabIndex(i)}
                     selected={selectedTabIndex === i}
                   >
-                    <SwapTabText>{swapName}</SwapTabText>
+                    <SwapTabText>{pairTypeToString(pairType)}</SwapTabText>
                   </SwapTab>
                 )
               })}
@@ -367,7 +375,7 @@ export default function Pool() {
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
                 <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your {swapNames[selectedTabIndex]} Liquidity
+                  Your {pairTypeToString(pairTypes[selectedTabIndex])} Liquidity
                 </TYPE.mediumHeader>
               </HideSmall>
             </TitleRow>

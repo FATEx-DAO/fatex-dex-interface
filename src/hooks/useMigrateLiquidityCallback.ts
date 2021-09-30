@@ -16,7 +16,7 @@ export enum MigrationCallbackState {
   VALID
 }
 
-function pairTypeToString(pairType: PairType) {
+export function pairTypeToString(pairType: PairType) {
   if (pairType === PairType.FATE) {
     return 'FATEx'
   } else if (pairType === PairType.SUSHI) {
