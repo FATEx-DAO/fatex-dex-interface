@@ -25,6 +25,8 @@ function pairTypeToString(pairType: PairType) {
     return 'Viper'
   } else if (pairType === PairType.FUZZ_FI) {
     return 'FuzzSwap'
+  } else if (pairType === PairType.DEFI_KINGDOM) {
+    return 'DeFi Kingdoms'
   } else {
     console.error('Invalid pairType, found ', pairType)
     return ''
