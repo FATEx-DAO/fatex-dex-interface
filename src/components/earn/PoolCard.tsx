@@ -24,9 +24,6 @@ const StatContainer = styled.div`
   margin-bottom: 1rem;
   margin-right: 1rem;
   margin-left: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  display: none;
-`};
 `
 
 const StatContainerTop = styled.div`
@@ -35,9 +32,6 @@ const StatContainerTop = styled.div`
   flex-direction: column;
   gap: 12px;
   margin: 1rem;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-  display: none;
-`};
 `
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any }>`
@@ -112,12 +106,6 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
         <TYPE.white fontWeight={600} fontSize={24} style={{ marginLeft: '8px' }}>
           {currency0.symbol}-{currency1.symbol}
         </TYPE.white>
-
-        <StyledInternalLink to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
-          <ButtonPrimary padding="8px" borderRadius="8px">
-            {isStaking || isArchived ? 'Manage' : 'Deposit'}
-          </ButtonPrimary>
-        </StyledInternalLink>
       </TopSection>
 
       <StatContainer>
@@ -156,6 +144,11 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               : '-'}
           </TYPE.white>
         </RowBetween>
+        <StyledInternalLink to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`} style={{ width: '100%' }}>
+          <ButtonPrimary padding="8px" borderRadius="8px">
+            {isStaking || isArchived ? 'Manage' : 'Deposit'}
+          </ButtonPrimary>
+        </StyledInternalLink>
       </StatContainer>
 
       {isStaking && (
