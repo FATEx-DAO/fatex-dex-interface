@@ -50,16 +50,6 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   // track and parse user input
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingInfo.stakedAmount.token, userLiquidityUnstaked)
-  /*const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
-
-  let hypotheticalRewardRate: TokenAmount = new TokenAmount(stakingInfo.rewardRate.token, '0')
-  if (parsedAmountWrapped?.greaterThan('0')) {
-    hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
-      stakingInfo.stakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalRewardRate
-    )
-  }*/
 
   // state for pending and submitted txn views
   const addTransaction = useTransactionAdder()
@@ -151,7 +141,10 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    💡 There is <b>no</b> deposit or withdrawal fee!
+                    {/*💡 There is <b>no</b> deposit or withdrawal fee!*/}
+                    {stakingInfo.active
+                      ? '💡 There is no deposit or withdrawal fee!'
+                      : 'This pool is archived. Depositing will not produce any rewards.'}
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
