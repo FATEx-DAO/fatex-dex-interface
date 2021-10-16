@@ -65,20 +65,20 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
     onDismiss()
   }, [onDismiss])
 
-  const pit = useXFateContract()
+  const xFateContract = useXFateContract()
 
   // approval data for stake
   const deadline = useTransactionDeadline()
-  const [approval, approveCallback] = useApproveCallback(parsedAmount, pit?.address)
+  const [approval, approveCallback] = useApproveCallback(parsedAmount, xFateContract?.address)
 
   async function onStake() {
     setAttempting(true)
-    if (pit && parsedAmount && deadline) {
+    if (xFateContract && parsedAmount && deadline) {
       if (approval === ApprovalState.APPROVED) {
         const formattedAmount = `0x${parsedAmount.raw.toString(16)}`
-        const estimatedGas = await pit.estimateGas.enter(formattedAmount)
+        const estimatedGas = await xFateContract.estimateGas.enter(formattedAmount)
 
-        await pit
+        await xFateContract
           .enter(formattedAmount, {
             gasLimit: calculateGasMargin(estimatedGas)
           })
@@ -115,7 +115,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!pit || !library || !deadline) throw new Error('missing dependencies')
+    if (!xFateContract || !library || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmount
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 

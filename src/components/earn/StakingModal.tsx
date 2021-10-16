@@ -1,26 +1,24 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
-import { AutoColumn } from '../Column'
+import { AutoColumn, ColumnCenter } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Pair } from '@fatex-dao/sdk'
+import { Pair, TokenAmount } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { usePairContract } from '../../hooks/useContract'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
+import { useFateRewardController, usePairContract } from '../../hooks/useContract'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { StakingInfo, useDerivedStakeInfo } from '../../state/stake/hooks'
 //import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
-import { useFateRewardController } from '../../hooks/useContract'
 import { BlueCard } from '../Card'
-import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
@@ -120,9 +118,17 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
   }, [maxAmountInput, onUserInput])
 
   async function onAttemptToApprove() {
-    if (!pairContract || !library || !deadline) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmount
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
+    if (!deadline) {
+      console.error('Deadline is missing')
+      return
+    }
+
+    if (!pairContract || !library) {
+      throw new Error(`missing dependencies pairContract=${!pairContract} library=${!library}`)
+    }
+    if (!parsedAmount) {
+      throw new Error('missing liquidity amount')
+    }
 
     return approveCallback()
   }

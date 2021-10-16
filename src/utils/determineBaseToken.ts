@@ -5,8 +5,6 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
   const currency0 = unwrappedToken(tokens[0])
   const currency1 = unwrappedToken(tokens[1])
 
-  //const baseToken = currency0 && DEFAULT_CURRENCIES.includes(currency0) ? token0 : token1
-
   let baseToken: Token | undefined = tokenData?.WETH?.token
 
   if (DEFAULT_CURRENCIES.includes(currency0) || DEFAULT_CURRENCIES.includes(currency1)) {
@@ -36,6 +34,21 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
     tokens[1]?.symbol?.toUpperCase() === tokenData?.bridgedETH?.token?.symbol?.toUpperCase()
   ) {
     baseToken = tokenData?.bridgedETH?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.DAI?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.DAI?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.DAI?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.PAXG?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.PAXG?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.PAXG?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.WBTC?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.WBTC?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.WBTC?.token
   }
 
   return baseToken

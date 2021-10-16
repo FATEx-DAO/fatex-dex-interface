@@ -6,11 +6,12 @@ import { CustomMouseoverTooltip } from '../Tooltip/custom'
 import { X_FATE_SETTINGS } from '../../constants'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 
-export default function CombinedTVL({}) {
+export default function CombinedTVL() {
   const { chainId } = useActiveWeb3React()
   const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const isActive = true
-  const filteredStakingInfos = useFilterStakingInfos(useStakingInfo(isActive), isActive)
+  const stakingInfos = useStakingInfo(isActive)
+  const filteredStakingInfos = useFilterStakingInfos(stakingInfos, isActive)
   const TVLs = useTotalCombinedTVL(filteredStakingInfos)
 
   return (

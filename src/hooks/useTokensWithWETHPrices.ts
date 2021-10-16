@@ -15,6 +15,10 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
   const govToken = useGovernanceToken()
   const govTokenWETHPrice = useTokenWETHPrice(govToken)
 
+  const PAXGTicker = blockchain === Blockchain.HARMONY ? '1PAXG' : 'PAXG'
+  const PAXG = getToken(chainId, PAXGTicker)
+  const PAXGWETHPrice = useTokenWETHPrice(PAXG)
+
   const BUSDTicker = chainId !== ChainId.HARMONY_TESTNET ? 'BUSD' : '1BUSD'
   const BUSD: Token | undefined = getToken(chainId, BUSDTicker)
   const BUSDWETHPrice = useTokenWETHPrice(BUSD)
@@ -30,6 +34,14 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
   const bridgedETH: Token | undefined = Blockchain.HARMONY ? getToken(chainId, '1ETH') : undefined
   const bridgedETHWETHPrice = useTokenWETHPrice(bridgedETH)
 
+  const DAITicker = blockchain === Blockchain.HARMONY ? '1DAI' : 'DAI'
+  const DAI: Token | undefined = Blockchain.HARMONY ? getToken(chainId, DAITicker) : undefined
+  const DAIWETHPrice = useTokenWETHPrice(DAI)
+
+  const WBTCTicker = blockchain === Blockchain.HARMONY ? '1WBTC' : 'WBTC'
+  const WBTC: Token | undefined = Blockchain.HARMONY ? getToken(chainId, WBTCTicker) : undefined
+  const WBTCWETHPrice = useTokenWETHPrice(WBTC)
+
   return useMemo(() => {
     return {
       WETH: { token: weth, price: undefined },
@@ -37,7 +49,10 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
       BUSD: { token: BUSD, price: BUSDWETHPrice },
       USDC: { token: USDC, price: USDCWETHPrice },
       bscBUSD: { token: bscBUSD, price: bscBUSDWETHPrice },
-      bridgedETH: { token: bridgedETH, price: bridgedETHWETHPrice }
+      bridgedETH: { token: bridgedETH, price: bridgedETHWETHPrice },
+      DAI: { token: DAI, price: DAIWETHPrice },
+      PAXG: { token: PAXG, price: PAXGWETHPrice },
+      WBTC: { token: WBTC, price: WBTCWETHPrice }
     }
   }, [
     chainId,

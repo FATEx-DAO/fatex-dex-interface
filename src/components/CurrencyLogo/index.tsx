@@ -19,6 +19,8 @@ export const getTokenFallbackLogoURL = (currency: Currency) => {
     return 'https://fatex.io/fatex-token-logo.png'
   } else if (currency.symbol === 'xFATE' || currency.symbol === 'XFATE') {
     return 'https://fatex.io/fatex-token-logo.png'
+  } else if (currency.symbol === '1PAXG') {
+    return 'https://assets.coingecko.com/coins/images/9519/small/paxg.PNG?1568542565'
   } else {
     return `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${currency.symbol}.png`
   }
@@ -56,9 +58,6 @@ export default function CurrencyLogo({
       const logoUrlLocation = [56, 97, 1666600000, 1666700000].includes(currency.chainId)
         ? getTokenFallbackLogoURL(currency)
         : getTokenLogoURL(currency.address)
-      if (currency.symbol === '1PAXG') {
-        console.error('logoUrlLocation ', logoUrlLocation)
-      }
 
       if (currency instanceof WrappedTokenInfo) {
         return [...uriLocations, logoUrlLocation]

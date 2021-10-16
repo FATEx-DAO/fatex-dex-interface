@@ -110,6 +110,76 @@ export const STAKING_REWARDS_INFO: {
       pid: 20,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'BUSD/bscBUSD'),
       active: true
+    },
+    {
+      pid: 21,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1DAI/FATE'),
+      active: true
+    },
+    {
+      pid: 22,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1DAI/1USDC'),
+      active: true
+    },
+    {
+      pid: 23,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1SUSHI'),
+      active: true
+    },
+    {
+      pid: 24,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1SUSHI/1USDC'),
+      active: true
+    },
+    {
+      pid: 25,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1ETH/1DAI'),
+      active: true
+    },
+    {
+      pid: 26,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1ETH/1USDC'),
+      active: true
+    },
+    {
+      pid: 27,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1WBTC/1DAI'),
+      active: true
+    },
+    {
+      pid: 28,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1WBTC/1USDC'),
+      active: true
+    },
+    {
+      pid: 29,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/1DAI'),
+      active: true
+    },
+    {
+      pid: 30,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/1USDC'),
+      active: true
+    },
+    {
+      pid: 31,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/1ETH'),
+      active: true
+    },
+    {
+      pid: 32,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/1WBTC'),
+      active: true
+    },
+    {
+      pid: 33,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/WONE'),
+      active: true
+    },
+    {
+      pid: 34,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/1PAXG'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [

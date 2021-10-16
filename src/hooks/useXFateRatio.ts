@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { Fraction } from '@fatex-dao/sdk'
 
 import { utils } from 'ethers'
-import useXFateToken from './usePitToken'
+import useXFateToken from './useXFateToken'
 import { useTokenBalance } from '../state/wallet/hooks'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 import { useTotalSupply } from '../data/TotalSupply'

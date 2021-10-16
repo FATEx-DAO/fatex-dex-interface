@@ -18,7 +18,7 @@ import { useXFateContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils'
 import { X_FATE_SETTINGS } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import usePitToken from '../../hooks/usePitToken'
+import useXFateToken from '../../hooks/useXFateToken'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -68,7 +68,7 @@ export default function ModifiedStakingModal({
   const govToken = useGovernanceToken()
   const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const pit = useXFateContract()
-  const pitToken = usePitToken()
+  const pitToken = useXFateToken()
 
   async function onWithdraw() {
     if (pit && userLiquidityStaked) {

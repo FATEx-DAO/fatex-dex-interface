@@ -135,9 +135,6 @@ export default function Pool() {
     )
   })
 
-  console.log(' ACCOUNT ')
-  console.log('' + account)
-
   return (
     <>
       <PageWrapper>

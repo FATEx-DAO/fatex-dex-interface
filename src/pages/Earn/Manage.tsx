@@ -61,8 +61,7 @@ const StyledBottomCard = styled(DataCard)<{ dim: any }>`
   background: ${({ theme }) => theme.bg2};
   opacity: ${({ dim }) => (dim ? 0.4 : 1)};
   margin-top: -40px;
-  padding: 0 1.25rem 1rem 1.25rem;
-  padding-top: 32px;
+  padding: 32px 1.25rem 1rem;
   z-index: 1;
 `
 
@@ -334,7 +333,6 @@ export default function Manage({
         <AwaitingRewards />
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            {/*{stakingInfo && stakingInfo.active && (*/}
             {stakingInfo && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATEx-LP Tokens'}
