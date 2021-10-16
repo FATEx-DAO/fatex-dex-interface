@@ -45,6 +45,66 @@ export const STAKING_REWARDS_INFO: {
       pid: 7,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1USDC'),
       active: true
+    },
+    {
+      pid: 8,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/XFATE'),
+      active: true
+    },
+    {
+      pid: 9,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/BUSD'),
+      active: true
+    },
+    {
+      pid: 10,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/BUSD'),
+      active: true
+    },
+    {
+      pid: 11,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/UST'),
+      active: true
+    },
+    {
+      pid: 12,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/bscBUSD'),
+      active: true
+    },
+    {
+      pid: 13,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/UST'),
+      active: true
+    },
+    {
+      pid: 14,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/bscBUSD'),
+      active: true
+    },
+    {
+      pid: 15,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1PAXG'),
+      active: true
+    },
+    {
+      pid: 16,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1ETH/1WBTC'),
+      active: true
+    },
+    {
+      pid: 17,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/1USDT'),
+      active: true
+    },
+    {
+      pid: 18,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/1USDT'),
+      active: true
+    },
+    {
+      pid: 19,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1USDT/1USDC'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [

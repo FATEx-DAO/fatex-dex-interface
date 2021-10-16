@@ -17,7 +17,9 @@ import {
   X_FATE,
   FEE_TOKEN_CONVERTER,
   SUSHI_MIGRATOR,
-  VIPER_MIGRATOR
+  VIPER_MIGRATOR,
+  FUZZ_MIGRATOR,
+  DEFI_KINGDOMS_MIGRATOR
 } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -170,5 +172,17 @@ export function useSushiMigrator(): Contract | null {
 export function useViperMigrator(): Contract | null {
   const { chainId } = useActiveWeb3React()
   const address = chainId && VIPER_MIGRATOR[chainId]
+  return useContract(address, LIQUIDITY_MIGRATOR_ABI, true)
+}
+
+export function useFuzzMigrator(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId && FUZZ_MIGRATOR[chainId]
+  return useContract(address, LIQUIDITY_MIGRATOR_ABI, true)
+}
+
+export function useDeFiKingdomsMigrator(): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId && DEFI_KINGDOMS_MIGRATOR[chainId]
   return useContract(address, LIQUIDITY_MIGRATOR_ABI, true)
 }

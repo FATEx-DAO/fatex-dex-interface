@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Book, Code, MessageSquare, PieChart, Send } from 'react-feather'
+import { Book, Code, PieChart } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -13,6 +13,13 @@ import { ButtonPrimary } from '../Button'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
 import { Blockchain } from '@fatex-dao/sdk'
+import TelegramLogo from '../../assets/images/telegram-logo.svg'
+import TwitterLogo from '../../assets/images/twitter-logo.svg'
+import DiscordLogo from '../../assets/images/discord-logo.svg'
+import YouTubeLogo from '../../assets/images/youtube-logo.svg'
+import RedditLogo from '../../assets/images/reddit-logo.svg'
+import MediumLogo from '../../assets/images/medium-logo.svg'
+import DiscourseLogo from '../../assets/images/discourse-logo.svg'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -47,14 +54,18 @@ const StyledMenuButton = styled.button`
   }
 `
 
-const StyledMenu = styled.div`
+const StyledMenuMobile = styled.div`
   margin-left: 0.5rem;
-  display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
   border: none;
   text-align: left;
+  display: none;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: flex;
+  `};
 `
 
 const MenuFlyout = styled.span`
@@ -77,8 +88,35 @@ const MenuFlyout = styled.span`
   `};
 `
 
+const StyledMenuDesktop = styled.div`
+  margin-left: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: right;
+  align-items: flex-end;
+  border: none;
+  text-align: right;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  width: fit-content;
+
+  a {
+    text-align: right;
+    text-decoration: none;
+  }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: none;
+  `};
+`
+
 const MenuItem = styled(ExternalLink)`
   flex: 1;
+  width: fit-content;
+  justify-content: right;
+  align-items: flex-end;
+  text-align: right;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.text2};
   :hover {
@@ -88,6 +126,32 @@ const MenuItem = styled(ExternalLink)`
   }
   > svg {
     margin-right: 8px;
+  }
+  img {
+    filter: invert(1);
+    opacity: 0.6;
+    margin-right: 8px;
+    width: 14px;
+  }
+`
+
+const SocialLinks = styled.div`
+  margin-top: 10px;
+
+  a {
+    display: inline-block;
+    margin: 5px;
+
+    img,
+    svg {
+      filter: invert(1);
+      width: 20px;
+      opacity: 0.6;
+
+      :hover {
+        opacity: 1;
+      }
+    }
   }
 `
 
@@ -103,43 +167,112 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   return (
-    // https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451
-    <StyledMenu ref={node as any}>
-      <StyledMenuButton onClick={toggle}>
-        <StyledMenuIcon />
-      </StyledMenuButton>
+    <>
+      {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451*/}
+      <StyledMenuDesktop ref={node as any}>
+        <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
+          <Code size={14} />
+          Code
+        </MenuItem>
+        {blockchain === Blockchain.HARMONY && (
+          <MenuItem id="link" href="https://info.fatex.io">
+            <PieChart size={14} />
+            Analytics
+          </MenuItem>
+        )}
+        <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
+          <img src={DiscourseLogo} />
+          DAO Forum
+        </MenuItem>
+        <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
+          <Book size={14} />
+          Green Paper
+        </MenuItem>
+        <SocialLinks>
+          <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
+            <img src={TwitterLogo} alt={'twitter logo'} />
+          </a>
+          <a href={'https://www.reddit.com/r/FATExDAO'} target={'_blank'} rel="noreferrer">
+            <img src={RedditLogo} alt={'reddit logo'} />
+          </a>
+          <a href={'https://fatexdao.medium.com'} target={'_blank'} rel="noreferrer">
+            <img src={MediumLogo} alt={'medium logo'} />
+          </a>
+          <a href={'https://t.me/FATExDAO'} target={'_blank'} rel="noreferrer">
+            <img src={TelegramLogo} alt={'telegram logo'} />
+          </a>
+          <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
+            <img src={DiscordLogo} alt={'discord logo'} />
+          </a>
+          <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
+            <img src={YouTubeLogo} alt={'youtube logo'} />
+          </a>
+          <a href={'https://gov.daodiscourse.fatex.io/categories'} target={'_blank'} rel="noreferrer">
+            <img src={DiscourseLogo} alt={'discourse logo'} />
+          </a>
+        </SocialLinks>
+        {account && blockchain === Blockchain.ETHEREUM && (
+          <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+            Claim {govToken?.symbol}
+          </ButtonPrimary>
+        )}
+      </StyledMenuDesktop>
+      <StyledMenuMobile ref={node as any}>
+        <StyledMenuButton onClick={toggle}>
+          <StyledMenuIcon />
+        </StyledMenuButton>
 
-      {open && (
-        <MenuFlyout>
-          {blockchain === Blockchain.HARMONY && (
-            <MenuItem id="link" href="https://info.fatex.io">
-              <PieChart size={14} />
-              Analytics
+        {open && (
+          <MenuFlyout>
+            <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
+              <Code size={14} />
+              Code
             </MenuItem>
-          )}
-          <MenuItem id="link" href="https://discord.com/invite/22CXCEPB3E">
-            <MessageSquare size={14} />
-            Discord
-          </MenuItem>
-          <MenuItem id="link" href="https://t.me/FATExDAO">
-            <Send size={14} />
-            Telegram
-          </MenuItem>
-          <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
-            <Book size={14} />
-            Green Paper
-          </MenuItem>
-          <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
-            <Code size={14} />
-            Code
-          </MenuItem>
-          {account && blockchain === Blockchain.ETHEREUM && (
-            <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-              Claim {govToken?.symbol}
-            </ButtonPrimary>
-          )}
-        </MenuFlyout>
-      )}
-    </StyledMenu>
+            {blockchain === Blockchain.HARMONY && (
+              <MenuItem id="link" href="https://info.fatex.io">
+                <PieChart size={14} />
+                Analytics
+              </MenuItem>
+            )}
+            <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
+              <img src={DiscourseLogo} />
+              DAO Forum
+            </MenuItem>
+            <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
+              <Book size={14} />
+              Green Paper
+            </MenuItem>
+            <SocialLinks>
+              <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
+                <img src={TwitterLogo} alt={'twitter logo'} />
+              </a>
+              <a href={'https://www.reddit.com/r/FATExDAO'} target={'_blank'} rel="noreferrer">
+                <img src={RedditLogo} alt={'reddit logo'} />
+              </a>
+              <a href={'https://fatexdao.medium.com'} target={'_blank'} rel="noreferrer">
+                <img src={MediumLogo} alt={'medium logo'} />
+              </a>
+              <a href={'https://t.me/FATExDAO'} target={'_blank'} rel="noreferrer">
+                <img src={TelegramLogo} alt={'telegram logo'} />
+              </a>
+              <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
+                <img src={DiscordLogo} alt={'discord logo'} />
+              </a>
+              <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
+                <img src={YouTubeLogo} alt={'youtube logo'} />
+              </a>
+              <a href={'https://gov.daodiscourse.fatex.io/categories'} target={'_blank'} rel="noreferrer">
+                <img src={DiscourseLogo} alt={'discourse logo'} />
+              </a>
+            </SocialLinks>
+            {account && blockchain === Blockchain.ETHEREUM && (
+              <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+                Claim {govToken?.symbol}
+              </ButtonPrimary>
+            )}
+          </MenuFlyout>
+        )}
+      </StyledMenuMobile>
+    </>
   )
 }

@@ -245,8 +245,8 @@ export default function Vote() {
         })}
       </TopSection>
       <TYPE.subHeader color="text3">
-        A minimum threshold of {proposalThresholdPercentage.toSignificant(4)}% of the total
-        {govToken?.symbol} supply is required to submit proposals
+        A minimum threshold of {proposalThresholdPercentage.toSignificant(4)}% of the total&nbsp;
+        {govToken?.symbol} supply is required to create proposals
       </TYPE.subHeader>
     </PageWrapper>
   )

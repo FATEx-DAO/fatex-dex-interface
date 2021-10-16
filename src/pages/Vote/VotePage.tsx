@@ -15,16 +15,14 @@ import ReactMarkdown from 'react-markdown'
 import VoteModal from '../../components/vote/VoteModal'
 import { ChainId, JSBI, TokenAmount } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
-import { AVERAGE_BLOCK_TIME_IN_SECS, COMMON_CONTRACT_NAMES, ZERO_ADDRESS } from '../../constants'
+import { COMMON_CONTRACT_NAMES, ZERO_ADDRESS } from '../../constants'
 import { getEtherscanLink, isAddress } from '../../utils'
 import { ApplicationModal } from '../../state/application/actions'
-import { useBlockNumber, useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
+import { useModalOpen, useToggleDelegateModal, useToggleVoteModal } from '../../state/application/hooks'
 import DelegateModal from '../../components/vote/DelegateModal'
 import { GreyCard } from '../../components/Card'
 import { useTokenBalance } from '../../state/wallet/hooks'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
-import { BigNumber } from 'ethers'
 
 const PageWrapper = styled(AutoColumn)`
   width: 100%;
@@ -125,16 +123,9 @@ export default function VotePage({
   const toggleDelegateModal = useToggleDelegateModal()
 
   // get and format date from data
-  const currentTimestamp = useCurrentBlockTimestamp()
-  const currentBlock = useBlockNumber()
-  const endDate: DateTime | undefined =
-    proposalData && currentTimestamp && currentBlock
-      ? DateTime.fromSeconds(
-          currentTimestamp
-            .add(BigNumber.from(AVERAGE_BLOCK_TIME_IN_SECS).mul(BigNumber.from(proposalData.endBlock - currentBlock)))
-            .toNumber()
-        )
-      : undefined
+  const endDate: DateTime | undefined = proposalData?.endTimestamp
+    ? DateTime.fromSeconds(proposalData.endTimestamp)
+    : undefined
   const now: DateTime = DateTime.local()
 
   // get total votes and format percentages for UI

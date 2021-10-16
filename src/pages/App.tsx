@@ -30,9 +30,6 @@ import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import usePlatformName from '../hooks/usePlatformName'
 
-import { Blockchain } from '@fatex-dao/sdk'
-import useBlockchain from '../hooks/useBlockchain'
-
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -76,7 +73,6 @@ function TopLevelModals() {
 }
 
 export default function App() {
-  const blockchain = useBlockchain()
   const platformName = usePlatformName()
 
   useEffect(() => {
@@ -117,7 +113,7 @@ export default function App() {
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
               <Route exact strict path="/staking/:currencyIdA/:currencyIdB" component={Manage} />
-              {blockchain === Blockchain.ETHEREUM && <Route exact strict path="/vote/:id" component={VotePage} />}
+              <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>
           </Web3ReactManager>

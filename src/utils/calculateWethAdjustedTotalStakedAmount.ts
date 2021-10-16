@@ -1,4 +1,4 @@
-import { Token, TokenAmount, Fraction, ChainId } from '@fatex-dao/sdk'
+import { Token, TokenAmount, Fraction, ChainId, JSBI } from '@fatex-dao/sdk'
 import { wrappedCurrency } from './wrappedCurrency'
 import calculateTotalStakedAmount from './calculateTotalStakedAmount'
 import getPair from './getPair'
@@ -75,5 +75,7 @@ export default function calculateWethAdjustedTotalStakedAmount(
     return undefined
   }
 
-  return pairCurrencyAmountInWeth(baseToken, tokenData, valueOfTotalStakedAmountInPairCurrency)
+  return pairCurrencyAmountInWeth(baseToken, tokenData, valueOfTotalStakedAmountInPairCurrency)?.divide(
+    baseToken.decimals !== 18 ? JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18 - baseToken.decimals)) : '1'
+  )
 }

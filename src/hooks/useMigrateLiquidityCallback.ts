@@ -16,15 +16,20 @@ export enum MigrationCallbackState {
   VALID
 }
 
-function pairTypeToString(pairType: PairType) {
+export function pairTypeToString(pairType: PairType) {
   if (pairType === PairType.FATE) {
     return 'FATEx'
   } else if (pairType === PairType.SUSHI) {
     return 'Sushi'
   } else if (pairType === PairType.VIPER) {
     return 'Viper'
+  } else if (pairType === PairType.FUZZ_FI) {
+    return 'FuzzSwap'
+  } else if (pairType === PairType.DEFI_KINGDOM) {
+    return 'DeFi Kingdoms'
   } else {
-    throw new Error('Invalid pairType, found ' + pairType)
+    console.error('Invalid pairType, found ', pairType)
+    return ''
   }
 }
 

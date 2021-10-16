@@ -9,8 +9,8 @@ import { useActiveWeb3React } from '../../hooks'
 const StyledPolling = styled.div`
   position: fixed;
   display: flex;
-  right: 0;
-  bottom: 0;
+  right: 215px;
+  bottom: 6px;
   padding: 1rem;
   color: ${({ theme }) => theme.text1};
   transition: opacity 0.25s ease;

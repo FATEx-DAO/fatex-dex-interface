@@ -1,18 +1,14 @@
 import { ChainId } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
-import { Text } from 'rebass'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
 import { useTranslation } from 'react-i18next'
+import Popover from '@material-ui/core/Popover'
 
 import styled from 'styled-components'
 
 import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
-import { useETHBalances /*, useAggregateGovTokenBalance*/ } from '../../state/wallet/hooks'
-//import { CardNoise } from '../earn/styled'
-//import { CountUp } from 'use-count-up'
-//import { TYPE } from '../../theme'
 
 import { Moon, Sun } from 'react-feather'
 import Menu from '../Menu'
@@ -20,23 +16,17 @@ import Menu from '../Menu'
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
 import ClaimModal from '../claim/ClaimModal'
-//import { useToggleSelfClaimModal, useShowClaimPopup } from '../../state/application/hooks'
-//import { useUserHasAvailableClaim } from '../../state/claim/hooks'
-//import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-//import { Dots } from '../swap/styleds'
 import Modal from '../Modal'
 import GovTokenBalanceContent from './GovTokenBalanceContent'
-//import usePrevious from '../../hooks/usePrevious'
-import { BASE_CURRENCY } from '../../connectors'
 import Card from '../Card'
-//import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { ExternalLink } from '../../theme'
+import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 const HeaderFrame = styled.div`
   display: grid;
   grid-template-columns: 1fr 120px;
   align-items: center;
   justify-content: space-between;
-  align-items: center;
   flex-direction: row;
   width: 100%;
   top: 0;
@@ -128,32 +118,32 @@ const AccountElement = styled.div<{ active: boolean }>`
   }
 `
 
-/*const UNIAmount = styled(AccountElement)`
-  color: white;
-  padding: 4px 8px;
-  height: 36px;
-  font-weight: 500;
-  background-color: ${({ theme }) => theme.bg3};
-  background: radial-gradient(
-    76.02% 75.41% at 1.84% 0%,
-    ${({ theme }) => theme.tokenButtonGradientStart} 0%,
-    ${({ theme }) => theme.tokenButtonGradientEnd} 100%
-  );
-`
+// const UNIAmount = styled(AccountElement)`
+//   color: white;
+//   padding: 4px 8px;
+//   height: 36px;
+//   font-weight: 500;
+//   background-color: ${({ theme }) => theme.bg1};
+//   // background: radial-gradient(
+//   //   76.02% 75.41% at 1.84% 0%,
+//   //   ${({ theme }) => theme.tokenButtonGradientStart} 0%,
+//   //   ${({ theme }) => theme.tokenButtonGradientEnd} 100%
+//   // );
+// `
 
-const UNIWrapper = styled.span`
-  width: fit-content;
-  position: relative;
-  cursor: pointer;
-
-  :hover {
-    opacity: 0.8;
-  }
-
-  :active {
-    opacity: 0.9;
-  }
-`*/
+// const UNIWrapper = styled.span`
+//   width: fit-content;
+//   position: relative;
+//   cursor: pointer;
+//
+//   :hover {
+//     opacity: 0.8;
+//   }
+//
+//   :active {
+//     opacity: 0.9;
+//   }
+// `
 
 const HideSmall = styled.span`
   ${({ theme }) => theme.mediaWidth.upToSmall`
@@ -179,12 +169,6 @@ const NetworkCard = styled(Card)`
   `};
 `
 
-const BalanceText = styled(Text)`
-  ${({ theme }) => theme.mediaWidth.upToExtraSmall`
-    display: none;
-  `};
-`
-
 const Title = styled.a`
   display: flex;
   align-items: center;
@@ -198,11 +182,17 @@ const Title = styled.a`
   margin-top: -18px;
   line-height: 32px;
   margin-left: 8px;
+  cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
-  :hover {
-    cursor: pointer;
+
+  @media screen and (max-width: 960px) {
+    margin-top: 4px;
+  }
+
+  @media screen and (max-width: 600px) {
+    margin-top: -20px;
   }
 `
 
@@ -235,7 +225,7 @@ const StyledNavLink = styled(NavLink).attrs({
   }
 `
 
-/*const StyledExternalLink = styled(ExternalLink).attrs({
+const StyledExternalLink = styled(ExternalLink).attrs({
   activeClassName
 })<{ isActive?: boolean }>`
   ${({ theme }) => theme.flexRowNoWrap}
@@ -244,7 +234,7 @@ const StyledNavLink = styled(NavLink).attrs({
   outline: none;
   cursor: pointer;
   text-decoration: none;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text6};
   font-size: 1rem;
   width: fit-content;
   margin: 0 12px;
@@ -253,26 +243,50 @@ const StyledNavLink = styled(NavLink).attrs({
   &.${activeClassName} {
     border-radius: 8px;
     font-weight: 600;
-    color: ${({ theme }) => theme.text1};
+    color: ${({ theme }) => theme.text4};
   }
 
   :hover,
   :focus {
-    color: ${({ theme }) => darken(0.1, theme.text1)};
+    color: ${({ theme }) => theme.text4};
+    text-decoration: none;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   ${({ theme }) => theme.mediaWidth.upToExtraSmall`
       display: none;
 `}
-`*/
+`
+
+const DesktopHeader = styled.div`
+  display: contents;
+  @media screen and (max-width: 600px) {
+    display: none;
+  }
+`
+
+const MobileHeader = styled.div`
+  display: none;
+  @media screen and (max-width: 600px) {
+    display: contents;
+  }
+`
+
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  align-items: flex-end;
+`
 
 export const StyledMenuButton = styled.button`
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: fit-content;
   margin: 0;
-  padding: 0;
-  height: 41px;
+  height: 42px;
   margin-left: 8px;
   padding: 0.15rem 0.5rem;
   border-radius: 0.5rem;
@@ -284,7 +298,7 @@ export const StyledMenuButton = styled.button`
   :hover {
     color: ${({ theme }) => theme.text6}
     background-color: ${({ theme }) => theme.bg6};
-    
+
     svg {
       filter: invert(1);
     }
@@ -293,10 +307,61 @@ export const StyledMenuButton = styled.button`
   svg {
     margin-top: 2px;
   }
+
   > * {
     stroke: ${({ theme }) => theme.text1};
   }
 `
+
+const BridgeButton = styled.div`
+  cursor: pointer;
+  margin: 0 12px;
+`
+
+const BridgePopoverInner = styled.div`
+  padding: 10px;
+  overflow: hidden;
+  background: ${({ theme }) => theme.text1};
+`
+
+const BridgeWrapper = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null)
+
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleClose = () => {
+    setAnchorEl(null)
+  }
+
+  const open = Boolean(anchorEl)
+  const id = open ? 'simple-popover' : undefined
+
+  return (
+    <>
+      <BridgeButton aria-describedby={id} onClick={handleClick}>
+        Bridge
+      </BridgeButton>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+      >
+        <BridgePopoverInner>
+          <StyledExternalLink href={'https://bridge.harmony.one'}>Ethereum</StyledExternalLink>
+          <StyledExternalLink href={'https://bridge.harmony.one'}>BSC</StyledExternalLink>
+          <StyledExternalLink href={'https://anyswap.exchange/#/bridge'}>AnySwap</StyledExternalLink>
+        </BridgePopoverInner>
+      </Popover>
+    </>
+  )
+}
 
 const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
   [ChainId.RINKEBY]: 'Rinkeby',
@@ -310,15 +375,14 @@ export default function Header() {
   const { account, chainId } = useActiveWeb3React()
   const { t } = useTranslation()
 
-  //const govToken = useGovernanceToken()
+  const govToken = useGovernanceToken()
 
-  const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
   // const [isDark] = useDarkModeManager()
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   //const toggleClaimModal = useToggleSelfClaimModal()
 
-  //const availableClaim: boolean = useUserHasAvailableClaim(account)
+  // const availableClaim: boolean = useUserHasAvailableClaim(account)
 
   //const { claimTxn } = useUserHasSubmittedClaim(account ?? undefined)
 
@@ -338,38 +402,79 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">x</Title>
-        <HeaderLinks>
-          <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-            {t('swap')}
-          </StyledNavLink>
-          <StyledNavLink
-            id={`pool-nav-link`}
-            to={'/pool'}
-            isActive={(match, { pathname }) =>
-              Boolean(match) ||
-              pathname.startsWith('/add') ||
-              pathname.startsWith('/remove') ||
-              pathname.startsWith('/create') ||
-              pathname.startsWith('/find')
-            }
-          >
-            {t('pool')}
-          </StyledNavLink>
-          <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-            Staking
-          </StyledNavLink>
-          <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
-            xFATE
-          </StyledNavLink>
-          {chainId === ChainId.HARMONY_TESTNET && (
-            <StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>
-              Vote
+        <MobileHeader>
+          <HeaderLinks>
+            <Column>
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('swap')}
+              </StyledNavLink>
+              <StyledNavLink
+                id={`pool-nav-link`}
+                to={'/pool'}
+                isActive={(match, { pathname }) =>
+                  Boolean(match) ||
+                  pathname.startsWith('/add') ||
+                  pathname.startsWith('/remove') ||
+                  pathname.startsWith('/create') ||
+                  pathname.startsWith('/find')
+                }
+              >
+                {t('pool')}
+              </StyledNavLink>
+              <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
+                Staking
+              </StyledNavLink>
+            </Column>
+            <Column>
+              <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+                xFATE
+              </StyledNavLink>
+              {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
+              {/*  Vote*/}
+              {/*</StyledNavLink>*/}
+              <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
+                Migrate
+              </StyledNavLink>
+              <BridgeWrapper />
+            </Column>
+          </HeaderLinks>
+        </MobileHeader>
+        <DesktopHeader>
+          <HeaderLinks>
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
             </StyledNavLink>
-          )}
-          <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-            Migrate
-          </StyledNavLink>
-        </HeaderLinks>
+            <StyledNavLink
+              id={`pool-nav-link`}
+              to={'/pool'}
+              isActive={(match, { pathname }) =>
+                Boolean(match) ||
+                pathname.startsWith('/add') ||
+                pathname.startsWith('/remove') ||
+                pathname.startsWith('/create') ||
+                pathname.startsWith('/find')
+              }
+            >
+              {t('pool')}
+            </StyledNavLink>
+            <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
+              Staking
+            </StyledNavLink>
+            <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+              xFATE
+            </StyledNavLink>
+            {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
+            {/*  Vote*/}
+            {/*</StyledNavLink>*/}
+            <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
+              Migrate
+            </StyledNavLink>
+            <BridgeWrapper />
+            {/*<ExternalLink id={'link'} href={`https://fatexdao.gitbook.io/fatexdao/`}>
+              Learn
+            </ExternalLink>*/}
+          </HeaderLinks>
+        </DesktopHeader>
       </HeaderRow>
       <HeaderControls>
         <HeaderElement>
@@ -378,52 +483,12 @@ export default function Header() {
               <NetworkCard title={NETWORK_LABELS[chainId]}>{NETWORK_LABELS[chainId]}</NetworkCard>
             )}
           </HideSmall>
-          {/*availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? (
-                    <Dots>Claiming {govToken?.symbol}</Dots>
-                  ) : (
-                    `Claim ${govToken?.symbol}`
-                  )}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )*/}
-          {/*!availableClaim && aggregateBalance && (
-            <UNIWrapper onClick={() => setShowUniBalanceModal(true)}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                {account && (
-                  <HideSmall>
-                    <TYPE.white
-                      style={{
-                        paddingRight: '.4rem'
-                      }}
-                    >
-                      <CountUp
-                        key={countUpValue}
-                        isCounting
-                        start={parseFloat(countUpValuePrevious)}
-                        end={parseFloat(countUpValue)}
-                        thousandsSeparator={','}
-                        duration={1}
-                      />
-                    </TYPE.white>
-                  </HideSmall>
-                )}
-                {govToken?.symbol}
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )*/}
+          <HeaderElementWrap>
+            <StyledMenuButton onClick={() => setShowUniBalanceModal(true)} style={{ width: '100px' }}>
+              {govToken?.symbol} INFO
+            </StyledMenuButton>
+          </HeaderElementWrap>
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                {userEthBalance?.toSignificant(4)} {BASE_CURRENCY.symbol}
-              </BalanceText>
-            ) : null}
             <Web3Status />
           </AccountElement>
         </HeaderElement>

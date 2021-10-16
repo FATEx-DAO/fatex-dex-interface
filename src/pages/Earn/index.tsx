@@ -10,7 +10,7 @@ import PoolCard from '../../components/earn/PoolCard'
 import { CustomButtonWhite } from '../../components/Button'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
 import { RowBetween } from '../../components/Row'
-import { CardSection, ExtraDataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardSection, CardNoise, CardBGImage } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import ClaimAllRewardsModal from '../../components/earn/ClaimAllRewardsModal'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,16 +21,13 @@ import useBaseStakingRewardsSchedule from '../../hooks/useBaseStakingRewardsSche
 import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
+//import GovTokenBalanceContent from '../../components/Header/GovTokenBalanceContent'
 
 const PageWrapper = styled(AutoColumn)`
-  max-width: 640px;
+  max-width: 1200px;
   width: 100%;
 `
 
-const TopSection = styled(AutoColumn)`
-  max-width: 720px;
-  width: 100%;
-`
 /*
 const ButtonWrapper = styled(AutoColumn)`
   max-width: 150px;
@@ -45,19 +42,43 @@ const ButtonWrapper = styled(AutoColumn)`
 </ButtonWrapper>
 */
 
-const PoolSection = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  column-gap: 10px;
-  row-gap: 15px;
+const TVLWrapper = styled.div`
   width: 100%;
-  justify-self: center;
+  display: inline-block;
 `
 
-const DataRow = styled(RowBetween)`
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-flex-direction: column;
-`};
+const LoaderWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+  transform: translateY(60px);
+`
+
+const StakingInfo = styled.div`
+  background: ${({ theme }) => theme.bg3};
+  border-radius: 8px;
+  width: 30%;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  vertical-align: top;
+  text-align: left;
+`
+
+const PoolSectionsWrapper = styled.div`
+  width: 100%;
+  text-align: center;
+`
+
+const PoolSection = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  margin: 0 10px;
+  width: 30%;
+  text-align: left;
+
+  > div:nth-of-type(1) {
+    margin-top: 0 !important;
+  }
 `
 
 export default function Earn() {
@@ -88,8 +109,16 @@ export default function Earn() {
 
   return (
     <PageWrapper gap="lg" justify="center">
-      <TopSection gap="md">
-        <ExtraDataCard>
+      <ClaimAllRewardsModal
+        isOpen={showClaimRewardsModal}
+        onDismiss={() => setShowClaimRewardsModal(false)}
+        stakingInfos={stakingInfosWithRewards}
+      />
+
+      <PoolSectionsWrapper>
+        <AwaitingRewards />
+
+        <StakingInfo>
           <CardBGImage />
           <CardNoise />
           <CardSection>
@@ -102,7 +131,15 @@ export default function Earn() {
                   Deposit your Liquidity Provider tokens to receive {govToken?.symbol}, the {govToken?.name} Protocol
                   governance token.
                 </TYPE.white>
-              </RowBetween>{' '}
+              </RowBetween>
+              <RowBetween>
+                {TVLs?.stakingPoolTVL?.greaterThan('0') && (
+                  <TVLWrapper>
+                    <CombinedTVL />
+                  </TVLWrapper>
+                )}
+              </RowBetween>
+              <RowBetween>{/*<GovTokenBalanceContent inline={true} />*/}</RowBetween>{' '}
               {stakingInfosWithRewards?.length > 0 && (
                 <RowBetween>
                   <CustomButtonWhite
@@ -128,33 +165,12 @@ export default function Earn() {
           </CardSection>
           <CardBGImage />
           <CardNoise />
-        </ExtraDataCard>
-      </TopSection>
-
-      <ClaimAllRewardsModal
-        isOpen={showClaimRewardsModal}
-        onDismiss={() => setShowClaimRewardsModal(false)}
-        stakingInfos={stakingInfosWithRewards}
-      />
-
-      <AutoColumn gap="lg" style={{ width: '100%', maxWidth: '720px' }}>
-        <DataRow style={{ alignItems: 'baseline' }}>
-          <TYPE.mediumHeader style={{ marginTop: '0.5rem' }}>Pools</TYPE.mediumHeader>
-          {TVLs?.stakingPoolTVL?.greaterThan('0') && (
-            <TYPE.black style={{ marginTop: '0.5rem' }}>
-              <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
-                🏆
-              </span>
-              <CombinedTVL />
-            </TYPE.black>
-          )}
-        </DataRow>
-
-        <AwaitingRewards />
-
+        </StakingInfo>
         <PoolSection>
           {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
-            <Loader style={{ margin: 'auto' }} />
+            <LoaderWrapper>
+              <Loader style={{ margin: 'auto' }} />
+            </LoaderWrapper>
           ) : account && !stakingRewardsExist ? (
             <OutlineCard>No active pools</OutlineCard>
           ) : account && stakingInfos?.length !== 0 && !activeStakingInfos ? (
@@ -164,7 +180,33 @@ export default function Earn() {
           ) : (
             activeStakingInfos?.map(stakingInfo => {
               // need to sort by added liquidity here
-              return <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
+              return (
+                stakingInfo?.baseToken?.symbol?.includes('FATE') && (
+                  <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
+                )
+              )
+            })
+          )}
+        </PoolSection>
+        <PoolSection>
+          {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
+            <LoaderWrapper>
+              <Loader style={{ margin: 'auto' }} />
+            </LoaderWrapper>
+          ) : account && !stakingRewardsExist ? (
+            <OutlineCard>No active pools</OutlineCard>
+          ) : account && stakingInfos?.length !== 0 && !activeStakingInfos ? (
+            <OutlineCard>No active pools</OutlineCard>
+          ) : !account ? (
+            <OutlineCard>Please connect your wallet to see available pools</OutlineCard>
+          ) : (
+            activeStakingInfos?.map(stakingInfo => {
+              // need to sort by added liquidity here
+              return (
+                !stakingInfo?.baseToken?.symbol?.includes('FATE') && (
+                  <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
+                )
+              )
             })
           )}
         </PoolSection>
@@ -188,7 +230,7 @@ export default function Earn() {
             </TYPE.small>
           </TYPE.main>
         )}
-      </AutoColumn>
+      </PoolSectionsWrapper>
     </PageWrapper>
   )
 }
