@@ -106,7 +106,7 @@ flex-direction: column;
 `};
 `
 
-export default function Pit({
+export default function XFate({
   match: {
     params: { currencyIdA, currencyIdB }
   }

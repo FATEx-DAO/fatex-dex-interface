@@ -27,7 +27,7 @@ const InfoLink = styled(ExternalLink)`
 
 function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippage: number }) {
   const { chainId } = useActiveWeb3React()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
   const blockchain = useBlockchain()
 
   const theme = useContext(ThemeContext)
@@ -72,7 +72,7 @@ function TradeSummary({ trade, allowedSlippage }: { trade: Trade; allowedSlippag
               Liquidity Provider Fee
             </TYPE.black>
             <QuestionHelper
-              text={`A portion of each trade (0.30%) goes to liquidity providers and ${pitSettings?.name} stakers as a protocol incentive.`}
+              text={`A portion of each trade (0.30%) goes to liquidity providers and ${xFateSettings?.name} stakers as a protocol incentive.`}
             />
           </RowFixed>
           <TYPE.black fontSize={14} color={theme.text1}>

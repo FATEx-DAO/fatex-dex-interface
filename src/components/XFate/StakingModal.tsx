@@ -51,7 +51,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
   const { parsedAmount, error } = useDerivedStakeInfo(typedValue, stakingToken, userLiquidityUnstaked)
 
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
 
   // state for pending and submitted txn views
   const addTransaction = useTransactionAdder()
@@ -84,7 +84,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
           })
           .then((response: TransactionResponse) => {
             addTransaction(response, {
-              summary: `Deposit ${govToken?.symbol} to ${pitSettings?.name}`
+              summary: `Deposit ${govToken?.symbol} to ${xFateSettings?.name}`
             })
             setHash(response.hash)
           })
@@ -167,7 +167,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              Depositing {govToken?.symbol} to {pitSettings?.name}
+              Depositing {govToken?.symbol} to {xFateSettings?.name}
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
               {parsedAmount?.toSignificant(4)} {govToken?.symbol}

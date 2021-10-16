@@ -66,24 +66,24 @@ export default function ModifiedStakingModal({
   }, [onDismiss])
 
   const govToken = useGovernanceToken()
-  const pitSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
-  const pit = useXFateContract()
-  const pitToken = useXFateToken()
+  const xFateSettings = chainId ? X_FATE_SETTINGS[chainId] : undefined
+  const xFateContract = useXFateContract()
+  const xFateToken = useXFateToken()
 
   async function onWithdraw() {
-    if (pit && userLiquidityStaked) {
+    if (xFateContract && userLiquidityStaked) {
       setAttempting(true)
 
       const formattedAmount = `0x${parsedAmount?.raw.toString(16)}`
-      const estimatedGas = await pit.estimateGas.leave(formattedAmount)
+      const estimatedGas = await xFateContract.estimateGas.leave(formattedAmount)
 
-      await pit
+      await xFateContract
         .leave(formattedAmount, {
           gasLimit: calculateGasMargin(estimatedGas)
         })
         .then((response: TransactionResponse) => {
           addTransaction(response, {
-            summary: `Withdraw x${govToken?.symbol} from ${pitSettings?.name}`
+            summary: `Withdraw x${govToken?.symbol} from ${xFateSettings?.name}`
           })
           setHash(response.hash)
         })
@@ -123,7 +123,7 @@ export default function ModifiedStakingModal({
             onUserInput={onUserInput}
             onMax={handleMax}
             showMaxButton={!atMaxAmount}
-            currency={pitToken}
+            currency={xFateToken}
             label={''}
             disableCurrencySelect={true}
             overrideSelectedCurrencyBalance={userLiquidityStaked}
@@ -142,7 +142,7 @@ export default function ModifiedStakingModal({
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>
-              Withdrawing x{govToken?.symbol} from {pitSettings?.name}
+              Withdrawing x{govToken?.symbol} from {xFateSettings?.name}
             </TYPE.largeHeader>
             <TYPE.body fontSize={20}>
               {parsedAmount?.toSignificant(4)} x{govToken?.symbol}

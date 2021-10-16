@@ -58,8 +58,6 @@ const BodyWrapper = styled.div`
     padding: 16px;
     padding-top: 2rem;
   `};
-
-  z-index: 1;
 `
 
 const Marginer = styled.div`

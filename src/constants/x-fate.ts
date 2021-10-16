@@ -1,7 +1,7 @@
 import { ChainId, Token } from '@fatex-dao/sdk'
 import getPairTokensWithDefaults from '../utils/getPairTokensWithDefaults'
 
-export const PIT_POOLS: {
+export const X_FATE_POOLS: {
   [chainId in ChainId]?: {
     pid: number
     tokens: [Token, Token]

@@ -9,15 +9,15 @@ import useXFateToken from './useXFateToken'
 export default function useXFateTVL(): Fraction | undefined {
   const govToken = useGovernanceToken()
   const govTokenBusdPrice = useBUSDPrice(govToken)
-  const pit = useXFateToken()
-  const pitGovTokenBalance: TokenAmount | undefined = useTokenBalance(
-    pit && pit.address,
+  const xFate = useXFateToken()
+  const xFateGovTokenBalance: TokenAmount | undefined = useTokenBalance(
+    xFate && xFate.address,
     govToken,
     'balanceOf',
     FATE_TOKEN_INTERFACE
   )
 
   return useMemo(() => {
-    return govTokenBusdPrice ? pitGovTokenBalance?.multiply(govTokenBusdPrice?.raw) : undefined
-  }, [govToken, govTokenBusdPrice, pit, pitGovTokenBalance])
+    return govTokenBusdPrice ? xFateGovTokenBalance?.multiply(govTokenBusdPrice?.raw) : undefined
+  }, [govToken, govTokenBusdPrice, xFate, xFateGovTokenBalance])
 }
