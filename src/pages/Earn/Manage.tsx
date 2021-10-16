@@ -51,9 +51,9 @@ const BottomSection = styled(AutoColumn)`
 const StyledDataCard = styled(DataCard)<{ bgColor?: any; showBackground?: any }>`
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #1e1a31 0%, #3d51a5 100%);*/
   z-index: 2;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  /*background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};*/
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    /*background: ${({ theme, bgColor, showBackground }) =>
+      `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%,  ${showBackground ? theme.black : theme.bg5} 100%) `};*/
   background: ${({ theme }) => theme.bg3};
 `
 
@@ -134,8 +134,6 @@ export default function Manage({
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
-  //const showAddLiquidityButton =
-  //  stakingInfo === undefined || Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
 
   const showAddLiquidityButton = useMemo<boolean>(() => {
     return Boolean(stakingInfo?.stakedAmount?.equalTo('0') && userLiquidityUnstaked?.equalTo('0'))
@@ -336,7 +334,8 @@ export default function Manage({
         <AwaitingRewards />
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
-            {stakingInfo && stakingInfo.active && (
+            {/*{stakingInfo && stakingInfo.active && (*/}
+            {stakingInfo && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
                 {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATEx-LP Tokens'}
               </ButtonPrimary>

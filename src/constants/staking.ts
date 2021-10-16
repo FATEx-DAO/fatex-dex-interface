@@ -105,6 +105,11 @@ export const STAKING_REWARDS_INFO: {
       pid: 19,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1USDT/1USDC'),
       active: true
+    },
+    {
+      pid: 20,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'BUSD/bscBUSD'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
