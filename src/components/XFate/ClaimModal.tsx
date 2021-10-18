@@ -70,10 +70,13 @@ export default function ClaimModal({ isOpen, onDismiss }: ClaimModalProps) {
   const balanceResults = useMultipleContractSingleData(liquidityTokenAddresses, ERC20_INTERFACE, 'balanceOf', [
     feeTokenConverterToFate?.address
   ])
-  const balanceResultsMap = liquidityTokenAddresses.reduce<{ [address: string]: CallState }>((memo, address, index) => {
-    memo[address ?? ''] = balanceResults[index]
-    return memo
-  }, {})
+  const balanceResultsMap = liquidityTokenAddresses.reduce<{ [address: string]: CallState }>(
+    (memo, liquidityTokenAddress, index) => {
+      memo[liquidityTokenAddress ?? ''] = balanceResults[index]
+      return memo
+    },
+    {}
+  )
 
   const [token0s, token1s] = useEligibleXFatePools(pairs, balanceResultsMap)
 
