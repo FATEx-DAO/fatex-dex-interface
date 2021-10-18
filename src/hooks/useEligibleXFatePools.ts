@@ -21,22 +21,15 @@ export default function useEligibleXFatePools(
     const claimTo: string[] = []
     const ZERO = JSBI.BigInt('0')
 
-    for (let index = 0; pairs && index < pairs.length; index++) {
-      const pair = pairs[index]
+    for (let i = 0; pairs && i < pairs.length; i++) {
+      const pair = pairs[i]
       const state = balanceResultsMap[pair?.liquidityToken.address ?? '']
-      const totalSupply = totalSupplies[index]
+      const totalSupply = totalSupplies[i]
       if (state && !state.loading && state?.result !== undefined && pair && totalSupply) {
-        // let minimumAmountWei = '1000'
-        // if (
-        //   (pair.token0.decimals === 8 && pair.token1.decimals === 18) ||
-        //   (pair.token0.decimals === 18 && pair.token1.decimals === 8)
-        // ) {
-        //   minimumAmountWei = '1000000000'
-        // }
         const balance = new TokenAmount(pair.liquidityToken, state.result?.[0].toString())
-        const amount0 = balance.multiply(pair.reserve0.quotient).divide(totalSupply.quotient)
-        const amount1 = balance.multiply(pair.reserve1.quotient).divide(totalSupply.quotient)
-        if (JSBI.GT(amount0, ZERO) && JSBI.GT(amount1, ZERO) && !isFatexFatePair(pair)) {
+        const amount0 = balance.multiply(pair.reserve0.numerator).divide(totalSupply)
+        const amount1 = balance.multiply(pair.reserve1.numerator).divide(totalSupply)
+        if (JSBI.GT(amount0.quotient, ZERO) && JSBI.GT(amount1.quotient, ZERO) && !isFatexFatePair(pair)) {
           claimFrom.push(pair.token0.address)
           claimTo.push(pair.token1.address)
         }
