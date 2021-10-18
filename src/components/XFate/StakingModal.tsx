@@ -1,19 +1,18 @@
-import React, { useState, useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { CloseIcon, TYPE } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
-import { TokenAmount, Token } from '@fatex-dao/sdk'
+import { Token, TokenAmount } from '@fatex-dao/sdk'
 import { useActiveWeb3React } from '../../hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { useApproveCallback, ApprovalState } from '../../hooks/useApproveCallback'
+import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useDerivedStakeInfo } from '../../state/stake/hooks'
-//import { wrappedCurrencyAmount } from '../../utils/wrappedCurrency'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
@@ -116,8 +115,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingToken, userLiqu
 
   async function onAttemptToApprove() {
     if (!xFateContract || !library || !deadline) throw new Error('missing dependencies')
-    const liquidityAmount = parsedAmount
-    if (!liquidityAmount) throw new Error('missing liquidity amount')
+    if (!parsedAmount) throw new Error('missing liquidity amount')
 
     return approveCallback()
   }
