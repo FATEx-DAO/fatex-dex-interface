@@ -6,6 +6,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useOnClickOutside } from '../../hooks/useOnClickOutside'
 import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleModal } from '../../state/application/hooks'
+import { useLocation } from 'react-router-dom'
 
 import { ExternalLink } from '../../theme'
 import { ButtonPrimary } from '../Button'
@@ -20,6 +21,7 @@ import YouTubeLogo from '../../assets/images/youtube-logo.svg'
 import RedditLogo from '../../assets/images/reddit-logo.svg'
 import MediumLogo from '../../assets/images/medium-logo.svg'
 import DiscourseLogo from '../../assets/images/discourse-logo.svg'
+import Checkmark from '../../assets/images/checkmark-icon.svg'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -54,7 +56,7 @@ const StyledMenuButton = styled.button`
   }
 `
 
-const StyledMenuMobile = styled.div`
+const StyledMenuMobile = styled.div<{ isStaking: boolean }>`
   margin-left: 0.5rem;
   justify-content: center;
   align-items: center;
@@ -63,13 +65,20 @@ const StyledMenuMobile = styled.div`
   text-align: left;
   display: none;
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme, isStaking }) =>
+    isStaking
+      ? `
+    @media screen and (max-width: 1250px) {
+      display: flex;
+    }
+  `
+      : theme.mediaWidth.upToMedium`
     display: flex;
   `};
 `
 
 const MenuFlyout = styled.span`
-  min-width: 10rem;
+  min-width: 13rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
     0 24px 32px rgba(0, 0, 0, 0.01);
@@ -88,7 +97,7 @@ const MenuFlyout = styled.span`
   `};
 `
 
-const StyledMenuDesktop = styled.div`
+const StyledMenuDesktop = styled.div<{ isStaking: boolean }>`
   margin-left: 0.5rem;
   display: flex;
   flex-direction: column;
@@ -106,7 +115,14 @@ const StyledMenuDesktop = styled.div`
     text-decoration: none;
   }
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  ${({ theme, isStaking }) =>
+    isStaking
+      ? `
+    @media screen and (max-width: 1250px) {
+      display: none;
+    }
+  `
+      : theme.mediaWidth.upToMedium`
     display: none;
   `};
 `
@@ -166,28 +182,35 @@ export default function Menu() {
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
+  const location = useLocation()
+  const isStaking = location.pathname === '/staking'
+
   return (
     <>
       {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451*/}
-      <StyledMenuDesktop ref={node as any}>
+      <StyledMenuDesktop ref={node as any} isStaking={isStaking}>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
         </MenuItem>
-        {blockchain === Blockchain.HARMONY && (
-          <MenuItem id="link" href="https://info.fatex.io">
-            <PieChart size={14} />
-            Analytics
-          </MenuItem>
-        )}
         <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
           <img src={DiscourseLogo} />
           DAO Forum
+        </MenuItem>
+        <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
+          <img src={Checkmark} />
+          DAO Voting
         </MenuItem>
         <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
           <Book size={14} />
           Green Paper
         </MenuItem>
+        {blockchain === Blockchain.HARMONY && (
+          <MenuItem id="link" href="https://info.fatex.io">
+            <PieChart size={14} />
+            DEX Analytics
+          </MenuItem>
+        )}
         <SocialLinks>
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
             <img src={TwitterLogo} alt={'twitter logo'} />
@@ -207,9 +230,6 @@ export default function Menu() {
           <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
             <img src={YouTubeLogo} alt={'youtube logo'} />
           </a>
-          <a href={'https://gov.daodiscourse.fatex.io/categories'} target={'_blank'} rel="noreferrer">
-            <img src={DiscourseLogo} alt={'discourse logo'} />
-          </a>
         </SocialLinks>
         {account && blockchain === Blockchain.ETHEREUM && (
           <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
@@ -217,7 +237,7 @@ export default function Menu() {
           </ButtonPrimary>
         )}
       </StyledMenuDesktop>
-      <StyledMenuMobile ref={node as any}>
+      <StyledMenuMobile ref={node as any} isStaking={isStaking}>
         <StyledMenuButton onClick={toggle}>
           <StyledMenuIcon />
         </StyledMenuButton>
@@ -228,20 +248,24 @@ export default function Menu() {
               <Code size={14} />
               Code
             </MenuItem>
-            {blockchain === Blockchain.HARMONY && (
-              <MenuItem id="link" href="https://info.fatex.io">
-                <PieChart size={14} />
-                Analytics
-              </MenuItem>
-            )}
             <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
               <img src={DiscourseLogo} />
               DAO Forum
+            </MenuItem>
+            <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
+              <img src={Checkmark} />
+              DAO Voting
             </MenuItem>
             <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
               <Book size={14} />
               Green Paper
             </MenuItem>
+            {blockchain === Blockchain.HARMONY && (
+              <MenuItem id="link" href="https://info.fatex.io">
+                <PieChart size={14} />
+                DEX Analytics
+              </MenuItem>
+            )}
             <SocialLinks>
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
                 <img src={TwitterLogo} alt={'twitter logo'} />
@@ -260,9 +284,6 @@ export default function Menu() {
               </a>
               <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
                 <img src={YouTubeLogo} alt={'youtube logo'} />
-              </a>
-              <a href={'https://gov.daodiscourse.fatex.io/categories'} target={'_blank'} rel="noreferrer">
-                <img src={DiscourseLogo} alt={'discourse logo'} />
               </a>
             </SocialLinks>
             {account && blockchain === Blockchain.ETHEREUM && (

@@ -10,7 +10,7 @@ import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBlockchain from '../../hooks/useBlockchain'
 import { X_FATE } from '../../constants'
 import { useTrackedTokenPairs } from '../../state/user/hooks'
-import { useLocation } from 'react-router-dom'
+//import { useLocation } from 'react-router-dom'
 import { CardBGImage, CardNoise } from '../earn/styled'
 import { X } from 'react-feather'
 
@@ -29,9 +29,9 @@ const StatsWrapper = styled.div<{ inline: boolean | undefined }>`
   left: 0;
   padding: ${({ inline }) => (inline ? '0' : '20px')};*/
 
-  ${({ theme }) => theme.mediaWidth.upToMedium`
+  /*${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
-  `};
+  `};*/
 `
 
 const StyledClose = styled(X)`
@@ -98,8 +98,8 @@ export default function GovTokenBalanceContent({
           .add(unlockedGovTokensToClaim)
       : undefined
 
-  const location = useLocation()
-  const isStaking = location.pathname === '/staking'
+  //const location = useLocation()
+  const isStaking = false //location.pathname === '/staking'
 
   const totalSupply = useGovTokenSupply()
   const outOfCirculationBalances = [

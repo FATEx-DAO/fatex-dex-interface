@@ -405,6 +405,12 @@ body {
  a {
    color: ${colors(Blockchain.ETHEREUM, false).blue1}; 
  }
+ 
+ #stats-popover > div {
+  border-radius: 8px !important;
+  background-color: #40444f;
+  margin-top: 10px;
+ }
 
 * {
   box-sizing: border-box;
