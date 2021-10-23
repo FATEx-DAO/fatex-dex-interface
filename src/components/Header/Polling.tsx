@@ -5,12 +5,13 @@ import { TYPE, ExternalLink } from '../../theme'
 import { useBlockNumber } from '../../state/application/hooks'
 import { getEtherscanLink } from '../../utils'
 import { useActiveWeb3React } from '../../hooks'
+import { useLocation } from 'react-router-dom'
 
-const StyledPolling = styled.div`
+const StyledPolling = styled.div<{ isStaking: boolean }>`
   position: fixed;
   display: flex;
-  right: 0;
-  bottom: 0;
+  right: 190px;
+  bottom: 6px;
   padding: 1rem;
   color: ${({ theme }) => theme.text1};
   transition: opacity 0.25s ease;
@@ -18,6 +19,14 @@ const StyledPolling = styled.div`
   :hover {
     opacity: 1;
   }
+
+  ${({ isStaking }) =>
+    isStaking &&
+    `
+    @media screen and (max-width: 1250px) {
+      right: 0;
+    }
+  `}
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     display: none;
@@ -69,6 +78,9 @@ export default function Polling() {
 
   const [isMounted, setIsMounted] = useState(true)
 
+  const location = useLocation()
+  const isStaking = location.pathname === '/staking'
+
   useEffect(
     () => {
       const timer1 = setTimeout(() => setIsMounted(true), 1000)
@@ -85,7 +97,7 @@ export default function Polling() {
 
   return (
     <ExternalLink href={chainId && blockNumber ? getEtherscanLink(chainId, blockNumber.toString(), 'block') : ''}>
-      <StyledPolling>
+      <StyledPolling isStaking={isStaking}>
         <TYPE.small style={{ opacity: isMounted ? '0.2' : '0.6' }}>{blockNumber}</TYPE.small>
         <StyledPollingDot>{!isMounted && <Spinner />}</StyledPollingDot>
       </StyledPolling>
