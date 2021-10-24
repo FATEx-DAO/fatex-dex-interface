@@ -53,9 +53,13 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expa
     showBackground &&
     `  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);`}
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: 0;
+  `}
 `
 
-const TopSection = styled.div`
+const TopSection = styled.div<{ smallText: boolean }>`
   /*display: grid;
   grid-template-columns: 48px 1fr 120px;
   grid-gap: 0;
@@ -64,8 +68,10 @@ const TopSection = styled.div`
   justify-content: space-between;
   padding: 1rem;
   z-index: 1;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
+  ${({ theme, smallText }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 48px 1fr 96px;
+
+    ${smallText && `> div > div:nth-of-type(2) { font-size: 16px; }`}
   `};
 
   > div:nth-of-type(1) {
@@ -131,7 +137,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
       <CardBGImage desaturate />
       <CardNoise />
 
-      <TopSection>
+      <TopSection smallText={`${currency0?.symbol}-${currency1?.symbol}`.length > 8}>
         <div>
           <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
           <TYPE.white

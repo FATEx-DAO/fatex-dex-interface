@@ -10,7 +10,7 @@ An open source interface for Uniswap -- a protocol for decentralized exchange of
 - Interface: [app.fatex.io](https://app.fatex.io)
 - Docs: [fatex.io/docs/](https://fatex.io/docs/)
 - Twitter: [@FATExDAO](https://twitter.com/FATExDAO)
-- Reddit: [/r/FATExDAO](https://www.reddit.com/r/FATExDAO/)
+- Reddit: [/r/FATEx](https://www.reddit.com/r/FATEx/)
 - Whitepaper: [Link](https://fatexdao.gitbook.io/fatexdao/)
 
 ## Accessing the FATEx Interface
