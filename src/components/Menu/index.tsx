@@ -21,6 +21,7 @@ import YouTubeLogo from '../../assets/images/youtube-logo.svg'
 import RedditLogo from '../../assets/images/reddit-logo.svg'
 import MediumLogo from '../../assets/images/medium-logo.svg'
 import DiscourseLogo from '../../assets/images/discourse-logo.svg'
+import LinkedinLogo from '../../assets/images/linkedin-logo.svg'
 import Checkmark from '../../assets/images/checkmark-icon.svg'
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -189,6 +190,9 @@ export default function Menu() {
     <>
       {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451*/}
       <StyledMenuDesktop ref={node as any} isStaking={isStaking}>
+        <MenuItem id="link" href={'https://fatex.io'}>
+          FATEx.io
+        </MenuItem>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
@@ -230,6 +234,9 @@ export default function Menu() {
           <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
             <img src={YouTubeLogo} alt={'youtube logo'} />
           </a>
+          <a href={'https://www.linkedin.com/company/fatexdao'} target={'_blank'} rel="noreferrer">
+            <img src={LinkedinLogo} alt={'linkedin logo'} />
+          </a>
         </SocialLinks>
         {account && blockchain === Blockchain.ETHEREUM && (
           <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
@@ -244,6 +251,9 @@ export default function Menu() {
 
         {open && (
           <MenuFlyout>
+            <MenuItem id="link" href={'https://fatex.io'}>
+              FATEx.io
+            </MenuItem>
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
               <Code size={14} />
               Code
@@ -284,6 +294,9 @@ export default function Menu() {
               </a>
               <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
                 <img src={YouTubeLogo} alt={'youtube logo'} />
+              </a>
+              <a href={'https://www.linkedin.com/company/fatexdao'} target={'_blank'} rel="noreferrer">
+                <img src={LinkedinLogo} alt={'linkedin logo'} />
               </a>
             </SocialLinks>
             {account && blockchain === Blockchain.ETHEREUM && (
