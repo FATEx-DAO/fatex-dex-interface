@@ -190,9 +190,9 @@ export default function Menu() {
     <>
       {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451*/}
       <StyledMenuDesktop ref={node as any} isStaking={isStaking}>
-        <MenuItem id="link" href={'https://fatex.io'}>
+        {/*<MenuItem id="link" href={'https://fatex.io'}>
           FATEx.io
-        </MenuItem>
+        </MenuItem>*/}
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
@@ -251,9 +251,9 @@ export default function Menu() {
 
         {open && (
           <MenuFlyout>
-            <MenuItem id="link" href={'https://fatex.io'}>
+            {/*<MenuItem id="link" href={'https://fatex.io'}>
               FATEx.io
-            </MenuItem>
+            </MenuItem>*/}
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
               <Code size={14} />
               Code

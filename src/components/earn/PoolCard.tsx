@@ -36,7 +36,7 @@ const StatContainerTop = styled.div`
 
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean }>`
   border-radius: 8px;
-  width: 100%;
+  width: 97%;
   margin: 0 1.5%
   height: ${({ expanded }) => (expanded ? '218px' : '57px')};
   transition: height 0.2s ease-in-out;
@@ -55,6 +55,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expa
     0px 24px 32px rgba(0, 0, 0, 0.01);`}
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
     margin: 0;
   `}
 `
