@@ -215,7 +215,7 @@ export default function Menu() {
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
             <img src={TwitterLogo} alt={'twitter logo'} />
           </a>
-          <a href={'https://www.reddit.com/r/FATExDAO'} target={'_blank'} rel="noreferrer">
+          <a href={'https://www.reddit.com/r/FATEx'} target={'_blank'} rel="noreferrer">
             <img src={RedditLogo} alt={'reddit logo'} />
           </a>
           <a href={'https://fatexdao.medium.com'} target={'_blank'} rel="noreferrer">
@@ -270,7 +270,7 @@ export default function Menu() {
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
                 <img src={TwitterLogo} alt={'twitter logo'} />
               </a>
-              <a href={'https://www.reddit.com/r/FATExDAO'} target={'_blank'} rel="noreferrer">
+              <a href={'https://www.reddit.com/r/FATEx'} target={'_blank'} rel="noreferrer">
                 <img src={RedditLogo} alt={'reddit logo'} />
               </a>
               <a href={'https://fatexdao.medium.com'} target={'_blank'} rel="noreferrer">
