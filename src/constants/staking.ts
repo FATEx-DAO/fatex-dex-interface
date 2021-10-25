@@ -180,6 +180,11 @@ export const STAKING_REWARDS_INFO: {
       pid: 34,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/1PAXG'),
       active: true
+    },
+    {
+      pid: 35,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'UST/1DAI'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
