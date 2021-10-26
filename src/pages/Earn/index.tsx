@@ -25,6 +25,11 @@ import Pool from '../Pool'
 const PageWrapper = styled(AutoColumn)`
   max-width: 1800px;
   width: 100%;
+  padding: 16px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0;
+  `};
 `
 
 /*
@@ -41,10 +46,14 @@ const ButtonWrapper = styled(AutoColumn)`
 </ButtonWrapper>
 */
 
-const LoaderWrapper = styled.div`
+const LoaderWrapper = styled.div<{ second?: boolean }>`
   width: 100%;
   text-align: center;
   transform: translateY(60px);
+
+  ${({ theme, second }) => theme.mediaWidth.upToMedium`
+    ${second && 'display: none;'}
+  `}
 `
 
 const StakingInfo = styled.div`
@@ -86,7 +95,7 @@ const PoolSection = styled.div`
       width: 100%;
       max-width: none;
 
-      > div {
+      > div:nth-of-type(1) {
         > div:nth-of-type(2) > div {
           font-size: 20px !important;
         }
@@ -97,6 +106,12 @@ const PoolSection = styled.div`
       }
     }
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    > div:nth-of-type(1) {
+      margin-bottom: 10px;
+    }
+  `};
 `
 
 const StakingSection = styled(PoolSection)`
@@ -117,6 +132,11 @@ const RightSideWrapper = styled.div`
     width: 100%;
     margin-top: 25px;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    min-width: auto;
+    margin-left: 0;
+  `};
 `
 
 export default function Earn() {
@@ -207,11 +227,11 @@ export default function Earn() {
                 <Loader style={{ margin: 'auto' }} />
               </LoaderWrapper>
             ) : account && !stakingRewardsExist ? (
-              <OutlineCard>No active pools</OutlineCard>
+              <OutlineCard style={{ width: '200%' }}>No active pools</OutlineCard>
             ) : account && stakingInfos?.length !== 0 && !activeStakingInfos ? (
-              <OutlineCard>No active pools</OutlineCard>
+              <OutlineCard style={{ width: '200%' }}>No active pools</OutlineCard>
             ) : !account ? (
-              <OutlineCard>Please connect your wallet to see available pools</OutlineCard>
+              <OutlineCard style={{ width: '200%' }}>Please connect your wallet to see available pools</OutlineCard>
             ) : (
               activeStakingInfos?.map(stakingInfo => {
                 // need to sort by added liquidity here
@@ -225,15 +245,15 @@ export default function Earn() {
           </StakingSection>
           <StakingSection>
             {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
-              <LoaderWrapper>
+              <LoaderWrapper second={true}>
                 <Loader style={{ margin: 'auto' }} />
               </LoaderWrapper>
             ) : account && !stakingRewardsExist ? (
-              <OutlineCard>No active pools</OutlineCard>
+              <></>
             ) : account && stakingInfos?.length !== 0 && !activeStakingInfos ? (
-              <OutlineCard>No active pools</OutlineCard>
+              <></>
             ) : !account ? (
-              <OutlineCard>Please connect your wallet to see available pools</OutlineCard>
+              <></>
             ) : (
               activeStakingInfos?.map(stakingInfo => {
                 // need to sort by added liquidity here

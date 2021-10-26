@@ -549,7 +549,7 @@ export default function Header() {
               <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
                 {t('swap')}
               </StyledNavLink>
-              <StyledNavLink
+              {/*<StyledNavLink
                 id={`pool-nav-link`}
                 to={'/pool'}
                 isActive={(match, { pathname }) =>
@@ -561,7 +561,8 @@ export default function Header() {
                 }
               >
                 {t('pool')}
-              </StyledNavLink>
+              </StyledNavLink>*/}
+              {/* TODO - map /add /remove /create and /find */}
               <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
                 Depository{/* TODO CHANGE BOTH */}
               </StyledNavLink>
@@ -585,7 +586,7 @@ export default function Header() {
             <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
               {t('swap')}
             </StyledNavLink>
-            <StyledNavLink
+            {/*<StyledNavLink
               id={`pool-nav-link`}
               to={'/pool'}
               isActive={(match, { pathname }) =>
@@ -597,7 +598,7 @@ export default function Header() {
               }
             >
               {t('pool')}
-            </StyledNavLink>
+            </StyledNavLink>*/}
             <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
               Depository{/* TODO CHANGE BOTH */}
             </StyledNavLink>

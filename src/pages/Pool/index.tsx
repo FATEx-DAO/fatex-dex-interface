@@ -217,7 +217,7 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : /* TODO allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ?*/ true ? (
+            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
                 {blockchain &&
                   Blockchain &&
@@ -238,12 +238,12 @@ export default function Pool() {
                       </RowBetween>
                     </ButtonSecondary>
                   )}
-                {testPair[0][1] && (
+                {/*testPair[0][1] && (
                   <FullPositionCard
                     key={tokenPairsWithLiquidityTokens[0].liquidityToken.address}
                     pair={testPair[0][1]}
                   />
-                )}
+                )*/}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

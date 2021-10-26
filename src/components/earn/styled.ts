@@ -39,6 +39,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   width: 1000px;
   height: 600px;
   position: absolute;
+  pointer-events: none;
   border-radius: 8px;
   opacity: 0.4;
   top: -100px;
@@ -67,6 +68,7 @@ export const CardNoise = styled.span`
   background: url(${noise});
   background-size: cover;
   mix-blend-mode: overlay;
+  pointer-events: none;
   border-radius: 8px;
   width: 100%;
   height: 100%;
