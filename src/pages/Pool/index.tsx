@@ -126,6 +126,9 @@ export default function Pool() {
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
   const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
 
+  const testData = stakingInfo.map(stakingInfo => stakingInfo.tokens)
+  const testPair = usePairs(testData)
+
   // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
     return (
@@ -134,6 +137,10 @@ export default function Pool() {
         .filter(stakingPair => stakingPair?.liquidityToken.address === v2Pair.liquidityToken.address).length === 0
     )
   })
+
+  console.log('VVV')
+  console.log(Blockchain.HARMONY)
+  console.log(blockchain)
 
   return (
     <>
@@ -145,13 +152,22 @@ export default function Pool() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Liquidity provider rewards</TYPE.white>
+                <TYPE.white fontWeight={600}>Pool Your Liquidity</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
-                  Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool. Fees are
-                  added to the pool, accrue in real time and can be claimed by withdrawing your liquidity. There are no
-                  withdrawal fees when withdrawing liquidity from a pool.
+                  Liquidity Pool (LP) tokens are made by creating a pair or adding liquidity to existing LPs.
+                </TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  Liquidity providers earn a 0.25% fee on all trades proportional to their share of the pool.
+                </TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
+                  There are no withdrawal fees when withdrawing liquidity from a pool.
                 </TYPE.white>
               </RowBetween>
               {blockchain === Blockchain.ETHEREUM && (
@@ -173,8 +189,8 @@ export default function Pool() {
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow style={{ marginTop: '1rem' }} padding={'0'}>
               <HideSmall>
-                <TYPE.mediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
-                  Your liquidity
+                <TYPE.mediumHeader style={{ justifySelf: 'flex-start', maxWidth: '250px' }}>
+                  Your Liquidity Pool Deposits
                 </TYPE.mediumHeader>
               </HideSmall>
               <ButtonRow>
@@ -201,17 +217,32 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
+            ) : /* TODO allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ?*/ true ? (
               <>
-                {blockchain === Blockchain.HARMONY && (
-                  <ButtonSecondary>
-                    <RowBetween>
-                      <ExternalLink href={'https://info.fatex.io/account/' + account}>
-                        Account analytics and accrued fees
-                      </ExternalLink>
-                      <span> ↗</span>
-                    </RowBetween>
-                  </ButtonSecondary>
+                {blockchain &&
+                  Blockchain &&
+                  Blockchain.HARMONY &&
+                  testPair &&
+                  testPair[0][1] &&
+                  tokenPairsWithLiquidityTokens &&
+                  tokenPairsWithLiquidityTokens[0] &&
+                  tokenPairsWithLiquidityTokens[0].liquidityToken &&
+                  tokenPairsWithLiquidityTokens[0].liquidityToken.address &&
+                  blockchain === Blockchain.HARMONY && (
+                    <ButtonSecondary>
+                      <RowBetween>
+                        <ExternalLink href={'https://info.fatex.io/account/' + account}>
+                          Account analytics and accrued fees
+                        </ExternalLink>
+                        <span> ↗</span>
+                      </RowBetween>
+                    </ButtonSecondary>
+                  )}
+                {testPair[0][1] && (
+                  <FullPositionCard
+                    key={tokenPairsWithLiquidityTokens[0].liquidityToken.address}
+                    pair={testPair[0][1]}
+                  />
                 )}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />

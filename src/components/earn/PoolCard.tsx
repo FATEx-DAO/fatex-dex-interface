@@ -48,6 +48,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expa
   background: ${({ theme }) => theme.bg3};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
   margin: 10px;
+  cursor: pointer;
 
   ${({ showBackground }) =>
     showBackground &&
@@ -69,10 +70,13 @@ const TopSection = styled.div<{ smallText: boolean }>`
   justify-content: space-between;
   padding: 1rem;
   z-index: 1;
+
+  > div > div:nth-of-type(2) {
+    font-size: 16px;
+  }
+
   ${({ theme, smallText }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 48px 1fr 96px;
-
-    ${smallText && `> div > div:nth-of-type(2) { font-size: 16px; }`}
   `};
 
   > div:nth-of-type(1) {
@@ -150,7 +154,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </div>
         <div style={{ marginTop: '-2px', textAlign: 'right' }}>
-          <TYPE.white fontWeight={500} style={{ fontSize: '20px', lineHeight: '32px', fontWeight: 300 }}>
+          <TYPE.white fontWeight={500} style={{ fontSize: '18px', lineHeight: '32px', fontWeight: 300 }}>
             {stakingInfo.apr && stakingInfo.apr.greaterThan('0')
               ? `${stakingInfo.apr.multiply('100').toSignificant(4, { groupSeparator: ',' })}%`
               : 'TBD'}

@@ -181,6 +181,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
+    !!userPoolBalance &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
@@ -207,7 +208,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           <RowFixed gap="8px">
             <ButtonEmpty
               padding="6px 8px"
-              borderRadius="12px"
+              borderRadius="8px"
               width="fit-content"
               onClick={() => setShowMore(!showMore)}
             >

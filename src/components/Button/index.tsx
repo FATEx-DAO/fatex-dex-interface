@@ -125,8 +125,12 @@ export const ButtonSecondary = styled(Base)`
     background-color: ${({ theme }) => theme.bg6};*/
   }
   &:hover {
-    color: ${({ theme }) => theme.text6};
-    background-color: ${({ theme }) => theme.bg6};
+    color: ${({ theme }) => theme.text6} !important;
+    background-color: ${({ theme }) => theme.bg6} !important;
+
+    > div > a {
+      color: ${({ theme }) => theme.text6} !important;
+    }
   }
   &:active {
     /*color: ${({ theme }) => theme.text6};
@@ -137,7 +141,7 @@ export const ButtonSecondary = styled(Base)`
     cursor: auto;
   }
   a:hover {
-    text-decoration: none;
+    text-decoration: none !important;
   }
 `
 

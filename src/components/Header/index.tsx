@@ -563,7 +563,7 @@ export default function Header() {
                 {t('pool')}
               </StyledNavLink>
               <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-                Staking
+                Depository{/* TODO CHANGE BOTH */}
               </StyledNavLink>
             </Column>
             <Column>
@@ -599,7 +599,7 @@ export default function Header() {
               {t('pool')}
             </StyledNavLink>
             <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-              Staking
+              Depository{/* TODO CHANGE BOTH */}
             </StyledNavLink>
             <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
               xFATE
