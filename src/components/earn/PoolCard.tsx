@@ -34,11 +34,11 @@ const StatContainerTop = styled.div`
   margin: 1rem;
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean; isStaking: boolean }>`
   border-radius: 8px;
   width: 97%;
   margin: 0 1.5%
-  height: ${({ expanded }) => (expanded ? '218px' : '57px')};
+  height: ${({ expanded, isStaking }) => (expanded ? (isStaking ? '241px' : '218px') : isStaking ? '74px' : '57px')};
   transition: height 0.2s ease-in-out;
   overflow: hidden;
   position: relative;
@@ -112,6 +112,22 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
+const UserDeposit = styled.div`
+  width: 100%;
+  margin: -20px 16px 20px;
+  color: ${({ theme }) => theme.text2};
+  font-weight: 200;
+
+  > div {
+    display: inline-block;
+    width: calc(50% - 16px);
+
+    :nth-of-type(2) {
+      text-align: right;
+    }
+  }
+`
+
 export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: StakingInfo; isArchived: boolean }) {
   const [expanded, setExpanded] = useState(false)
 
@@ -132,11 +148,20 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
   const currencyId0 = currency0 ? currencyId(currency0) : ZERO_ADDRESS
   const currencyId1 = currency1 ? currencyId(currency1) : ZERO_ADDRESS
 
+  const userStakedAmountUSD =
+    stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
+      ? stakingInfo.stakedRatio.multiply(stakingInfo.valueOfTotalStakedAmountInUsd)
+      : undefined
+
+  console.log('STAKING INFO')
+  console.log(stakingInfo)
+
   return (
     <Wrapper
       showBackground={isStaking}
       bgColor={backgroundColor}
       expanded={expanded}
+      isStaking={isStaking}
       onClick={() => setExpanded(!expanded)}
     >
       <CardBGImage desaturate />
@@ -165,7 +190,12 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </div>
       </TopSection>
-
+      {isStaking && (
+        <UserDeposit>
+          <div>Your staked amount</div>
+          <div>${userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-'}</div>
+        </UserDeposit>
+      )}
       <StatContainer>
         <RowBetween>
           <TYPE.white> Total deposited </TYPE.white>

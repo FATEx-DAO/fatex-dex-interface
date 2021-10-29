@@ -366,6 +366,11 @@ const Value = styled.div`
 const BridgeButton = styled.div`
   cursor: pointer;
   margin: 0 12px;
+  color: ${({ theme }) => theme.text2};
+
+  :hover {
+    color: ${({ theme }) => theme.text1};
+  }
 `
 
 const BridgePopoverInner = styled.div`

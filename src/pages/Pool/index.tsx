@@ -138,10 +138,6 @@ export default function Pool() {
     )
   })
 
-  console.log('VVV')
-  console.log(Blockchain.HARMONY)
-  console.log(blockchain)
-
   return (
     <>
       <PageWrapper>
@@ -217,12 +213,13 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
+            ) : /*TODO allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0*/ true ? (
               <>
                 {blockchain &&
                   Blockchain &&
                   Blockchain.HARMONY &&
                   testPair &&
+                  testPair[0] &&
                   testPair[0][1] &&
                   tokenPairsWithLiquidityTokens &&
                   tokenPairsWithLiquidityTokens[0] &&
@@ -238,12 +235,12 @@ export default function Pool() {
                       </RowBetween>
                     </ButtonSecondary>
                   )}
-                {/*testPair[0][1] && (
+                {testPair && testPair[0] && testPair[0][1] && (
                   <FullPositionCard
                     key={tokenPairsWithLiquidityTokens[0].liquidityToken.address}
                     pair={testPair[0][1]}
                   />
-                )*/}
+                )}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

@@ -23,7 +23,7 @@ const StyledPolling = styled.div<{ isStaking: boolean }>`
   ${({ isStaking }) =>
     isStaking &&
     `
-    @media screen and (max-width: 1250px) {
+    @media screen and (max-width: 1800px) {
       right: 0;
     }
   `}

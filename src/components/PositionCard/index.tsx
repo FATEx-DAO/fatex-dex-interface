@@ -24,6 +24,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO } from '../../constants'
+import useBUSDPrice from '../../hooks/useBUSDPrice'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -42,6 +43,36 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   background: ${({ theme }) => theme.bg3};
   position: relative;
   overflow: hidden;
+`
+
+const LeftSide = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  width: 60%;
+
+  > div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  > div:nth-of-type(1) {
+    margin-top: 3px;
+    margin-right: 5px;
+  }
+
+  > div:nth-of-type(2) {
+    font-size: 20px;
+    font-weight: 700;
+  }
+`
+
+const RightSide = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+  width: 40%;
+  font-size: 20px;
+  font-weight: 300;
 `
 
 interface PositionCardProps {
@@ -193,30 +224,36 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
+  const poolTokenPrice = useBUSDPrice(pair?.token0)
+  const poolValue = poolTokenPrice && userPoolBalance ? poolTokenPrice.raw.multiply(userPoolBalance) : undefined
+
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px">
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
-              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
-            </Text>
+          <AutoRow>
+            <LeftSide>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
+              <Text fontWeight={500} fontSize={20}>
+                {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              </Text>
+            </LeftSide>
+            <RightSide>${poolValue?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</RightSide>
           </AutoRow>
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
-            <FixedHeightRow>
+          <AutoColumn gap="4px">
+            {/*<FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 Your total pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
               </Text>
-            </FixedHeightRow>
-            {stakedBalance && (
+            </FixedHeightRow>*/}
+            {/*stakedBalance && (
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={500}>
                   Pool tokens in rewards pool:
@@ -225,7 +262,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   {stakedBalance.toSignificant(4)}
                 </Text>
               </FixedHeightRow>
-            )}
+            )*/}
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>

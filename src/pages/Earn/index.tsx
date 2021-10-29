@@ -9,8 +9,8 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { CustomButtonWhite } from '../../components/Button'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
-import { RowBetween } from '../../components/Row'
-import { CardSection, CardNoise, CardBGImage } from '../../components/earn/styled'
+//import { RowBetween } from '../../components/Row'
+import { CardNoise, CardBGImage } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import ClaimAllRewardsModal from '../../components/earn/ClaimAllRewardsModal'
 import { useActiveWeb3React } from '../../hooks'
@@ -118,6 +118,10 @@ const StakingSection = styled(PoolSection)`
   width: 50%;
   min-width: 320px;
   margin: 0;
+
+  @media screen and (max-width: 1099px) {
+    width: 100%;
+  }
 `
 
 const RightSideWrapper = styled.div`
@@ -126,7 +130,11 @@ const RightSideWrapper = styled.div`
   min-width: 600px;
   display: inline-block;
   vertical-align: top;
-  margin-left: 1%;
+  margin-left: 2.5%;
+
+  @media screen and (max-width: 1500px) {
+    margin-left: 2%;
+  }
 
   @media screen and (max-width: 1100px) {
     width: 100%;
@@ -137,6 +145,47 @@ const RightSideWrapper = styled.div`
     min-width: auto;
     margin-left: 0;
   `};
+`
+
+const TitleCard = styled.div`
+  padding: 1rem;
+`
+
+const InfoLeft = styled.div`
+  width: calc(100% - 150px);
+  min-width: 300px;
+  display: inline-block;
+  vertical-align: top;
+
+  > div {
+    margin-top: 10px;
+  }
+
+  > div:nth-of-type(1) {
+    margin-top: 0;
+  }
+`
+
+const InfoRight = styled.div`
+  width: 150px;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+
+  > button {
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+
+    > button {
+      margin-top: 10px;
+      width: 100%;
+    }
+  }
 `
 
 export default function Earn() {
@@ -180,23 +229,18 @@ export default function Earn() {
           <StakingInfo>
             <CardBGImage />
             <CardNoise />
-            <CardSection>
-              <AutoColumn gap="md">
-                <RowBetween>
+            <TitleCard>
+              <div>
+                <InfoLeft>
                   <TYPE.white fontWeight={600}>Stake Liquidity Pool Tokens</TYPE.white>
-                </RowBetween>
-                <RowBetween>
                   <TYPE.white fontSize={14}>
                     LP tokens you hold for any of the pairs shown below can be staked to receive rewards.
                   </TYPE.white>
-                </RowBetween>
-                <RowBetween>
                   <TYPE.white fontSize={14}>
                     Stake your LP tokens to receive FATE, the FATExDAO governance token.
                   </TYPE.white>
-                </RowBetween>
-                <RowBetween>{/*<GovTokenBalanceContent inline={true} />*/}</RowBetween>{' '}
-                <RowBetween>
+                </InfoLeft>
+                <InfoRight>
                   {stakingInfosWithRewards?.length > 0 && (
                     <CustomButtonWhite
                       padding="8px"
@@ -207,16 +251,9 @@ export default function Earn() {
                       Claim all ({stakingInfosWithRewards.length})
                     </CustomButtonWhite>
                   )}
-                  {hasArchivedStakingPools && (
-                    <StyledInternalLink to={`/depository/archived`}>
-                      <CustomButtonWhite padding="8px" borderRadius="8px">
-                        Archived Pools
-                      </CustomButtonWhite>
-                    </StyledInternalLink>
-                  )}
-                </RowBetween>
-              </AutoColumn>
-            </CardSection>
+                </InfoRight>
+              </div>
+            </TitleCard>
             <CardBGImage />
             <CardNoise />
           </StakingInfo>
@@ -265,6 +302,13 @@ export default function Earn() {
                   )
                 )
               })
+            )}
+            {hasArchivedStakingPools && (
+              <StyledInternalLink to={`/depository/archived`}>
+                <CustomButtonWhite padding="8px" borderRadius="8px">
+                  Archived Pools
+                </CustomButtonWhite>
+              </StyledInternalLink>
             )}
           </StakingSection>
         </RightSideWrapper>
