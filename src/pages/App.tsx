@@ -20,7 +20,6 @@ import EarnArchived from './Earn/Archived'
 import Manage from './Earn/Manage'
 import XFate from './XFate'
 import Migrate from './Migrate'
-import Pool from './Pool'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -94,10 +93,10 @@ export default function App() {
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/find" component={PoolFinder} />
-              <Route exact strict path="/pool" component={Pool} />
-              <Route exact strict path="/staking" component={Earn} />
+              <Route exact strict path="/pool" component={Earn} />
+              <Route exact strict path="/depository" component={Earn} />
               <Route exact strict path="/migrate" component={Migrate} />
-              <Route exact strict path="/staking/archived" component={EarnArchived} />
+              <Route exact strict path="/depository/archived" component={EarnArchived} />
               <Route exact strict path={'/xFATE'} component={XFate} />
               <Route exact strict path="/vote" component={Vote} />
               <Route exact strict path="/create" component={RedirectToAddLiquidity} />
@@ -109,7 +108,7 @@ export default function App() {
               <Route exact path="/create/:currencyIdA/:currencyIdB" component={RedirectDuplicateTokenIds} />
               <Route exact strict path="/remove/:tokens" component={RedirectOldRemoveLiquidityPathStructure} />
               <Route exact strict path="/remove/:currencyIdA/:currencyIdB" component={RemoveLiquidity} />
-              <Route exact strict path="/staking/:currencyIdA/:currencyIdB" component={Manage} />
+              <Route exact strict path="/depository/:currencyIdA/:currencyIdB" component={Manage} />
               <Route exact strict path="/vote/:id" component={VotePage} />
               <Route component={RedirectPathToSwapOnly} />
             </Switch>

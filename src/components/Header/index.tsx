@@ -549,9 +549,9 @@ export default function Header() {
               <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
                 {t('swap')}
               </StyledNavLink>
-              {/*<StyledNavLink
-                id={`pool-nav-link`}
-                to={'/pool'}
+              <StyledNavLink
+                id={`stake-nav-link`}
+                to={'/depository'}
                 isActive={(match, { pathname }) =>
                   Boolean(match) ||
                   pathname.startsWith('/add') ||
@@ -560,11 +560,7 @@ export default function Header() {
                   pathname.startsWith('/find')
                 }
               >
-                {t('pool')}
-              </StyledNavLink>*/}
-              {/* TODO - map /add /remove /create and /find */}
-              <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-                Depository{/* TODO CHANGE BOTH */}
+                Depository
               </StyledNavLink>
             </Column>
             <Column>
@@ -586,9 +582,9 @@ export default function Header() {
             <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
               {t('swap')}
             </StyledNavLink>
-            {/*<StyledNavLink
-              id={`pool-nav-link`}
-              to={'/pool'}
+            <StyledNavLink
+              id={`stake-nav-link`}
+              to={'/depository'}
               isActive={(match, { pathname }) =>
                 Boolean(match) ||
                 pathname.startsWith('/add') ||
@@ -597,10 +593,7 @@ export default function Header() {
                 pathname.startsWith('/find')
               }
             >
-              {t('pool')}
-            </StyledNavLink>*/}
-            <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-              Depository{/* TODO CHANGE BOTH */}
+              Depository
             </StyledNavLink>
             <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
               xFATE

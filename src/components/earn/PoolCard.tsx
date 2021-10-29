@@ -193,7 +193,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </RowBetween>
         <StyledInternalLink
-          to={`/staking/${currencyId0}/${currencyId1}`}
+          to={`/depository/${currencyId0}/${currencyId1}`}
           style={{ width: '40%', marginLeft: '30%', marginTop: '5px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">

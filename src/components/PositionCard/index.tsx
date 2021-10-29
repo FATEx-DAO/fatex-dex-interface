@@ -297,7 +297,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               <ButtonPrimary
                 padding="8px"
                 as={Link}
-                to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/depository/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool

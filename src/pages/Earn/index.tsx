@@ -208,7 +208,7 @@ export default function Earn() {
                     </CustomButtonWhite>
                   )}
                   {hasArchivedStakingPools && (
-                    <StyledInternalLink to={`/staking/archived`}>
+                    <StyledInternalLink to={`/depository/archived`}>
                       <CustomButtonWhite padding="8px" borderRadius="8px">
                         Archived Pools
                       </CustomButtonWhite>
@@ -231,7 +231,9 @@ export default function Earn() {
             ) : account && stakingInfos?.length !== 0 && !activeStakingInfos ? (
               <OutlineCard style={{ width: '200%' }}>No active pools</OutlineCard>
             ) : !account ? (
-              <OutlineCard style={{ width: '200%' }}>Please connect your wallet to see available pools</OutlineCard>
+              <OutlineCard style={{ width: '200%', textAlign: 'center', maxWidth: '90vw' }}>
+                Please connect your wallet to see available pools
+              </OutlineCard>
             ) : (
               activeStakingInfos?.map(stakingInfo => {
                 // need to sort by added liquidity here

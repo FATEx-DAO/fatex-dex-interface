@@ -184,7 +184,7 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   const location = useLocation()
-  const isStaking = location.pathname === '/staking'
+  const isStaking = location.pathname === '/depository'
 
   return (
     <>

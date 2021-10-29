@@ -79,7 +79,7 @@ export default function Polling() {
   const [isMounted, setIsMounted] = useState(true)
 
   const location = useLocation()
-  const isStaking = location.pathname === '/staking'
+  const isStaking = location.pathname === '/depository'
 
   useEffect(
     () => {
