@@ -186,6 +186,11 @@ export const STAKING_REWARDS_INFO: {
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'UST/1DAI'),
       active: true
     }
+    // {
+    //   pid: 36,
+    //   tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/bscBNB'),
+    //   active: true
+    // }
   ],
   [ChainId.HARMONY_TESTNET]: [
     {

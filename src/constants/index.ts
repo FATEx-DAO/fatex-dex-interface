@@ -67,7 +67,7 @@ export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27',
-  [ChainId.HARMONY_TESTNET]: '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27'
+  [ChainId.HARMONY_TESTNET]: '0x8430d8BCDc025960b491aE8D043648e9A9968949'
 }
 
 export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
