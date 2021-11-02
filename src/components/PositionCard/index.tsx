@@ -1,7 +1,6 @@
 import { JSBI, Pair, Percent, TokenAmount } from '@fatex-dao/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -12,7 +11,7 @@ import { useTokenBalance } from '../../state/wallet/hooks'
 import { TYPE } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import { unwrappedToken } from '../../utils/wrappedCurrency'
-import { ButtonPrimary, ButtonEmpty } from '../Button'
+import { ButtonPrimary } from '../Button'
 import { transparentize } from 'polished'
 import { CardNoise } from '../earn/styled'
 
@@ -25,6 +24,10 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO } from '../../constants'
+import useBUSDPrice from '../../hooks/useBUSDPrice'
+import calculateWethAdjustedTotalStakedAmount from '../../utils/calculateWethAdjustedTotalStakedAmount'
+import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
+import determineBaseToken from '../../utils/determineBaseToken'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -43,6 +46,36 @@ const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   background: ${({ theme }) => theme.bg3};
   position: relative;
   overflow: hidden;
+`
+
+const LeftSide = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  width: 60%;
+
+  > div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  > div:nth-of-type(1) {
+    margin-top: 3px;
+    margin-right: 5px;
+  }
+
+  > div:nth-of-type(2) {
+    font-size: 20px;
+    font-weight: 700;
+  }
+`
+
+const RightSide = styled.div`
+  display: inline-block;
+  vertical-align: top;
+  text-align: right;
+  width: 40%;
+  font-size: 20px;
+  font-weight: 300;
 `
 
 interface PositionCardProps {
@@ -161,17 +194,17 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
 
-  const [showMore, setShowMore] = useState(false)
+  const showMore = true
 
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
-  // if staked balance balance provided, add to standard liquidity amount
+  // if staked balance provided, add to standard liquidity amount
   const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
 
   const poolTokenPercentage =
@@ -181,6 +214,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const [token0Deposited, token1Deposited] =
     !!pair &&
+    !!userPoolBalance &&
     !!totalPoolTokens &&
     !!userPoolBalance &&
     // this condition is a short-circuit in the case where useTokenBalance updates sooner than useTotalSupply
@@ -193,50 +227,52 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
+  const tokensWithPrices = useTokensWithWETHPrices()
+  const baseToken = determineBaseToken(tokensWithPrices, [pair.token0, pair.token1])
+  const weth = tokensWithPrices?.WETH?.token
+  const wethBusdPrice = useBUSDPrice(weth)
+  const token0WethBalance =
+    chainId && totalPoolTokens && userPoolBalance
+      ? calculateWethAdjustedTotalStakedAmount(
+          chainId,
+          baseToken,
+          tokensWithPrices,
+          [pair.token0, pair.token1],
+          totalPoolTokens,
+          userPoolBalance,
+          pair
+        )
+      : undefined
+  const userBalanceValue =
+    token0WethBalance && wethBusdPrice ? token0WethBalance.multiply(wethBusdPrice.raw) : undefined
+
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
       <CardNoise />
       <AutoColumn gap="12px">
         <FixedHeightRow>
-          <AutoRow gap="8px">
-            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
-            <Text fontWeight={500} fontSize={20}>
-              {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
-            </Text>
+          <AutoRow>
+            <LeftSide>
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
+              <Text fontWeight={500} fontSize={20}>
+                {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
+              </Text>
+            </LeftSide>
+            <RightSide>${userBalanceValue?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</RightSide>
           </AutoRow>
-          <RowFixed gap="8px">
-            <ButtonEmpty
-              padding="6px 8px"
-              borderRadius="12px"
-              width="fit-content"
-              onClick={() => setShowMore(!showMore)}
-            >
-              {showMore ? (
-                <>
-                  Manage
-                  <ChevronUp size="20" style={{ marginLeft: '10px' }} />
-                </>
-              ) : (
-                <>
-                  Manage
-                  <ChevronDown size="20" style={{ marginLeft: '10px' }} />
-                </>
-              )}
-            </ButtonEmpty>
-          </RowFixed>
         </FixedHeightRow>
 
         {showMore && (
-          <AutoColumn gap="8px">
-            <FixedHeightRow>
+          <AutoColumn gap="4px">
+            {/*<FixedHeightRow>
               <Text fontSize={16} fontWeight={500}>
                 Your total pool tokens:
               </Text>
               <Text fontSize={16} fontWeight={500}>
                 {userPoolBalance ? userPoolBalance.toSignificant(4) : '-'}
               </Text>
-            </FixedHeightRow>
-            {stakedBalance && (
+            </FixedHeightRow>*/}
+            {/*stakedBalance && (
               <FixedHeightRow>
                 <Text fontSize={16} fontWeight={500}>
                   Pool tokens in rewards pool:
@@ -245,7 +281,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                   {stakedBalance.toSignificant(4)}
                 </Text>
               </FixedHeightRow>
-            )}
+            )*/}
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={500}>
@@ -317,7 +353,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               <ButtonPrimary
                 padding="8px"
                 as={Link}
-                to={`/staking/${currencyId(currency0)}/${currencyId(currency1)}`}
+                to={`/depository/${currencyId(currency0)}/${currencyId(currency1)}`}
                 width="100%"
               >
                 Manage Liquidity in Rewards Pool

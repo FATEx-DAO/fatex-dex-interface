@@ -15,6 +15,9 @@ import useBUSDPrice from '../../hooks/useBUSDPrice'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useCurrency } from '../../hooks/Tokens'
 import { ZERO_ADDRESS } from '../../constants'
+import { useTokenBalance } from '../../state/wallet/hooks'
+import { useActiveWeb3React } from '../../hooks'
+import { usePair } from '../../data/Reserves'
 
 const StatContainer = styled.div`
   display: flex;
@@ -34,11 +37,11 @@ const StatContainerTop = styled.div`
   margin: 1rem;
 `
 
-const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean }>`
+const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean; isStaking: boolean }>`
   border-radius: 8px;
   width: 97%;
   margin: 0 1.5%
-  height: ${({ expanded }) => (expanded ? '218px' : '57px')};
+  height: ${({ expanded, isStaking }) => (expanded ? (isStaking ? '241px' : '218px') : isStaking ? '74px' : '57px')};
   transition: height 0.2s ease-in-out;
   overflow: hidden;
   position: relative;
@@ -47,7 +50,8 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expa
     `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};*/
   background: ${({ theme }) => theme.bg3};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
-  margin: 10px;
+  margin: 10px 5px;
+  cursor: pointer;
 
   ${({ showBackground }) =>
     showBackground &&
@@ -56,7 +60,7 @@ const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expa
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
     width: 100%;
-    margin: 0;
+    margin: 0 0 10px 0;
   `}
 `
 
@@ -69,10 +73,13 @@ const TopSection = styled.div<{ smallText: boolean }>`
   justify-content: space-between;
   padding: 1rem;
   z-index: 1;
+
+  > div > div:nth-of-type(2) {
+    font-size: 16px;
+  }
+
   ${({ theme, smallText }) => theme.mediaWidth.upToSmall`
     grid-template-columns: 48px 1fr 96px;
-
-    ${smallText && `> div > div:nth-of-type(2) { font-size: 16px; }`}
   `};
 
   > div:nth-of-type(1) {
@@ -108,7 +115,28 @@ const BottomSection = styled.div<{ showBackground: boolean }>`
   z-index: 1;
 `
 
+const UserDeposit = styled.div`
+  width: 100%;
+  margin: -20px 16px 20px;
+  color: ${({ theme }) => theme.text2};
+  font-weight: 200;
+
+  > div {
+    display: inline-block;
+    width: calc(50% - 16px);
+
+    :nth-of-type(2) {
+      text-align: right;
+    }
+  }
+`
+
+const StakedAmount = styled.div<{ isZero?: boolean }>`
+  color: ${({ theme, isZero }) => (isZero ? theme.red1 : theme.text2)};
+`
+
 export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: StakingInfo; isArchived: boolean }) {
+  const { account } = useActiveWeb3React()
   const [expanded, setExpanded] = useState(false)
 
   const govToken = useGovernanceToken()
@@ -116,6 +144,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0') || stakingInfo.rewardDebt.greaterThan('0'))
   const poolSharePercentage = stakingInfo.poolShare.multiply(JSBI.BigInt(100))
+
+  const [, tokenPair] = usePair(stakingInfo.tokens[0], stakingInfo.tokens[1])
+  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, tokenPair?.liquidityToken)
+  const isPooling = userDefaultPoolBalance?.greaterThan('0') || false
 
   // get the color of the token
   const token0 = stakingInfo.tokens[0]
@@ -128,11 +160,17 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
   const currencyId0 = currency0 ? currencyId(currency0) : ZERO_ADDRESS
   const currencyId1 = currency1 ? currencyId(currency1) : ZERO_ADDRESS
 
+  const userStakedAmountUSD =
+    stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
+      ? stakingInfo.stakedRatio.multiply(stakingInfo.valueOfTotalStakedAmountInUsd)
+      : undefined
+
   return (
     <Wrapper
-      showBackground={isStaking}
+      showBackground={isPooling || isStaking}
       bgColor={backgroundColor}
       expanded={expanded}
+      isStaking={isPooling || isStaking}
       onClick={() => setExpanded(!expanded)}
     >
       <CardBGImage desaturate />
@@ -150,7 +188,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </div>
         <div style={{ marginTop: '-2px', textAlign: 'right' }}>
-          <TYPE.white fontWeight={500} style={{ fontSize: '20px', lineHeight: '32px', fontWeight: 300 }}>
+          <TYPE.white fontWeight={500} style={{ fontSize: '18px', lineHeight: '32px', fontWeight: 300 }}>
             {stakingInfo.apr && stakingInfo.apr.greaterThan('0')
               ? `${stakingInfo.apr.multiply('100').toSignificant(4, { groupSeparator: ',' })}%`
               : 'TBD'}
@@ -161,7 +199,18 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </div>
       </TopSection>
-
+      {(isPooling || isStaking) && (
+        <UserDeposit>
+          <div>Your staked amount</div>
+          <StakedAmount
+            isZero={
+              /*(userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-') === '0.00'*/ isPooling && !isStaking
+            }
+          >
+            ${userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-'}
+          </StakedAmount>
+        </UserDeposit>
+      )}
       <StatContainer>
         <RowBetween>
           <TYPE.white> Total deposited </TYPE.white>
@@ -189,7 +238,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </RowBetween>
         <StyledInternalLink
-          to={`/staking/${currencyId0}/${currencyId1}`}
+          to={`/depository/${currencyId0}/${currencyId1}`}
           style={{ width: '40%', marginLeft: '30%', marginTop: '5px' }}
         >
           <ButtonPrimary padding="8px" borderRadius="8px">

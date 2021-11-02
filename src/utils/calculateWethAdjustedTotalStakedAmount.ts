@@ -1,4 +1,4 @@
-import { Token, TokenAmount, Fraction, ChainId, JSBI } from '@fatex-dao/sdk'
+import { Token, TokenAmount, Fraction, ChainId, JSBI, Pair } from '@fatex-dao/sdk'
 import { wrappedCurrency } from './wrappedCurrency'
 import calculateTotalStakedAmount from './calculateTotalStakedAmount'
 import getPair from './getPair'
@@ -58,7 +58,7 @@ export default function calculateWethAdjustedTotalStakedAmount(
   tokens: [Token, Token],
   totalLpTokenSupply: TokenAmount,
   totalStakedAmount: TokenAmount,
-  lpTokenReserves: Result | undefined
+  lpTokenReserves: Result | Pair | undefined
 ): TokenAmount | Fraction | undefined {
   if (!baseToken || !lpTokenReserves || !totalLpTokenSupply) {
     return undefined
@@ -67,12 +67,10 @@ export default function calculateWethAdjustedTotalStakedAmount(
   const reserve0 = lpTokenReserves?.reserve0
   const reserve1 = lpTokenReserves?.reserve1
 
-  const stakingTokenPair = getPair(
-    wrappedCurrency(tokens[0], chainId),
-    wrappedCurrency(tokens[1], chainId),
-    reserve0,
-    reserve1
-  )
+  const stakingTokenPair =
+    lpTokenReserves instanceof Pair
+      ? lpTokenReserves
+      : getPair(wrappedCurrency(tokens[0], chainId), wrappedCurrency(tokens[1], chainId), reserve0, reserve1)
   if (!stakingTokenPair) {
     return undefined
   }
