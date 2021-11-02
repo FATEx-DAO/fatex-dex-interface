@@ -16,6 +16,7 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
   const busdTicker =
     chainId === ChainId.HARMONY_TESTNET ? '1BUSD' : chainId === ChainId.HARMONY_MAINNET ? '1USDC' : 'BUSD'
   const busd: Token | undefined = getToken(chainId, busdTicker)
+  const divisor = busdTicker.includes('BUSD') ? JSBI.BigInt('1') : JSBI.BigInt('1000000000000')
 
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
@@ -39,9 +40,7 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
     if (wrapped.equals(WETH[chainId])) {
       if (busdPair) {
         const price = busdPair.priceOf(WETH[chainId])
-        return busd
-          ? new Price(currency, busd, price.denominator, JSBI.multiply(price.numerator, JSBI.BigInt('1000000000000')))
-          : undefined
+        return busd ? new Price(currency, busd, price.denominator, JSBI.multiply(price.numerator, divisor)) : undefined
       } else {
         return undefined
       }
@@ -71,21 +70,14 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
       busdPair.reserveOf(busd).greaterThan(ethPairETHBUSDValue)
     ) {
       const price = busdPair.priceOf(wrapped)
-      return busd
-        ? new Price(currency, busd, price.denominator, JSBI.multiply(price.numerator, JSBI.BigInt('1000000000000')))
-        : undefined
+      return busd ? new Price(currency, busd, price.denominator, JSBI.multiply(price.numerator, divisor)) : undefined
     }
     if (ethPairState === PairState.EXISTS && ethPair && busdEthPairState === PairState.EXISTS && busdEthPair) {
       if (busd && busdEthPair.reserveOf(busd).greaterThan('0') && ethPair.reserveOf(WETH[chainId]).greaterThan('0')) {
         const ethUsdcPrice = busdEthPair.priceOf(busd)
         const currencyEthPrice = ethPair.priceOf(WETH[chainId])
         const usdcPrice = ethUsdcPrice.multiply(currencyEthPrice).invert()
-        return new Price(
-          currency,
-          busd,
-          usdcPrice.denominator,
-          JSBI.multiply(usdcPrice.numerator, JSBI.BigInt('1000000000000'))
-        )
+        return new Price(currency, busd, usdcPrice.denominator, JSBI.multiply(usdcPrice.numerator, divisor))
       }
     }
     return undefined
