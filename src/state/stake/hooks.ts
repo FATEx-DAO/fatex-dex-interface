@@ -221,7 +221,9 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           dummyPair.liquidityToken,
           JSBI.BigInt(lpTokenBalance.result?.[0] ?? 0)
         )
-        const stakedRatio = new Fraction(stakedAmount.raw, totalStakedAmount.raw)
+        const stakedRatio = totalStakedAmount.equalTo('0')
+          ? new Fraction('0')
+          : new Fraction(stakedAmount.raw, totalStakedAmount.raw)
 
         const totalLpTokenSupply = new TokenAmount(
           dummyPair.liquidityToken,

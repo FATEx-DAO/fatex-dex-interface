@@ -40,14 +40,13 @@ const StatContainerTop = styled.div`
 const Wrapper = styled(AutoColumn)<{ showBackground: boolean; bgColor: any; expanded: boolean; isStaking: boolean }>`
   border-radius: 8px;
   width: 97%;
-  margin: 0 1.5%
   height: ${({ expanded, isStaking }) => (expanded ? (isStaking ? '241px' : '218px') : isStaking ? '74px' : '57px')};
   transition: height 0.2s ease-in-out;
   overflow: hidden;
   position: relative;
   opacity: ${({ showBackground }) => (showBackground ? '1' : '1')};
-  /*background: ${({ theme, bgColor, showBackground }) =>
-    `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};*/
+    /*background: ${({ theme, bgColor, showBackground }) =>
+      `radial-gradient(91.85% 100% at 1.84% 0%, ${bgColor} 0%, ${showBackground ? theme.black : theme.bg5} 100%) `};*/
   background: ${({ theme }) => theme.bg3};
   color: ${({ theme, showBackground }) => (showBackground ? theme.white : theme.text1)} !important;
   margin: 10px 5px;
@@ -160,10 +159,9 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
   const currencyId0 = currency0 ? currencyId(currency0) : ZERO_ADDRESS
   const currencyId1 = currency1 ? currencyId(currency1) : ZERO_ADDRESS
 
-  const userStakedAmountUSD =
-    stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd
-      ? stakingInfo.stakedRatio.multiply(stakingInfo.valueOfTotalStakedAmountInUsd)
-      : undefined
+  const userStakedAmountUSD = stakingInfo?.valueOfTotalStakedAmountInUsd
+    ? stakingInfo.stakedRatio.multiply(stakingInfo.valueOfTotalStakedAmountInUsd)
+    : undefined
 
   return (
     <Wrapper
