@@ -202,15 +202,21 @@ const Title = styled.a`
   line-height: 40px;
   margin-left: 0;
   cursor: pointer;
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    justify-self: center;
-  `};
 
   > span {
     font-size: 24px;
     font-weight: 300;
     line-height: 40px;
+    margin-top: 12px;
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-self: center;
+    font-size: 32px;
+    > span {
+      font-size: 16px;
+    }
+  `};
 
   @media screen and (max-width: 960px) {
     margin-top: 4px;

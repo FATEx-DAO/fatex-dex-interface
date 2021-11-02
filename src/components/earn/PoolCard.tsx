@@ -15,6 +15,9 @@ import useBUSDPrice from '../../hooks/useBUSDPrice'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useCurrency } from '../../hooks/Tokens'
 import { ZERO_ADDRESS } from '../../constants'
+import { useTokenBalance } from '../../state/wallet/hooks'
+import { useActiveWeb3React } from '../../hooks'
+import { usePair } from '../../data/Reserves'
 
 const StatContainer = styled.div`
   display: flex;
@@ -128,7 +131,12 @@ const UserDeposit = styled.div`
   }
 `
 
+const StakedAmount = styled.div<{ isZero?: boolean }>`
+  color: ${({ theme, isZero }) => (isZero ? theme.red1 : theme.text2)};
+`
+
 export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: StakingInfo; isArchived: boolean }) {
+  const { account } = useActiveWeb3React()
   const [expanded, setExpanded] = useState(false)
 
   const govToken = useGovernanceToken()
@@ -136,6 +144,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
 
   const isStaking = Boolean(stakingInfo.stakedAmount.greaterThan('0') || stakingInfo.rewardDebt.greaterThan('0'))
   const poolSharePercentage = stakingInfo.poolShare.multiply(JSBI.BigInt(100))
+
+  const [, tokenPair] = usePair(stakingInfo.tokens[0], stakingInfo.tokens[1])
+  const userDefaultPoolBalance = useTokenBalance(account ?? undefined, tokenPair?.liquidityToken)
+  const isPooling = userDefaultPoolBalance?.greaterThan('0') || false
 
   // get the color of the token
   const token0 = stakingInfo.tokens[0]
@@ -155,10 +167,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
 
   return (
     <Wrapper
-      showBackground={isStaking}
+      showBackground={isPooling || isStaking}
       bgColor={backgroundColor}
       expanded={expanded}
-      isStaking={isStaking}
+      isStaking={isPooling || isStaking}
       onClick={() => setExpanded(!expanded)}
     >
       <CardBGImage desaturate />
@@ -187,10 +199,16 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </TYPE.white>
         </div>
       </TopSection>
-      {isStaking && (
+      {(isPooling || isStaking) && (
         <UserDeposit>
           <div>Your staked amount</div>
-          <div>${userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-'}</div>
+          <StakedAmount
+            isZero={
+              /*(userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-') === '0.00'*/ isPooling && !isStaking
+            }
+          >
+            ${userStakedAmountUSD?.toFixed(2, { groupSeparator: ',' }) || '-'}
+          </StakedAmount>
         </UserDeposit>
       )}
       <StatContainer>

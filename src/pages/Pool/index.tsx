@@ -127,11 +127,11 @@ export default function Pool() {
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
   const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
 
-  console.log(stakingInfo)
+  //console.log(stakingInfo)
   const testData = stakingInfo.map(stakingInfo => stakingInfo.tokens)
-  console.log(testData)
+  //console.log(testData)
   const testPair = usePairs(testData)
-  console.log(testPair)
+  //console.log(testPair)
 
   // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
@@ -217,7 +217,7 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 || true /*TODO*/ ? (
+            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
               <>
                 {blockchain &&
                   Blockchain &&
@@ -239,7 +239,7 @@ export default function Pool() {
                       </RowBetween>
                     </ButtonSecondary>
                   )}
-                {/*TODO*/ testPair &&
+                {/*testPair &&
                   testPair[0] &&
                   testPair[0][1] &&
                   testPair[2] &&
@@ -260,13 +260,13 @@ export default function Pool() {
                       <FullPositionCard
                         key={tokenPairsWithLiquidityTokens[4].liquidityToken.address}
                         pair={testPair[4][1]}
-                      />*/}
+                      />}
                       <FullPositionCard
                         key={tokenPairsWithLiquidityTokens[22].liquidityToken.address}
                         pair={testPair[22][1]}
                       />
                     </>
-                  )}
+                  )*/}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

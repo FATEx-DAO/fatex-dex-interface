@@ -204,7 +204,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
   const userDefaultPoolBalance = useTokenBalance(account ?? undefined, pair.liquidityToken)
   const totalPoolTokens = useTotalSupply(pair.liquidityToken)
 
-  // if staked balance balance provided, add to standard liquidity amount
+  // if staked balance provided, add to standard liquidity amount
   const userPoolBalance = stakedBalance ? userDefaultPoolBalance?.add(stakedBalance) : userDefaultPoolBalance
 
   const poolTokenPercentage =
@@ -229,77 +229,22 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const tokensWithPrices = useTokensWithWETHPrices()
   const baseToken = determineBaseToken(tokensWithPrices, [pair.token0, pair.token1])
-  console.log('BASE TOKEN:')
-  console.log(baseToken)
-  console.log(pair.token0Price)
-  console.log('totalPoolTokens')
-  console.log(totalPoolTokens?.toFixed(8))
   const weth = tokensWithPrices?.WETH?.token
   const wethBusdPrice = useBUSDPrice(weth)
   const token0WethBalance =
-    chainId && totalPoolTokens && stakedBalance
+    chainId && totalPoolTokens && userPoolBalance
       ? calculateWethAdjustedTotalStakedAmount(
           chainId,
           baseToken,
           tokensWithPrices,
           [pair.token0, pair.token1],
           totalPoolTokens,
-          stakedBalance,
+          userPoolBalance,
           pair
         )
       : undefined
-  const userToken0Value = token0WethBalance && wethBusdPrice ? token0WethBalance.multiply(wethBusdPrice.raw) : undefined
-  /*const token1WethBalance =
-    chainId && totalPoolTokens && stakedBalance
-      ? calculateWethAdjustedTotalStakedAmount(
-          chainId,
-          pair.token1,
-          tokensWithPrices,
-          [pair.token0, pair.token1],
-          totalPoolTokens,
-          stakedBalance,
-          pair
-        )
-      : undefined
-  const userToken1Value = token1WethBalance && wethBusdPrice ? token1WethBalance.multiply(wethBusdPrice.raw) : undefined*/
-  const userBalanceValue = userToken0Value //userToken0Value && userToken1Value ? userToken0Value.add(userToken1Value) : undefined
-
-  /*const token0Price = useBUSDPrice(pair?.token0)
-  const userToken0Balance =
-    pair && pair.token0 && token0Price && token0Deposited
-      ? new TokenAmount(pair.token0, '1'.padEnd(pair.token0.decimals + 1, '0'))
-          .multiply(token0Price.raw)
-          .multiply(token0Deposited)
-      : undefined
-  const token1Price = useBUSDPrice(pair?.token1)
-  const userToken1Balance =
-    pair && pair.token1 && token1Price && token1Deposited
-      ? new TokenAmount(pair.token1, '1'.padEnd(pair.token1.decimals + 1, '0'))
-          .multiply(token1Price.raw)
-          .multiply(token1Deposited)
-      : undefined
-  const userPoolValue = userToken0Balance && userToken1Balance ? userToken0Balance.add(userToken1Balance) : undefined*/
-
-  /*console.log('\nPOOL INFO:')
-  console.log('pair: ' + JSON.stringify(pair))
-  console.log('userDefaultPoolBalance: ' + userDefaultPoolBalance?.toFixed(8))
-  console.log('totalPoolTokens: ' + totalPoolTokens?.toFixed(8))
-  console.log('userPoolBalance: ' + userPoolBalance?.toFixed(8))
-  console.log('poolTokenPercentage: ' + poolTokenPercentage?.toFixed(8))
-  console.log('token0Deposited: ' + token0Deposited?.toFixed(8))
-  console.log(
-    'token0Price: ' +
-      (token0Price !== undefined
-        ? new TokenAmount(pair.token0, '1000000000000000000').multiply(token0Price.raw).toFixed(8)
-        : '-')
-  )
-  console.log('token1Deposited: ' + token1Deposited?.toFixed(8))
-  console.log(
-    'token1Price: ' +
-      (token1Price !== undefined
-        ? new TokenAmount(pair.token1, '1000000000000000000').multiply(token1Price.raw).toFixed(8)
-        : '-')
-  )*/
+  const userBalanceValue =
+    token0WethBalance && wethBusdPrice ? token0WethBalance.multiply(wethBusdPrice.raw) : undefined
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
