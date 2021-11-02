@@ -69,7 +69,7 @@ const StyledMenuMobile = styled.div<{ isStaking: boolean }>`
   ${({ theme, isStaking }) =>
     isStaking
       ? `
-    @media screen and (max-width: 1250px) {
+    @media screen and (max-width: 1800px) {
       display: flex;
     }
   `
@@ -78,8 +78,8 @@ const StyledMenuMobile = styled.div<{ isStaking: boolean }>`
   `};
 `
 
-const MenuFlyout = styled.span`
-  min-width: 13rem;
+const MenuFlyout = styled.span<{ isStaking: boolean }>`
+  min-width: 15rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
     0 24px 32px rgba(0, 0, 0, 0.01);
@@ -93,8 +93,20 @@ const MenuFlyout = styled.span`
   right: 0rem;
   z-index: 100;
 
+  ${({ isStaking }) =>
+    isStaking &&
+    `
+
+    @media screen and (max-width: 1800px) {
+    top: -20.5rem;
+    left: 0rem;
+    right: auto;
+    }`}
+
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.25rem;
+    top: -17.75rem;
+    right: 0rem;
+    left: auto;
   `};
 `
 
@@ -119,7 +131,7 @@ const StyledMenuDesktop = styled.div<{ isStaking: boolean }>`
   ${({ theme, isStaking }) =>
     isStaking
       ? `
-    @media screen and (max-width: 1250px) {
+    @media screen and (max-width: 1800px) {
       display: none;
     }
   `
@@ -184,15 +196,15 @@ export default function Menu() {
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   const location = useLocation()
-  const isStaking = location.pathname === '/staking'
+  const isStaking = location.pathname === '/depository'
 
   return (
     <>
       {/* https://github.com/DefinitelyTyped/DefinitelyTyped/issues/30451*/}
       <StyledMenuDesktop ref={node as any} isStaking={isStaking}>
-        {/*<MenuItem id="link" href={'https://fatex.io'}>
+        <MenuItem id="link" href={'https://fatex.io'}>
           FATEx.io
-        </MenuItem>*/}
+        </MenuItem>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
@@ -250,10 +262,10 @@ export default function Menu() {
         </StyledMenuButton>
 
         {open && (
-          <MenuFlyout>
-            {/*<MenuItem id="link" href={'https://fatex.io'}>
+          <MenuFlyout isStaking={isStaking}>
+            <MenuItem id="link" href={'https://fatex.io'}>
               FATEx.io
-            </MenuItem>*/}
+            </MenuItem>
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
               <Code size={14} />
               Code

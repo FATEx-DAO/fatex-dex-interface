@@ -194,16 +194,28 @@ const Title = styled.a`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
-  font-size: 60px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text1};
   text-decoration: none;
-  margin-top: -18px;
-  line-height: 32px;
-  margin-left: 8px;
+  margin-top: -10px;
+  line-height: 40px;
+  margin-left: 0;
   cursor: pointer;
+
+  > span {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 40px;
+    margin-top: 12px;
+  }
+
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
+    font-size: 32px;
+    > span {
+      font-size: 16px;
+    }
   `};
 
   @media screen and (max-width: 960px) {
@@ -366,6 +378,11 @@ const Value = styled.div`
 const BridgeButton = styled.div`
   cursor: pointer;
   margin: 0 12px;
+  color: ${({ theme }) => theme.text2};
+
+  :hover {
+    color: ${({ theme }) => theme.text1};
+  }
 `
 
 const BridgePopoverInner = styled.div`
@@ -542,16 +559,15 @@ export default function Header() {
         <GovTokenBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <HeaderRow>
-        <Title href=".">x</Title>
+        <Title href=".">
+          FATEx<span>DAO</span>
+        </Title>
         <MobileHeader>
           <HeaderLinks>
             <Column>
-              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-                {t('swap')}
-              </StyledNavLink>
               <StyledNavLink
-                id={`pool-nav-link`}
-                to={'/pool'}
+                id={`stake-nav-link`}
+                to={'/depository'}
                 isActive={(match, { pathname }) =>
                   Boolean(match) ||
                   pathname.startsWith('/add') ||
@@ -560,10 +576,10 @@ export default function Header() {
                   pathname.startsWith('/find')
                 }
               >
-                {t('pool')}
+                Depository
               </StyledNavLink>
-              <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-                Staking
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('swap')}
               </StyledNavLink>
             </Column>
             <Column>
@@ -582,12 +598,9 @@ export default function Header() {
         </MobileHeader>
         <DesktopHeader>
           <HeaderLinks>
-            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-              {t('swap')}
-            </StyledNavLink>
             <StyledNavLink
-              id={`pool-nav-link`}
-              to={'/pool'}
+              id={`stake-nav-link`}
+              to={'/depository'}
               isActive={(match, { pathname }) =>
                 Boolean(match) ||
                 pathname.startsWith('/add') ||
@@ -596,10 +609,10 @@ export default function Header() {
                 pathname.startsWith('/find')
               }
             >
-              {t('pool')}
+              Depository
             </StyledNavLink>
-            <StyledNavLink id={`stake-nav-link`} to={'/staking'}>
-              Staking
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
             </StyledNavLink>
             <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
               xFATE
