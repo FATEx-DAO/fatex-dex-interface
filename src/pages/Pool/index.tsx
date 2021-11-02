@@ -35,6 +35,7 @@ const VoteCard = styled(DataCard)`
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #777777 0%, #909090 100%);*/
   background: ${({ theme }) => theme.bg3};
   overflow: hidden;
+  margin-bottom: 30px;
 `
 
 const TitleRow = styled(RowBetween)`
@@ -126,8 +127,11 @@ export default function Pool() {
   const stakingInfosWithBalance = stakingInfo?.filter(pool => JSBI.greaterThan(pool.stakedAmount.raw, BIG_INT_ZERO))
   const stakingPairs = usePairs(stakingInfosWithBalance?.map(stakingInfo => stakingInfo.tokens))
 
+  console.log(stakingInfo)
   const testData = stakingInfo.map(stakingInfo => stakingInfo.tokens)
+  console.log(testData)
   const testPair = usePairs(testData)
+  console.log(testPair)
 
   // remove any pairs that also are included in pairs with stake in mining pool
   const v2PairsWithoutStakedAmount = allV2PairsWithLiquidity.filter(v2Pair => {
@@ -213,7 +217,7 @@ export default function Pool() {
                   <Dots>Loading</Dots>
                 </TYPE.body>
               </EmptyProposals>
-            ) : /*TODO allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0*/ true ? (
+            ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 || true /*TODO*/ ? (
               <>
                 {blockchain &&
                   Blockchain &&
@@ -235,12 +239,34 @@ export default function Pool() {
                       </RowBetween>
                     </ButtonSecondary>
                   )}
-                {testPair && testPair[0] && testPair[0][1] && (
-                  <FullPositionCard
-                    key={tokenPairsWithLiquidityTokens[0].liquidityToken.address}
-                    pair={testPair[0][1]}
-                  />
-                )}
+                {/*TODO*/ testPair &&
+                  testPair[0] &&
+                  testPair[0][1] &&
+                  testPair[2] &&
+                  testPair[2][1] &&
+                  testPair[4] &&
+                  testPair[4][1] &&
+                  testPair[22] &&
+                  testPair[22][1] && (
+                    <>
+                      {/*<FullPositionCard
+                        key={tokenPairsWithLiquidityTokens[0].liquidityToken.address}
+                        pair={testPair[0][1]}
+                      />
+                      <FullPositionCard
+                        key={tokenPairsWithLiquidityTokens[2].liquidityToken.address}
+                        pair={testPair[2][1]}
+                      />
+                      <FullPositionCard
+                        key={tokenPairsWithLiquidityTokens[4].liquidityToken.address}
+                        pair={testPair[4][1]}
+                      />*/}
+                      <FullPositionCard
+                        key={tokenPairsWithLiquidityTokens[22].liquidityToken.address}
+                        pair={testPair[22][1]}
+                      />
+                    </>
+                  )}
                 {v2PairsWithoutStakedAmount.map(v2Pair => (
                   <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                 ))}

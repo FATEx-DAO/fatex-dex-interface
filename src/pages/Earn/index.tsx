@@ -16,9 +16,11 @@ import ClaimAllRewardsModal from '../../components/earn/ClaimAllRewardsModal'
 import { useActiveWeb3React } from '../../hooks'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useCalculateStakingInfoMembers from '../../hooks/useCalculateStakingInfoMembers'
+import useTotalCombinedTVL from '../../hooks/useTotalCombinedTVL'
 import useBaseStakingRewardsSchedule from '../../hooks/useBaseStakingRewardsSchedule'
 import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
+import CombinedTVL from '../../components/CombinedTVL'
 //import GovTokenBalanceContent from '../../components/Header/GovTokenBalanceContent'
 import Pool from '../Pool'
 
@@ -26,9 +28,11 @@ const PageWrapper = styled(AutoColumn)`
   max-width: 1800px;
   width: 100%;
   padding: 16px;
+  margin-top: -50px;
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
     padding: 0;
+    margin-top: 0;
   `};
 `
 
@@ -45,6 +49,12 @@ const ButtonWrapper = styled(AutoColumn)`
   </StyledInternalLink>
 </ButtonWrapper>
 */
+
+const TVLWrapper = styled.div`
+  width: 100%;
+  display: inline-block;
+  margin-bottom: -7px;
+`
 
 const LoaderWrapper = styled.div<{ second?: boolean }>`
   width: 100%;
@@ -65,7 +75,7 @@ const StakingInfo = styled.div`
   display: inline-block;
   vertical-align: top;
   text-align: left;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 `
 
 const PoolSectionsWrapper = styled.div`
@@ -77,7 +87,7 @@ const PoolSection = styled.div`
   display: inline-block;
   vertical-align: top;
   margin: 0 10px;
-  width: 30%;
+  width: 36%;
   text-align: left;
 
   > div:nth-of-type(1) {
@@ -130,7 +140,15 @@ const RightSideWrapper = styled.div`
   min-width: 600px;
   display: inline-block;
   vertical-align: top;
-  margin-left: 2.5%;
+  margin-left: 5%;
+
+  @media screen and (max-width: 2000px) {
+    margin-left: 4%;
+  }
+
+  @media screen and (max-width: 1800px) {
+    margin-left: 3%;
+  }
 
   @media screen and (max-width: 1500px) {
     margin-left: 2%;
@@ -212,6 +230,8 @@ export default function Earn() {
 
   const stakingInfosWithRewards = useFilterStakingInfos(activeStakingInfos, true, true)
 
+  const TVLs = useTotalCombinedTVL(activeStakingInfos)
+
   return (
     <PageWrapper gap="lg" justify="center">
       <ClaimAllRewardsModal
@@ -239,6 +259,11 @@ export default function Earn() {
                   <TYPE.white fontSize={14}>
                     Stake your LP tokens to receive FATE, the FATExDAO governance token.
                   </TYPE.white>
+                  {TVLs?.stakingPoolTVL?.greaterThan('0') && (
+                    <TVLWrapper>
+                      <CombinedTVL />
+                    </TVLWrapper>
+                  )}
                 </InfoLeft>
                 <InfoRight>
                   {stakingInfosWithRewards?.length > 0 && (

@@ -194,17 +194,23 @@ const Title = styled.a`
   pointer-events: auto;
   justify-self: flex-start;
   margin-right: 12px;
-  font-size: 60px;
-  font-weight: 700;
+  font-size: 40px;
+  font-weight: 500;
   color: ${({ theme }) => theme.text1};
   text-decoration: none;
-  margin-top: -18px;
-  line-height: 32px;
-  margin-left: 8px;
+  margin-top: -10px;
+  line-height: 40px;
+  margin-left: 0;
   cursor: pointer;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     justify-self: center;
   `};
+
+  > span {
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 40px;
+  }
 
   @media screen and (max-width: 960px) {
     margin-top: 4px;
@@ -547,13 +553,12 @@ export default function Header() {
         <GovTokenBalanceContent setShowUniBalanceModal={setShowUniBalanceModal} />
       </Modal>
       <HeaderRow>
-        <Title href=".">x</Title>
+        <Title href=".">
+          FATEx<span>DAO</span>
+        </Title>
         <MobileHeader>
           <HeaderLinks>
             <Column>
-              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-                {t('swap')}
-              </StyledNavLink>
               <StyledNavLink
                 id={`stake-nav-link`}
                 to={'/depository'}
@@ -566,6 +571,9 @@ export default function Header() {
                 }
               >
                 Depository
+              </StyledNavLink>
+              <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+                {t('swap')}
               </StyledNavLink>
             </Column>
             <Column>
@@ -584,9 +592,6 @@ export default function Header() {
         </MobileHeader>
         <DesktopHeader>
           <HeaderLinks>
-            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-              {t('swap')}
-            </StyledNavLink>
             <StyledNavLink
               id={`stake-nav-link`}
               to={'/depository'}
@@ -599,6 +604,9 @@ export default function Header() {
               }
             >
               Depository
+            </StyledNavLink>
+            <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
+              {t('swap')}
             </StyledNavLink>
             <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
               xFATE

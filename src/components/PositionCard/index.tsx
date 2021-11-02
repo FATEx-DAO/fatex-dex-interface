@@ -25,6 +25,9 @@ import { RowBetween, RowFixed, AutoRow } from '../Row'
 import { Dots } from '../swap/styleds'
 import { BIG_INT_ZERO } from '../../constants'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
+import calculateWethAdjustedTotalStakedAmount from '../../utils/calculateWethAdjustedTotalStakedAmount'
+import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
+import determineBaseToken from '../../utils/determineBaseToken'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -191,7 +194,7 @@ export function MinimalPositionCard({ pair, showUnwrapped = false, border }: Pos
 }
 
 export default function FullPositionCard({ pair, border, stakedBalance }: PositionCardProps) {
-  const { account } = useActiveWeb3React()
+  const { chainId, account } = useActiveWeb3React()
 
   const currency0 = unwrappedToken(pair.token0)
   const currency1 = unwrappedToken(pair.token1)
@@ -224,8 +227,79 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
 
   const backgroundColor = useColor(pair?.token0)
 
-  const poolTokenPrice = useBUSDPrice(pair?.token0)
-  const poolValue = poolTokenPrice && userPoolBalance ? poolTokenPrice.raw.multiply(userPoolBalance) : undefined
+  const tokensWithPrices = useTokensWithWETHPrices()
+  const baseToken = determineBaseToken(tokensWithPrices, [pair.token0, pair.token1])
+  console.log('BASE TOKEN:')
+  console.log(baseToken)
+  console.log(pair.token0Price)
+  console.log('totalPoolTokens')
+  console.log(totalPoolTokens?.toFixed(8))
+  const weth = tokensWithPrices?.WETH?.token
+  const wethBusdPrice = useBUSDPrice(weth)
+  const token0WethBalance =
+    chainId && totalPoolTokens && stakedBalance
+      ? calculateWethAdjustedTotalStakedAmount(
+          chainId,
+          baseToken,
+          tokensWithPrices,
+          [pair.token0, pair.token1],
+          totalPoolTokens,
+          stakedBalance,
+          pair
+        )
+      : undefined
+  const userToken0Value = token0WethBalance && wethBusdPrice ? token0WethBalance.multiply(wethBusdPrice.raw) : undefined
+  /*const token1WethBalance =
+    chainId && totalPoolTokens && stakedBalance
+      ? calculateWethAdjustedTotalStakedAmount(
+          chainId,
+          pair.token1,
+          tokensWithPrices,
+          [pair.token0, pair.token1],
+          totalPoolTokens,
+          stakedBalance,
+          pair
+        )
+      : undefined
+  const userToken1Value = token1WethBalance && wethBusdPrice ? token1WethBalance.multiply(wethBusdPrice.raw) : undefined*/
+  const userBalanceValue = userToken0Value //userToken0Value && userToken1Value ? userToken0Value.add(userToken1Value) : undefined
+
+  /*const token0Price = useBUSDPrice(pair?.token0)
+  const userToken0Balance =
+    pair && pair.token0 && token0Price && token0Deposited
+      ? new TokenAmount(pair.token0, '1'.padEnd(pair.token0.decimals + 1, '0'))
+          .multiply(token0Price.raw)
+          .multiply(token0Deposited)
+      : undefined
+  const token1Price = useBUSDPrice(pair?.token1)
+  const userToken1Balance =
+    pair && pair.token1 && token1Price && token1Deposited
+      ? new TokenAmount(pair.token1, '1'.padEnd(pair.token1.decimals + 1, '0'))
+          .multiply(token1Price.raw)
+          .multiply(token1Deposited)
+      : undefined
+  const userPoolValue = userToken0Balance && userToken1Balance ? userToken0Balance.add(userToken1Balance) : undefined*/
+
+  /*console.log('\nPOOL INFO:')
+  console.log('pair: ' + JSON.stringify(pair))
+  console.log('userDefaultPoolBalance: ' + userDefaultPoolBalance?.toFixed(8))
+  console.log('totalPoolTokens: ' + totalPoolTokens?.toFixed(8))
+  console.log('userPoolBalance: ' + userPoolBalance?.toFixed(8))
+  console.log('poolTokenPercentage: ' + poolTokenPercentage?.toFixed(8))
+  console.log('token0Deposited: ' + token0Deposited?.toFixed(8))
+  console.log(
+    'token0Price: ' +
+      (token0Price !== undefined
+        ? new TokenAmount(pair.token0, '1000000000000000000').multiply(token0Price.raw).toFixed(8)
+        : '-')
+  )
+  console.log('token1Deposited: ' + token1Deposited?.toFixed(8))
+  console.log(
+    'token1Price: ' +
+      (token1Price !== undefined
+        ? new TokenAmount(pair.token1, '1000000000000000000').multiply(token1Price.raw).toFixed(8)
+        : '-')
+  )*/
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
@@ -239,7 +313,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
               </Text>
             </LeftSide>
-            <RightSide>${poolValue?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</RightSide>
+            <RightSide>${userBalanceValue?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</RightSide>
           </AutoRow>
         </FixedHeightRow>
 

@@ -153,9 +153,6 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
       ? stakingInfo.stakedRatio.multiply(stakingInfo.valueOfTotalStakedAmountInUsd)
       : undefined
 
-  console.log('STAKING INFO')
-  console.log(stakingInfo)
-
   return (
     <Wrapper
       showBackground={isStaking}
