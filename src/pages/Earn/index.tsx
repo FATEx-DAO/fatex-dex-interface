@@ -54,6 +54,7 @@ const TVLWrapper = styled.div`
   width: 100%;
   display: inline-block;
   margin-bottom: -7px;
+  text-align: right;
 `
 
 const LoaderWrapper = styled.div<{ second?: boolean }>`
@@ -134,13 +135,14 @@ const StakingSection = styled(PoolSection)`
   }
 `
 
-const RightSideWrapper = styled.div`
+const RightSideWrapper = styled.div<{ tvlLoaded: boolean }>`
   width: 60%;
   max-width: 800px;
   min-width: 600px;
   display: inline-block;
   vertical-align: top;
   margin-left: 5%;
+  ${({ tvlLoaded }) => tvlLoaded && 'margin-top: -20px;'}
 
   @media screen and (max-width: 2000px) {
     margin-left: 4%;
@@ -162,6 +164,7 @@ const RightSideWrapper = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     min-width: auto;
     margin-left: 0;
+    margin-top: 0;
   `};
 `
 
@@ -245,7 +248,12 @@ export default function Earn() {
         <PoolSection>
           <Pool />
         </PoolSection>
-        <RightSideWrapper>
+        <RightSideWrapper tvlLoaded={TVLs?.stakingPoolTVL?.greaterThan('0')}>
+          {TVLs?.stakingPoolTVL?.greaterThan('0') && (
+            <TVLWrapper>
+              <CombinedTVL />
+            </TVLWrapper>
+          )}
           <StakingInfo>
             <CardBGImage />
             <CardNoise />
@@ -259,11 +267,6 @@ export default function Earn() {
                   <TYPE.white fontSize={14}>
                     Stake your LP tokens to receive FATE, the FATExDAO governance token.
                   </TYPE.white>
-                  {TVLs?.stakingPoolTVL?.greaterThan('0') && (
-                    <TVLWrapper>
-                      <CombinedTVL />
-                    </TVLWrapper>
-                  )}
                 </InfoLeft>
                 <InfoRight>
                   {stakingInfosWithRewards?.length > 0 && (
