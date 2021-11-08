@@ -190,6 +190,16 @@ export const STAKING_REWARDS_INFO: {
       pid: 36,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/bscBNB'),
       active: true
+    },
+    {
+      pid: 37,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1SUSHI/1PAXG'),
+      active: true
+    },
+    {
+      pid: 38,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/1PAXG'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
