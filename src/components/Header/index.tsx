@@ -424,6 +424,7 @@ const BridgeWrapper = () => {
           <StyledExternalLink href={'https://bridge.harmony.one'}>Ethereum</StyledExternalLink>
           <StyledExternalLink href={'https://bridge.harmony.one'}>BSC</StyledExternalLink>
           <StyledExternalLink href={'https://anyswap.exchange/#/bridge'}>AnySwap</StyledExternalLink>
+          <StyledExternalLink href={'https://synapseprotocol.com'}>Synapse</StyledExternalLink>
         </BridgePopoverInner>
       </Popover>
     </>
