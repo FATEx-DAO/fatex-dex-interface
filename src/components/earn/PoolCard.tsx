@@ -255,7 +255,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
         </StyledInternalLink>
       </StatContainer>
 
-      {(isStaking || true) && (
+      {isStaking && (
         <>
           <Break />
           <StatContainerTop>
