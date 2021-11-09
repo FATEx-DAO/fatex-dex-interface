@@ -255,13 +255,13 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
         </StyledInternalLink>
       </StatContainer>
 
-      {isStaking && (
+      {(isStaking || true) && (
         <>
           <Break />
           <StatContainerTop>
             <RowBetween>
               <TYPE.white>Unclaimed Rewards</TYPE.white>
-              <TYPE.white>
+              <TYPE.white style={{ textAlign: 'right' }}>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔓
                 </span>
@@ -278,7 +278,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
             </RowBetween>
             <RowBetween>
               <TYPE.white>Locked Rewards</TYPE.white>
-              <TYPE.white>
+              <TYPE.white style={{ textAlign: 'right' }}>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔒
                 </span>
@@ -296,10 +296,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           </StatContainerTop>
           <Break />
           <BottomSection showBackground={true}>
-            <TYPE.black color={'white'} fontWeight={500}>
+            <TYPE.black fontWeight={500}>
               <span>Total Unclaimed & Locked Rewards</span>
             </TYPE.black>
-            <TYPE.black style={{ textAlign: 'right' }} color={'white'} fontWeight={500}>
+            <TYPE.black style={{ textAlign: 'right' }} fontWeight={500}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                 ⚡
               </span>
