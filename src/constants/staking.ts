@@ -200,6 +200,26 @@ export const STAKING_REWARDS_INFO: {
       pid: 38,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/1PAXG'),
       active: true
+    },
+    {
+      pid: 39,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1WBTC/UST'),
+      active: true
+    },
+    {
+      pid: 40,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1ETH/UST'),
+      active: true
+    },
+    {
+      pid: 41,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1SUSHI/UST'),
+      active: true
+    },
+    {
+      pid: 42,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/UST'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [

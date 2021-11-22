@@ -42,6 +42,10 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
   const WBTC: Token | undefined = Blockchain.HARMONY ? getToken(chainId, WBTCTicker) : undefined
   const WBTCWETHPrice = useTokenWETHPrice(WBTC)
 
+  const USTTicker = 'UST'
+  const UST: Token | undefined = Blockchain.HARMONY ? getToken(chainId, USTTicker) : undefined
+  const USTWETHPrice = useTokenWETHPrice(UST)
+
   return useMemo(() => {
     return {
       WETH: { token: weth, price: undefined },
@@ -52,7 +56,8 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
       bridgedETH: { token: bridgedETH, price: bridgedETHWETHPrice },
       DAI: { token: DAI, price: DAIWETHPrice },
       PAXG: { token: PAXG, price: PAXGWETHPrice },
-      WBTC: { token: WBTC, price: WBTCWETHPrice }
+      WBTC: { token: WBTC, price: WBTCWETHPrice },
+      UST: { token: UST, price: USTWETHPrice }
     }
   }, [
     chainId,

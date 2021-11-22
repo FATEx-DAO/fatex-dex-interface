@@ -49,6 +49,11 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
     tokens[1]?.symbol?.toUpperCase() === tokenData?.WBTC?.token?.symbol?.toUpperCase()
   ) {
     baseToken = tokenData?.WBTC?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.UST?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.UST?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.UST?.token
   }
 
   return baseToken
