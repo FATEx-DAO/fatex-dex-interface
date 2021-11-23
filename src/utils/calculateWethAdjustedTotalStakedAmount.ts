@@ -42,9 +42,17 @@ function pairCurrencyAmountInWeth(
       return tokens?.WBTC?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.WBTC?.price)
         : valueOfTotalStakedAmountInPairCurrency
+    case tokens?.UST?.token?.symbol?.toUpperCase():
+      return tokens?.UST?.price
+        ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.UST?.price)
+        : valueOfTotalStakedAmountInPairCurrency
     case tokens?.PAXG?.token?.symbol?.toUpperCase():
       return tokens?.PAXG?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.PAXG?.price)
+        : valueOfTotalStakedAmountInPairCurrency
+    case tokens?.xFATE?.token?.symbol?.toUpperCase():
+      return tokens?.xFATE?.price
+        ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.xFATE?.price)
         : valueOfTotalStakedAmountInPairCurrency
     default:
       return valueOfTotalStakedAmountInPairCurrency
