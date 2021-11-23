@@ -54,6 +54,16 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
     tokens[1]?.symbol?.toUpperCase() === tokenData?.UST?.token?.symbol?.toUpperCase()
   ) {
     baseToken = tokenData?.UST?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.FATE?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.FATE?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.FATE?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.xFATE?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.xFATE?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.xFATE?.token
   }
 
   return baseToken

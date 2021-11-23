@@ -17,10 +17,18 @@ export const getTokenLogoURL = (address: string) =>
 export const getTokenFallbackLogoURL = (currency: Currency) => {
   if (currency.symbol === 'FATE') {
     return 'https://fatex.io/fatex-token-logo.png'
-  } else if (currency.symbol === 'xFATE' || currency.symbol === 'XFATE') {
+  } else if (currency.symbol?.toUpperCase().includes('XFATE')) {
     return 'https://fatex.io/fatex-token-logo.png'
-  } else if (currency.symbol === '1PAXG') {
+  } else if (currency.symbol?.includes('PAXG')) {
     return 'https://assets.coingecko.com/coins/images/9519/small/paxg.PNG?1568542565'
+  } else if (currency.symbol?.includes('MATIC')) {
+    return 'https://assets.coingecko.com/coins/images/4713/small/matic-token-icon.png?1624446912'
+  } else if (currency.symbol?.includes('AVAX')) {
+    return 'https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png?1604021818'
+  } else if (currency.symbol?.includes('FTM')) {
+    return 'https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016'
+  } else if (currency.symbol?.includes('LUNA')) {
+    return 'https://assets.coingecko.com/coins/images/8284/small/luna1557227471663.png?1567147072'
   } else {
     return `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${currency.symbol}.png`
   }

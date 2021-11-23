@@ -46,6 +46,14 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
   const UST: Token | undefined = Blockchain.HARMONY ? getToken(chainId, USTTicker) : undefined
   const USTWETHPrice = useTokenWETHPrice(UST)
 
+  const FATETicker = 'FATE'
+  const FATE: Token | undefined = Blockchain.HARMONY ? getToken(chainId, FATETicker) : undefined
+  const FATEWETHPrice = useTokenWETHPrice(FATE)
+
+  const xFATETicker = 'xFATE'
+  const xFATE: Token | undefined = Blockchain.HARMONY ? getToken(chainId, xFATETicker) : undefined
+  const xFATEWETHPrice = useTokenWETHPrice(xFATE)
+
   return useMemo(() => {
     return {
       WETH: { token: weth, price: undefined },
@@ -57,7 +65,9 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
       DAI: { token: DAI, price: DAIWETHPrice },
       PAXG: { token: PAXG, price: PAXGWETHPrice },
       WBTC: { token: WBTC, price: WBTCWETHPrice },
-      UST: { token: UST, price: USTWETHPrice }
+      UST: { token: UST, price: USTWETHPrice },
+      FATE: { token: FATE, price: FATEWETHPrice },
+      xFATE: { token: xFATE, price: xFATEWETHPrice }
     }
   }, [
     chainId,

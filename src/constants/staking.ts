@@ -220,6 +220,76 @@ export const STAKING_REWARDS_INFO: {
       pid: 42,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/UST'),
       active: true
+    },
+    {
+      pid: 43,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/UST'),
+      active: true
+    },
+    {
+      pid: 44,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'UST/1USDC'),
+      active: true
+    },
+    {
+      pid: 45,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/WMATIC'),
+      active: true
+    },
+    {
+      pid: 46,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/WMATIC'),
+      active: true
+    },
+    {
+      pid: 47,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/WMATIC'),
+      active: true
+    },
+    {
+      pid: 48,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/FTM'),
+      active: true
+    },
+    {
+      pid: 49,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/FTM'),
+      active: true
+    },
+    {
+      pid: 50,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/FTM'),
+      active: true
+    },
+    {
+      pid: 51,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/LUNA'),
+      active: true
+    },
+    {
+      pid: 52,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/LUNA'),
+      active: true
+    },
+    {
+      pid: 53,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/LUNA'),
+      active: true
+    },
+    {
+      pid: 54,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/AVAX'),
+      active: true
+    },
+    {
+      pid: 55,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'xFATE/AVAX'),
+      active: true
+    },
+    {
+      pid: 56,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/AVAX'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
