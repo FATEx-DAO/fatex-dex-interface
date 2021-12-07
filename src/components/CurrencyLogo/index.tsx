@@ -29,6 +29,10 @@ export const getTokenFallbackLogoURL = (currency: Currency) => {
     return 'https://assets.coingecko.com/coins/images/4001/small/Fantom.png?1558015016'
   } else if (currency.symbol?.includes('LUNA')) {
     return 'https://assets.coingecko.com/coins/images/8284/small/luna1557227471663.png?1567147072'
+  } else if (currency.symbol?.includes('JEWEL')) {
+    return 'https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282'
+  } else if (currency.symbol?.includes('LINK')) {
+    return 'https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/LINK.png'
   } else {
     return `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${currency.symbol}.png`
   }
