@@ -277,7 +277,7 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
               </TYPE.white>
             </RowBetween>
             <RowBetween>
-              <TYPE.white>Locked Rewards</TYPE.white>
+              <TYPE.white>{`Member's Locked Rewards`}</TYPE.white>
               <TYPE.white style={{ textAlign: 'right' }}>
                 <span role="img" aria-label="wizard-icon" style={{ marginRight: '0.5rem' }}>
                   🔒

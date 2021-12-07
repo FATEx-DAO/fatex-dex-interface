@@ -140,7 +140,7 @@ const StyledMenuDesktop = styled.div<{ isStaking: boolean }>`
   `};
 `
 
-const MenuItem = styled(ExternalLink)`
+export const MenuItem = styled(ExternalLink)`
   flex: 1;
   width: fit-content;
   justify-content: right;

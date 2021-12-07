@@ -11,7 +11,7 @@ import { useActiveWeb3React } from '../../hooks'
 import { useDarkModeManager } from '../../state/user/hooks'
 
 import { Moon, Sun } from 'react-feather'
-import Menu from '../Menu'
+import Menu, { MenuItem } from '../Menu'
 
 import Row, { RowFixed } from '../Row'
 import Web3Status from '../Web3Status'
@@ -311,6 +311,24 @@ const Column = styled.div`
   flex-direction: column;
   text-align: right;
   align-items: flex-end;
+`
+const ThemeButtonContainer = styled.div`
+  display: flex;
+  padding-bottom: 10px;
+
+  a {
+    line-height: 42px;
+    padding: 0;
+    text-align: center;
+  }
+
+  @media screen and (max-width: 960px) {
+    padding-bottom: 0;
+    a {
+      max-width: 42px;
+      line-height: 21px;
+    }
+  }
 `
 
 export const StyledMenuButton = styled.button`
@@ -716,6 +734,26 @@ export default function Header() {
                     <InfoRow>
                       <Label>Total $ Amount:</Label>
                       <Value>{totalTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      {/* // TODO: would add the Member Bonus % as a percent */}
+                    </InfoRow>
+                    <InfoRow>
+                      <Label>Member $ Bonus:</Label>
+                      {/* // TODO: display amount of points earned from MembershipReward Controller */}
+                      <Value>{'0.00'}</Value>
+                    </InfoRow>
+                    <InfoRow>
+                      <Label>Member Points:</Label>
+                      {/*
+                        // TODO: implement correct logic
+                        1. title should also have a hyperlink that will take user to the member bonus FAQ
+                        subscription of the V2 section in of the updated docs
+                        2. displays `locked amount X earned points until the end of the epoch`
+                        (i.e. if they had $100 in lockedRewards and the bonus was 20%, it would show $20)
+                        they would receive if they continue to earn points until the end of the epoch - 
+                        which is a steady rate the % bonus the member receives will be based on a simpler formula
+                        that will be provided shortly
+                      */}
+                      <Value>{'0.00'}</Value>
                     </InfoRow>
                   </>
                 }
@@ -727,9 +765,15 @@ export default function Header() {
           </AccountElement>
         </HeaderElement>
         <ModeHeaderElementWrap>
-          <StyledMenuButton onClick={() => toggleDarkMode()} style={{ width: 'fit-content', marginLeft: '8px' }}>
-            {darkMode ? <Moon size={20} /> : <Sun size={20} />}
-          </StyledMenuButton>
+          <ThemeButtonContainer>
+            <StyledMenuButton onClick={() => toggleDarkMode()} style={{ width: 'fit-content', marginLeft: '8px' }}>
+              {darkMode ? <Moon size={20} /> : <Sun size={20} />}
+            </StyledMenuButton>
+            <MenuItem id="link" href={'https://fatex.io'}>
+              {/* // TODO: implement correct link */}
+              V2 FAQ
+            </MenuItem>
+          </ThemeButtonContainer>
           <Menu />
         </ModeHeaderElementWrap>
       </HeaderControls>
