@@ -290,6 +290,76 @@ export const STAKING_REWARDS_INFO: {
       pid: 56,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, '1PAXG/AVAX'),
       active: true
+    },
+    {
+      pid: 57,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/1USDC'),
+      active: true
+    },
+    {
+      pid: 58,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/UST'),
+      active: true
+    },
+    {
+      pid: 59,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/FATE'),
+      active: true
+    },
+    {
+      pid: 60,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/1PAXG'),
+      active: true
+    },
+    {
+      pid: 61,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/xFATE'),
+      active: true
+    },
+    {
+      pid: 62,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/WONE'),
+      active: true
+    },
+    {
+      pid: 63,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'JEWEL/1DAI'),
+      active: true
+    },
+    {
+      pid: 64,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/1USDC'),
+      active: true
+    },
+    {
+      pid: 65,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/UST'),
+      active: true
+    },
+    {
+      pid: 66,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/FATE'),
+      active: true
+    },
+    {
+      pid: 67,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/1PAXG'),
+      active: true
+    },
+    {
+      pid: 68,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/xFATE'),
+      active: true
+    },
+    {
+      pid: 69,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/WONE'),
+      active: true
+    },
+    {
+      pid: 70,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/1DAI'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
