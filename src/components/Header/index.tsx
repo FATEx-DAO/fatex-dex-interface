@@ -315,18 +315,24 @@ const Column = styled.div`
 const ThemeButtonContainer = styled.div`
   display: flex;
   padding-bottom: 10px;
+  align-items: bottom;
 
   a {
-    line-height: 42px;
     padding: 0;
     text-align: center;
+    color: #ffd700;
+    font-size: 16px;
+    line-height: 16px;
+    margin-top: 22px;
+
+    font-family: 'Lexend';
   }
 
   @media screen and (max-width: 960px) {
     padding-bottom: 0;
     a {
       max-width: 42px;
-      line-height: 21px;
+      margin-top: 7px;
     }
   }
 `
@@ -734,27 +740,17 @@ export default function Header() {
                     <InfoRow>
                       <Label>Total $ Amount:</Label>
                       <Value>{totalTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
-                      {/* // TODO: would add the Member Bonus % as a percent */}
                     </InfoRow>
+                    {/*
+                    // TODO: confirm if below are necessary
                     <InfoRow>
                       <Label>Member $ Bonus:</Label>
-                      {/* // TODO: display amount of points earned from MembershipReward Controller */}
                       <Value>{'0.00'}</Value>
                     </InfoRow>
                     <InfoRow>
                       <Label>Member Points:</Label>
-                      {/*
-                        // TODO: implement correct logic
-                        1. title should also have a hyperlink that will take user to the member bonus FAQ
-                        subscription of the V2 section in of the updated docs
-                        2. displays `locked amount X earned points until the end of the epoch`
-                        (i.e. if they had $100 in lockedRewards and the bonus was 20%, it would show $20)
-                        they would receive if they continue to earn points until the end of the epoch - 
-                        which is a steady rate the % bonus the member receives will be based on a simpler formula
-                        that will be provided shortly
-                      */}
                       <Value>{'0.00'}</Value>
-                    </InfoRow>
+                    </InfoRow> */}
                   </>
                 }
               />
@@ -771,7 +767,7 @@ export default function Header() {
             </StyledMenuButton>
             <MenuItem id="link" href={'https://fatex.io'}>
               {/* // TODO: implement correct link */}
-              V2 FAQ
+              v2 FAQ
             </MenuItem>
           </ThemeButtonContainer>
           <Menu />

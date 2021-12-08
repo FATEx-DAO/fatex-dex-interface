@@ -315,17 +315,19 @@ export default function Manage({
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above represents 20% of your rewards.
+              The unclaimed {govToken?.symbol} amount above represents your unlocked rewards for the current epoch{' '}
+              period.
               <br />
-              The other 80% can be claimed later, once this 13 week epoch period is over. Learn more{' '}
+              Locked rewards are distributed after the end of the epoch. Learn more{' '}
+              {/* // TODO: replace below hyperlink */}
               <a
                 href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
                 target={'_blank'}
                 rel="noreferrer"
               >
                 here
-              </a>
-              .
+              </a>{' '}
+              & please note - there <i>are</i> withdrawl fees.
             </TYPE.main>
           )}
         </>

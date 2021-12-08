@@ -133,6 +133,32 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     return approveCallback()
   }
 
+  const renderDepositIntroText = () => {
+    if (stakingInfo.active) {
+      return (
+        <TYPE.link fontWeight={400} color={'text1'}>
+          💡 There is no deposit or withdrawal fee! <br /> <br />
+          <strong>NOTE</strong>: there <i>are</i> withdrawal fees{` - `}
+          Learn more {` `}
+          {/* // TODO: replace with proper link */}
+          <a
+            href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
+            target={'_blank'}
+            rel="noreferrer"
+          >
+            here
+          </a>
+          {` `}before depositing.
+        </TYPE.link>
+      )
+    }
+    return (
+      <TYPE.link fontWeight={400} color={'text1'}>
+        This pool is archived. Depositing will not produce any rewards.
+      </TYPE.link>
+    )
+  }
+
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && !hash && !failed && (
@@ -145,14 +171,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           <RowBetween>
             <ColumnCenter>
               <BlueCard>
-                <AutoColumn gap="10px">
-                  <TYPE.link fontWeight={400} color={'text1'}>
-                    {/*💡 There is <b>no</b> deposit or withdrawal fee!*/}
-                    {stakingInfo.active
-                      ? '💡 There is no deposit or withdrawal fee!'
-                      : 'This pool is archived. Depositing will not produce any rewards.'}
-                  </TYPE.link>
-                </AutoColumn>
+                <AutoColumn gap="10px">{renderDepositIntroText()}</AutoColumn>
               </BlueCard>
             </ColumnCenter>
           </RowBetween>

@@ -127,7 +127,27 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    💡 There is <b>no</b> withdrawal fee!
+                    {/* 💡 There is <b>no</b> withdrawal fee! */}
+                    Fees to discourage short-term yield-farming & reward long-term member participation are charged:
+                    <br />
+                    <br />
+                    Learn more {` `}
+                    {/* // TODO: replace below hyperlink */}
+                    <a
+                      href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
+                      target={'_blank'}
+                      rel="noreferrer"
+                    >
+                      here
+                    </a>
+                    . Fees charged if any amount is withdrawn are currently: <br /> <br />
+                    1. LP withdrawal fee (paid to xFATE pool): <br />
+                    {/* VALUE: $ amount of fees they will be charged for withdrawing
+                    (exactly) - AND - % value */}
+                    <br />
+                    <br />
+                    2. Locked Rewards Fee{':'} <br />
+                    VALUES: $ amount of locked rewards taken - AND - % Value
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
