@@ -11,6 +11,7 @@ export default function getTokenWithDefault(chainId: ChainId | undefined, symbol
     case 'WONE':
       return WETH[chainId]
     default:
+      // 2047000000000
       return TOKENS[chainId].firstBySymbol(symbol)
   }
 }

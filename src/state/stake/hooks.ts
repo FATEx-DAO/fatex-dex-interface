@@ -116,7 +116,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     [masterInfo, account]
   )
 
-  const pendingRewards = useSingleContractMultipleData(fateRewardController, 'pendingFate', pidAccountMapping)
+  const pendingRewards = useSingleContractMultipleData(fateRewardController, 'pendingUnlockedFate', pidAccountMapping)
   const userInfos = useSingleContractMultipleData(fateRewardController, 'userInfo', pidAccountMapping)
 
   const poolInfos = useSingleContractMultipleData(
@@ -194,17 +194,21 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.subtract(JSBI.BigInt(currentBlock ?? 0), JSBI.BigInt(startsAtBlock)),
           JSBI.BigInt(302400)
         )
-        const multiplier = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('5') : JSBI.BigInt('1')
+        const multiplier = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('5') : JSBI.BigInt('125')
+        const divisor = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('1') : JSBI.BigInt('10')
 
         const baseBlockRewards = new TokenAmount(
           govToken,
-          JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+          JSBI.divide(JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier), divisor)
         )
 
         const poolBlockRewards = specificPoolRewardsPerBlock?.result?.[0]
           ? new TokenAmount(
               govToken,
-              JSBI.multiply(JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+              JSBI.divide(
+                JSBI.multiply(JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0), multiplier),
+                divisor
+              )
             )
           : baseBlockRewards
 
@@ -235,7 +239,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           govToken,
           JSBI.add(
             tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
-            JSBI.multiply(totalPendingRewardAmount.raw, JSBI.BigInt('4'))
+            JSBI.divide(JSBI.multiply(totalPendingRewardAmount.raw, multiplier), divisor)
           )
         )
 

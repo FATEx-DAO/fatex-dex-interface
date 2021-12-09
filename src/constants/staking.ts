@@ -369,7 +369,7 @@ export const STAKING_REWARDS_INFO: {
       active: true
     },
     {
-      pid: 1,
+      pid: 3,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_TESTNET, 'WONE/1BUSD'),
       active: true
     }

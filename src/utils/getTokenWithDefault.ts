@@ -7,6 +7,14 @@ export default function getTokenWithDefault(chainId: ChainId, symbol: string): T
   let token: Token
 
   switch (symbol) {
+    case '1BUSD':
+      if (chainId === ChainId.HARMONY_TESTNET) {
+        token = new Token(chainId, '0xDeC283184034d06422bEa74cc93275B67eB73D0e', 18, symbol, 'OneBUSD')
+      } else {
+        const retrievedToken = TOKENS[chainId].firstBySymbol(symbol)
+        token = retrievedToken ? retrievedToken : new Token(chainId, ZERO_ONE_ADDRESS, 18, symbol, symbol)
+      }
+      break
     case 'WETH':
     case 'WBNB':
     case 'WONE':

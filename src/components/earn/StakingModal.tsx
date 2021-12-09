@@ -137,7 +137,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
     if (stakingInfo.active) {
       return (
         <TYPE.link fontWeight={400} color={'text1'}>
-          💡 There is no deposit or withdrawal fee! <br /> <br />
+          💡 There is no deposit fee! <br /> <br />
           <strong>NOTE</strong>: there <i>are</i> withdrawal fees{` - `}
           Learn more {` `}
           {/* // TODO: replace with proper link */}
