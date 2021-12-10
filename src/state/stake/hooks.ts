@@ -1,10 +1,9 @@
-import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@fatex-dao/sdk'
+import { CurrencyAmount, Fraction, JSBI, Pair, Token, TokenAmount } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
-import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
+import { useMultipleContractSingleData, useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
-import { useMultipleContractSingleData } from '../multicall/hooks'
 import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -50,10 +49,6 @@ export interface StakingInfo {
   blocksPerYear: JSBI
   // pool share vs all pools
   poolShare: Fraction
-  // the percentage of rewards locked
-  lockedRewardsPercentageUnits: number
-  // the percentage of rewards locked
-  unlockedRewardsPercentageUnits: number
   // the total supply of lp tokens in existence
   totalLpTokenSupply: TokenAmount
   // the amount of currently total staked tokens in the pool
@@ -76,6 +71,10 @@ export interface StakingInfo {
   apr: Fraction | undefined
   // if pool is active
   active: boolean
+  // fees for locked rewards
+  lockedRewardsFeePercent: Fraction
+  // fees for LP withdrawals
+  lpWithdrawFeePercent: Fraction
 }
 
 // gets the staking info from the network for the active chain id
@@ -152,6 +151,16 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     'getNewRewardPerBlock',
     adjustedPids.map(adjustedPids => [adjustedPids])
   )
+  const lockedRewardsFeePercents = useSingleContractMultipleData(
+    fateRewardController,
+    'getLockedRewardsFeePercent',
+    adjustedPids.map(adjustedPid => [adjustedPid, account ?? undefined])
+  )
+  const lpWithdrawFeePercents = useSingleContractMultipleData(
+    fateRewardController,
+    'getLPWithdrawFeePercent',
+    adjustedPids.map(adjustedPid => [adjustedPid, account ?? undefined])
+  )
 
   const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
   const currentBlock = useBlockNumber()
@@ -169,6 +178,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
       const lpTokenTotalSupply = lpTokenTotalSupplies[index]
       const lpTokenReserve = lpTokenReserves[index]
       const lpTokenBalance = lpTokenBalances[index]
+      const lockedRewardsFeePercent = lockedRewardsFeePercents[index]
+      const lpWithdrawFeePercent = lpWithdrawFeePercents[index]
 
       // poolRewardsPerBlock indexes have to be +1'd to get the actual specific pool data
       const baseRewardsPerBlock = poolRewardsPerBlock[0]
@@ -186,7 +197,9 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           lpTokenReserve,
           lpTokenBalance,
           startBlock,
-          currentBlock
+          currentBlock,
+          lockedRewardsFeePercent,
+          lpWithdrawFeePercent
         )
       ) {
         const startsAtBlock = parseInt(startBlock.result?.[0].toString() ?? '0')
@@ -194,8 +207,24 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           JSBI.subtract(JSBI.BigInt(currentBlock ?? 0), JSBI.BigInt(startsAtBlock)),
           JSBI.BigInt(302400)
         )
-        const multiplier = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('5') : JSBI.BigInt('125')
-        const divisor = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('1') : JSBI.BigInt('10')
+
+        let multiplier
+        if (JSBI.lessThan(index, JSBI.BigInt('13'))) {
+          multiplier = JSBI.BigInt('5')
+        } else if (JSBI.lessThan(index, JSBI.BigInt('21'))) {
+          multiplier = JSBI.BigInt('125')
+        } else {
+          multiplier = JSBI.BigInt('1')
+        }
+
+        let divisor
+        if (JSBI.lessThan(index, JSBI.BigInt('13'))) {
+          divisor = JSBI.BigInt('1')
+        } else if (JSBI.lessThan(index, JSBI.BigInt('21'))) {
+          divisor = JSBI.BigInt('10')
+        } else {
+          divisor = JSBI.BigInt('1')
+        }
 
         const baseBlockRewards = new TokenAmount(
           govToken,
@@ -289,7 +318,9 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           valueOfTotalStakedAmountInWeth: totalStakedAmountWETH,
           valueOfTotalStakedAmountInUsd: totalStakedAmountBUSD,
           apr: apr,
-          active: active
+          active: active,
+          lockedRewardsFeePercent: new Fraction(lockedRewardsFeePercent.result?.[0], '10000000000000000'),
+          lpWithdrawFeePercent: new Fraction(lpWithdrawFeePercent.result?.[0], '10000000000000000')
         }
 
         memo.push(stakingInfo)

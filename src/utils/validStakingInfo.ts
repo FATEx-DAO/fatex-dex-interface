@@ -12,7 +12,9 @@ export default function validStakingInfo(
   lpTokenReserve: CallState,
   lpTokenBalance: CallState,
   startBlock: CallState,
-  currentBlock: number | undefined
+  currentBlock: number | undefined,
+  lockedRewardsFeePercent: CallState,
+  lpWithdrawFeePercent: CallState
 ): boolean {
   if (
     tokens &&
@@ -52,7 +54,15 @@ export default function validStakingInfo(
     !startBlock.error &&
     !startBlock.loading &&
     startBlock?.result?.[0] !== undefined &&
-    currentBlock !== undefined
+    currentBlock !== undefined &&
+    lockedRewardsFeePercent &&
+    !lockedRewardsFeePercent.error &&
+    !lockedRewardsFeePercent.loading &&
+    lockedRewardsFeePercent?.result?.[0] !== undefined &&
+    lpWithdrawFeePercent &&
+    !lpWithdrawFeePercent.error &&
+    !lpWithdrawFeePercent.loading &&
+    lpWithdrawFeePercent?.result?.[0] !== undefined
   ) {
     return true
   }

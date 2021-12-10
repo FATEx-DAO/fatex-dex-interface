@@ -141,13 +141,14 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
                       here
                     </a>
                     . Fees charged if any amount is withdrawn are currently: <br /> <br />
-                    1. LP withdrawal fee (paid to xFATE pool): <br />
-                    {/* VALUE: $ amount of fees they will be charged for withdrawing
-                    (exactly) - AND - % value */}
+                    1. LP withdrawal fee (paid to xFATE pool):
+                    <br />
+                    {stakingInfo.lpWithdrawFeePercent.toFixed(0)}%
                     <br />
                     <br />
-                    2. Locked Rewards Fee{':'} <br />
-                    VALUES: $ amount of locked rewards taken - AND - % Value
+                    2. Locked Rewards Fee (claimable after epoch 1 is over):
+                    <br />
+                    {stakingInfo.lockedRewardsFeePercent.toFixed(0)}%
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
