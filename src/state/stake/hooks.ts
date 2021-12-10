@@ -28,9 +28,6 @@ export const STAKING_GENESIS = 6502000
 
 export const REWARDS_DURATION_DAYS = 60
 
-/// rewards are locked 80% initially, meaning they receive 4 times the amount later on
-export const REWARD_MULTIPLIER = '4'
-
 export interface StakingInfo {
   // the pool id (pid) of the pool
   pid: number
