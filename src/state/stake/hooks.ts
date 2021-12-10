@@ -83,16 +83,35 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const { chainId, account } = useActiveWeb3React()
   const fateRewardController = useFateRewardController()
   const blockNumber = useBlockNumber()
+  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+
+  const weekIndex = JSBI.divide(
+    JSBI.subtract(
+      JSBI.BigInt(blockNumber ?? 0),
+      startBlock.result?.[0] ? startBlock.result?.[0] : JSBI.BigInt(blockNumber ?? 0)
+    ),
+    JSBI.BigInt(302400)
+  )
+
+  let epoch: JSBI
+  if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+    epoch = JSBI.BigInt('0')
+  } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+    epoch = JSBI.BigInt('1')
+  } else {
+    epoch = JSBI.BigInt('2')
+  }
 
   const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
     client: rewardsClient,
     variables: {
       account: account ?? '',
+      epoch: parseInt(epoch.toString()),
       blockNumber: blockNumber
     }
   })
   const lockedRewardsMap = useMemo(() => {
-    return lockedRewards?.userEpoch0TotalLockedRewardByPools.reduce((memo: { [key: string]: any }, rewardInfo: any) => {
+    return lockedRewards?.userEpochTotalLockedRewardByPools.reduce((memo: { [key: string]: any }, rewardInfo: any) => {
       memo[rewardInfo.poolId] = rewardInfo
       return memo
     }, {})
@@ -153,7 +172,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     adjustedPids.map(adjustedPids => [adjustedPids])
   )
 
-  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
   const currentBlock = useBlockNumber()
 
   return useMemo(() => {
@@ -190,21 +208,37 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         )
       ) {
         const startsAtBlock = parseInt(startBlock.result?.[0].toString() ?? '0')
-        const index = JSBI.divide(
-          JSBI.subtract(JSBI.BigInt(currentBlock ?? 0), JSBI.BigInt(startsAtBlock)),
-          JSBI.BigInt(302400)
-        )
-        const multiplier = JSBI.lessThan(index, JSBI.BigInt('13')) ? JSBI.BigInt('5') : JSBI.BigInt('1')
+
+        let multiplier
+        if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+          multiplier = JSBI.BigInt('5')
+        } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+          multiplier = JSBI.BigInt('125')
+        } else {
+          multiplier = JSBI.BigInt('1')
+        }
+
+        let divisor
+        if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+          divisor = JSBI.BigInt('1')
+        } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+          divisor = JSBI.BigInt('10')
+        } else {
+          divisor = JSBI.BigInt('1')
+        }
 
         const baseBlockRewards = new TokenAmount(
           govToken,
-          JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+          JSBI.divide(JSBI.multiply(JSBI.BigInt(baseRewardsPerBlock?.result?.[0] ?? 0), multiplier), divisor)
         )
 
         const poolBlockRewards = specificPoolRewardsPerBlock?.result?.[0]
           ? new TokenAmount(
               govToken,
-              JSBI.multiply(JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0), multiplier)
+              JSBI.divide(
+                JSBI.multiply(JSBI.BigInt(specificPoolRewardsPerBlock?.result?.[0] ?? 0), multiplier),
+                divisor
+              )
             )
           : baseBlockRewards
 
@@ -235,7 +269,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           govToken,
           JSBI.add(
             tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
-            JSBI.multiply(totalPendingRewardAmount.raw, JSBI.BigInt('4'))
+            JSBI.divide(JSBI.multiply(totalPendingRewardAmount.raw, JSBI.subtract(multiplier, divisor)), divisor)
           )
         )
 
