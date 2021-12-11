@@ -29,6 +29,8 @@ import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
 import { BIG_INT_ZERO } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { useSingleCallResult } from '../../state/multicall/hooks'
+import { useFateRewardController } from '../../hooks/useContract'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -120,6 +122,44 @@ export default function Manage({
   const tokenB = wrappedCurrency(currencyB ?? undefined, chainId)
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
+
+  const blockNumber = useBlockNumber() ?? 0
+  const fateRewardController = useFateRewardController()
+  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+
+  const weekIndex = JSBI.divide(
+    JSBI.subtract(
+      JSBI.BigInt(blockNumber),
+      startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber)
+    ),
+    JSBI.BigInt(302400)
+  )
+
+  let epoch: JSBI
+  if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+    epoch = JSBI.BigInt('0')
+  } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+    epoch = JSBI.BigInt('1')
+  } else {
+    epoch = JSBI.BigInt('2')
+  }
+
+  let epochLengthWeeks: number
+  let lockAmountPercent: string
+  let unlockAmountPercent: string
+  if (JSBI.equal(epoch, JSBI.BigInt('0'))) {
+    epochLengthWeeks = 13
+    lockAmountPercent = '80%'
+    unlockAmountPercent = '20%'
+  } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
+    epochLengthWeeks = 8
+    lockAmountPercent = '92%'
+    unlockAmountPercent = '8%'
+  } else {
+    epochLengthWeeks = 13
+    lockAmountPercent = '?%'
+    unlockAmountPercent = '?%'
+  }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
 
@@ -315,9 +355,10 @@ export default function Manage({
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above represents 20% of your rewards.
+              The unclaimed {govToken?.symbol} amount listed above represents {unlockAmountPercent} of your rewards.
               <br />
-              The other 80% can be claimed later, once this 13 week epoch period is over. Learn more{' '}
+              The other {lockAmountPercent} can be claimed later, once this {epochLengthWeeks} week epoch period is
+              over. Learn more{' '}
               <a
                 href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
                 target={'_blank'}
