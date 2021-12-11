@@ -85,7 +85,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const weekIndex = JSBI.divide(
     JSBI.subtract(
       JSBI.BigInt(blockNumber ?? 0),
-      startBlock.result?.[0] ? startBlock.result?.[0] : JSBI.BigInt(blockNumber ?? 0)
+      startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber ?? 0)
     ),
     JSBI.BigInt(302400)
   )
