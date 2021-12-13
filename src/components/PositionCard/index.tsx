@@ -1,4 +1,4 @@
-import { JSBI, Pair, Percent, TokenAmount } from '@fatex-dao/sdk'
+import { Fraction, JSBI, Pair, Percent, TokenAmount } from '@fatex-dao/sdk'
 import { darken } from 'polished'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -28,6 +28,7 @@ import useBUSDPrice from '../../hooks/useBUSDPrice'
 import calculateWethAdjustedTotalStakedAmount from '../../utils/calculateWethAdjustedTotalStakedAmount'
 import useTokensWithWETHPrices from '../../hooks/useTokensWithWETHPrices'
 import determineBaseToken from '../../utils/determineBaseToken'
+import calculateTotalStakedAmount from '../../utils/calculateTotalStakedAmount'
 
 export const FixedHeightRow = styled(RowBetween)`
   height: 24px;
@@ -243,8 +244,20 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
           pair
         )
       : undefined
-  const userBalanceValue =
-    token0WethBalance && wethBusdPrice ? token0WethBalance.multiply(wethBusdPrice.raw) : undefined
+  const token0PriceUSD = useBUSDPrice(pair.token0)
+  const token1PriceUSD = useBUSDPrice(pair.token1)
+  let userBalanceValue: Fraction | undefined
+  if (token0WethBalance && wethBusdPrice) {
+    userBalanceValue = token0WethBalance.multiply(wethBusdPrice.raw)
+  } else if (token0PriceUSD && userPoolBalance && totalPoolTokens) {
+    userBalanceValue = calculateTotalStakedAmount(pair.token0, pair, userPoolBalance, totalPoolTokens).multiply(
+      token0PriceUSD
+    )
+  } else if (token1PriceUSD && userPoolBalance && totalPoolTokens) {
+    userBalanceValue = calculateTotalStakedAmount(pair.token1, pair, userPoolBalance, totalPoolTokens).multiply(
+      token1PriceUSD
+    )
+  }
 
   return (
     <StyledPositionCard border={border} bgColor={backgroundColor}>
@@ -258,7 +271,9 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
                 {!currency0 || !currency1 ? <Dots>Loading</Dots> : `${currency0.symbol}/${currency1.symbol}`}
               </Text>
             </LeftSide>
-            <RightSide>${userBalanceValue?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</RightSide>
+            <RightSide>
+              {userBalanceValue ? `$${userBalanceValue?.toFixed(2, { groupSeparator: ',' })}` : 'N/A'}
+            </RightSide>
           </AutoRow>
         </FixedHeightRow>
 

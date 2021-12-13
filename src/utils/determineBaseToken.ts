@@ -5,9 +5,14 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
   const currency0 = unwrappedToken(tokens[0])
   const currency1 = unwrappedToken(tokens[1])
 
-  let baseToken: Token | undefined = tokenData?.WETH?.token
+  let baseToken: Token | undefined = undefined
 
   if (DEFAULT_CURRENCIES.includes(currency0) || DEFAULT_CURRENCIES.includes(currency1)) {
+    baseToken = tokenData?.WETH?.token
+  } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.WETH?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.WETH?.token?.symbol?.toUpperCase()
+  ) {
     baseToken = tokenData?.WETH?.token
   } else if (
     tokens[0]?.symbol?.toUpperCase() === tokenData?.govToken?.token?.symbol?.toUpperCase() ||
