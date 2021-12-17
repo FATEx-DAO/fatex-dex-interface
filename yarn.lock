@@ -2065,22 +2065,22 @@
   resolved "https://registry.yarnpkg.com/@fatex-dao/community-token-list/-/community-token-list-3.0.0.tgz#f95677d48b806af7f122275aa97553ce44d0e461"
   integrity sha512-5t18zRyjZY5N7qx9twpboFMYiJKzMhb+BHen0tazxRC1IB1xxjC9e8g1R3LFLt8mCJpUIAuiepoQG0djv3lPDA==
 
-"@fatex-dao/default-token-list@^8.0.0":
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-8.0.0.tgz#6ffa4f46df30eb67253a110dd89265a7cf9c36c0"
-  integrity sha512-nrFiOPseDpWwzwq7kENx8SvLzSCS9dWWtzSCtOY18CUEnSosUjwzW2YfYzbVihddassgnyj9rMnJN/WDTOib8A==
+"@fatex-dao/default-token-list@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-10.0.0.tgz#8d0166d467337b993cdb366a2b6d41a6a7b75419"
+  integrity sha512-Iq6hfDHMXxB81UaNeZgBs/iWF1/P7izA8ySf3HS+dolGmIxM4OpJAC9f3pP6S2PKbQpXX/FiTbd4Bmx7G4FeWQ==
 
-"@fatex-dao/sdk-extra@^1.0.22":
-  version "1.0.22"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-1.0.22.tgz#12749b3de56ebb888e05a0a26a3a413c74303eb3"
-  integrity sha512-mBniDsp4VnKxzls6jd/qv21XoiPNl2bQj8FHpw2NZapAuKnqsXhv9Hj0ycACIA+UQvUFXKe2oIr6TbacXxx3NA==
+"@fatex-dao/sdk-extra@^1.0.24":
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-1.0.24.tgz#9c1ace7e8c6f5c89c1e0a3fb075c39491edace81"
+  integrity sha512-AIl1i9brf2nM168K9KLZ9uLpOeNvhUN/9s82mO9ubSE9KbVPBNq+uMyOqE+HVxWW+YDoKD8Mu41XPX0rFDjtEw==
   dependencies:
     "@ethersproject/address" "^5.3.0"
     "@ethersproject/contracts" "^5.3.0"
     "@ethersproject/providers" "^5.3.0"
     "@ethersproject/solidity" "^5.3.0"
     "@fatex-dao/community-token-list" "^3.0.0"
-    "@fatex-dao/default-token-list" "^8.0.0"
+    "@fatex-dao/default-token-list" "^10.0.0"
     "@fatex-dao/sdk" "^1.0.12"
     "@types/lodash.random" "^3.2.6"
     lodash.random "^3.2.0"

@@ -360,6 +360,61 @@ export const STAKING_REWARDS_INFO: {
       pid: 70,
       tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/1DAI'),
       active: true
+    },
+    {
+      pid: 71,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WONE/1DAI'),
+      active: true
+    },
+    {
+      pid: 72,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FTM/1USDC'),
+      active: true
+    },
+    {
+      pid: 73,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'AVAX/1USDC'),
+      active: true
+    },
+    {
+      pid: 74,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/1USDC'),
+      active: true
+    },
+    {
+      pid: 75,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscLINK/LINK'),
+      active: true
+    },
+    {
+      pid: 76,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'WMATIC/1USDC'),
+      active: true
+    },
+    {
+      pid: 77,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscADA/1USDC'),
+      active: true
+    },
+    {
+      pid: 78,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'FATE/bscADA'),
+      active: true
+    },
+    {
+      pid: 79,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscADA/1PAXG'),
+      active: true
+    },
+    {
+      pid: 80,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'LUNA/UST'),
+      active: true
+    },
+    {
+      pid: 81,
+      tokens: getPairTokensWithDefaults(ChainId.HARMONY_MAINNET, 'bscBNB/1DAI'),
+      active: true
     }
   ],
   [ChainId.HARMONY_TESTNET]: [
