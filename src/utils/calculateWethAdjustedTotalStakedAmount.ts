@@ -12,50 +12,51 @@ function pairCurrencyAmountInWeth(
   if (!baseToken) return valueOfTotalStakedAmountInPairCurrency
 
   switch (baseToken.symbol?.toUpperCase()) {
-    case tokens?.WETH?.token?.symbol?.toUpperCase():
+    case tokens.WETH?.token?.symbol?.toUpperCase():
       return valueOfTotalStakedAmountInPairCurrency
-    case tokens?.govToken?.token?.symbol?.toUpperCase():
-      return tokens?.govToken?.price
+    case tokens.govToken?.token?.symbol?.toUpperCase():
+      return tokens.govToken?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.govToken?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.BUSD?.token?.symbol?.toUpperCase():
-      return tokens?.BUSD?.price
+    case tokens.BUSD?.token?.symbol?.toUpperCase():
+      return tokens.BUSD?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.BUSD?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.USDC?.token?.symbol?.toUpperCase():
-      return tokens?.USDC?.price
+    case tokens.USDC?.token?.symbol?.toUpperCase():
+      return tokens.USDC?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.USDC?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.bscBUSD?.token?.symbol?.toUpperCase():
-      return tokens?.bscBUSD?.price
+    case tokens.bscBUSD?.token?.symbol?.toUpperCase():
+      return tokens.bscBUSD?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.bscBUSD?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.bridgedETH?.token?.symbol?.toUpperCase():
-      return tokens?.bridgedETH?.price
+    case tokens.bridgedETH?.token?.symbol?.toUpperCase():
+      return tokens.bridgedETH?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.bridgedETH?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.DAI?.token?.symbol?.toUpperCase():
-      return tokens?.DAI?.price
+    case tokens.DAI?.token?.symbol?.toUpperCase():
+      return tokens.DAI?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.DAI?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.WBTC?.token?.symbol?.toUpperCase():
-      return tokens?.WBTC?.price
+    case tokens.WBTC?.token?.symbol?.toUpperCase():
+      return tokens.WBTC?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.WBTC?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.UST?.token?.symbol?.toUpperCase():
-      return tokens?.UST?.price
+    case tokens.UST?.token?.symbol?.toUpperCase():
+      return tokens.UST?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.UST?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.PAXG?.token?.symbol?.toUpperCase():
-      return tokens?.PAXG?.price
+    case tokens.PAXG?.token?.symbol?.toUpperCase():
+      return tokens.PAXG?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.PAXG?.price)
         : valueOfTotalStakedAmountInPairCurrency
-    case tokens?.xFATE?.token?.symbol?.toUpperCase():
-      return tokens?.xFATE?.price
+    case tokens.xFATE?.token?.symbol?.toUpperCase():
+      return tokens.xFATE?.price
         ? valueOfTotalStakedAmountInPairCurrency.multiply(tokens?.xFATE?.price)
         : valueOfTotalStakedAmountInPairCurrency
     default:
-      return valueOfTotalStakedAmountInPairCurrency
+      const price = tokens[baseToken.symbol ?? '']?.price
+      return price ? valueOfTotalStakedAmountInPairCurrency.multiply(price) : valueOfTotalStakedAmountInPairCurrency
   }
 }
 

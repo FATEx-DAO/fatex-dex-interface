@@ -246,15 +246,15 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
       : undefined
   const token0PriceUSD = useBUSDPrice(pair.token0)
   const token1PriceUSD = useBUSDPrice(pair.token1)
-  let userBalanceValue: Fraction | undefined
+  let userBalanceValueUSD: Fraction | undefined
   if (token0WethBalance && wethBusdPrice) {
-    userBalanceValue = token0WethBalance.multiply(wethBusdPrice.raw)
+    userBalanceValueUSD = token0WethBalance.multiply(wethBusdPrice.raw)
   } else if (token0PriceUSD && userPoolBalance && totalPoolTokens) {
-    userBalanceValue = calculateTotalStakedAmount(pair.token0, pair, userPoolBalance, totalPoolTokens).multiply(
+    userBalanceValueUSD = calculateTotalStakedAmount(pair.token0, pair, userPoolBalance, totalPoolTokens).multiply(
       token0PriceUSD
     )
   } else if (token1PriceUSD && userPoolBalance && totalPoolTokens) {
-    userBalanceValue = calculateTotalStakedAmount(pair.token1, pair, userPoolBalance, totalPoolTokens).multiply(
+    userBalanceValueUSD = calculateTotalStakedAmount(pair.token1, pair, userPoolBalance, totalPoolTokens).multiply(
       token1PriceUSD
     )
   }
@@ -272,7 +272,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               </Text>
             </LeftSide>
             <RightSide>
-              {userBalanceValue ? `$${userBalanceValue?.toFixed(2, { groupSeparator: ',' })}` : 'N/A'}
+              {userBalanceValueUSD ? `$${userBalanceValueUSD?.toFixed(2, { groupSeparator: ',' })}` : 'N/A'}
             </RightSide>
           </AutoRow>
         </FixedHeightRow>

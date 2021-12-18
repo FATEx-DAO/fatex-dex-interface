@@ -54,6 +54,26 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
   const xFATE: Token | undefined = Blockchain.HARMONY ? getToken(chainId, xFATETicker) : undefined
   const xFATEWETHPrice = useTokenWETHPrice(xFATE)
 
+  const bscLINKTicker = 'bscLINK'
+  const bscLINK: Token | undefined = Blockchain.HARMONY ? getToken(chainId, bscLINKTicker) : undefined
+  const bscLINKWETHPrice = useTokenWETHPrice(bscLINK)
+
+  const WMATICTicker = 'WMATIC'
+  const WMATIC: Token | undefined = Blockchain.HARMONY ? getToken(chainId, WMATICTicker) : undefined
+  const WMATICWETHPrice = useTokenWETHPrice(WMATIC)
+
+  const _1SUSHITicker = '1SUSHI'
+  const _1SUSHI: Token | undefined = Blockchain.HARMONY ? getToken(chainId, _1SUSHITicker) : undefined
+  const _1SUSHIWETHPrice = useTokenWETHPrice(_1SUSHI)
+
+  const LINKTicker = 'LINK'
+  const LINK: Token | undefined = Blockchain.HARMONY ? getToken(chainId, LINKTicker) : undefined
+  const LINKWETHPrice = useTokenWETHPrice(LINK)
+
+  const FTMTicker = 'FTM'
+  const FTM: Token | undefined = Blockchain.HARMONY ? getToken(chainId, FTMTicker) : undefined
+  const FTMWETHPrice = useTokenWETHPrice(FTM)
+
   return useMemo(() => {
     return {
       WETH: { token: weth, price: undefined },
@@ -67,7 +87,12 @@ export default function useTokensWithWETHPrices(): Record<string, any> {
       WBTC: { token: WBTC, price: WBTCWETHPrice },
       UST: { token: UST, price: USTWETHPrice },
       FATE: { token: FATE, price: FATEWETHPrice },
-      xFATE: { token: xFATE, price: xFATEWETHPrice }
+      xFATE: { token: xFATE, price: xFATEWETHPrice },
+      bscLINK: { token: bscLINK, price: bscLINKWETHPrice },
+      WMATIC: { token: WMATIC, price: WMATICWETHPrice },
+      '1SUSHI': { token: _1SUSHI, price: _1SUSHIWETHPrice },
+      LINK: { token: LINK, price: LINKWETHPrice },
+      FTM: { token: FTM, price: FTMWETHPrice }
     }
   }, [
     chainId,
