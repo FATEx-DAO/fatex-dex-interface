@@ -39,3 +39,5 @@ cypress/fixtures/example.json
 .firebase
 
 .firebase-debug.log
+
+.eslintcache
