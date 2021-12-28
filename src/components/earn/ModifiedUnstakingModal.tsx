@@ -16,6 +16,7 @@ import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
 import { useFateRewardController } from '../../hooks/useContract'
+import { GITBOOK_HELP_LINK } from '../../constants'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -133,11 +134,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
                     <br />
                     Learn more {` `}
                     {/* // TODO: replace below hyperlink */}
-                    <a
-                      href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
-                      target={'_blank'}
-                      rel="noreferrer"
-                    >
+                    <a href={GITBOOK_HELP_LINK} target={'_blank'} rel="noreferrer">
                       here
                     </a>
                     . Fees charged if any amount is withdrawn are currently: <br /> <br />

@@ -27,7 +27,7 @@ import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { currencyId } from '../../utils/currencyId'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, GITBOOK_HELP_LINK } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 
 const PageWrapper = styled(AutoColumn)`
@@ -320,11 +320,7 @@ export default function Manage({
               <br />
               Locked rewards are distributed after the end of the epoch. Learn more{' '}
               {/* // TODO: replace below hyperlink */}
-              <a
-                href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
-                target={'_blank'}
-                rel="noreferrer"
-              >
+              <a href={GITBOOK_HELP_LINK} target={'_blank'} rel="noreferrer">
                 here
               </a>{' '}
               & please note - there <i>are</i> withdrawl fees.

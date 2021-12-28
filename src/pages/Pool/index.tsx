@@ -20,7 +20,7 @@ import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks
 import { Dots } from '../../components/swap/styleds'
 import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
 import { useStakingInfo } from '../../state/stake/hooks'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, GITBOOK_HELP_LINK } from '../../constants'
 
 import { Blockchain } from '@fatex-dao/sdk'
 import useBlockchain from '../../hooks/useBlockchain'
@@ -167,7 +167,18 @@ export default function Pool() {
               <RowBetween>
                 <TYPE.white fontSize={14}>
                   Fees are added to the pool, accrue in real time and can be claimed by withdrawing your liquidity.
-                  There are no withdrawal fees when withdrawing liquidity from a pool.
+                </TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>There are no deposit fees, but there are withdrawal fees.</TYPE.white>
+              </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  Learn more {` `}
+                  <a href={GITBOOK_HELP_LINK} target={'_blank'} rel="noreferrer">
+                    here
+                  </a>
+                  {' before depositing.'}
                 </TYPE.white>
               </RowBetween>
               {blockchain === Blockchain.ETHEREUM && (

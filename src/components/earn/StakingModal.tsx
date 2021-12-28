@@ -20,6 +20,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { BlueCard } from '../Card'
 import { calculateGasMargin } from '../../utils'
+import { GITBOOK_HELP_LINK } from '../../constants'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -142,7 +143,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
           Learn more {` `}
           {/* // TODO: replace with proper link */}
           <a
-            href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
+            href={GITBOOK_HELP_LINK}
             target={'_blank'}
             rel="noreferrer"
           >
