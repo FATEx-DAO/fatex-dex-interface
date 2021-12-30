@@ -170,6 +170,18 @@ export default function Pool() {
                   There are no withdrawal fees when withdrawing liquidity from a pool.
                 </TYPE.white>
               </RowBetween>
+              <RowBetween>
+                <TYPE.white fontSize={14}>
+                  <strong>NOTE:</strong> There are no deposit fees, but there are withdrawal fees. Learn more&nbsp;
+                  <ExternalLink
+                    style={{ textDecoration: 'underline' }}
+                    href={'https://fatexdao.gitbook.io/fatexdao/fatexdex-faq/rewards-locking-1'}
+                  >
+                    here
+                  </ExternalLink>
+                  &nbsp;before depositing.
+                </TYPE.white>
+              </RowBetween>
               {blockchain === Blockchain.ETHEREUM && (
                 <ExternalLink
                   style={{ color: 'white', textDecoration: 'underline' }}
