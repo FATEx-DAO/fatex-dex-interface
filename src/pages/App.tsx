@@ -28,6 +28,7 @@ import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, Redirec
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import usePlatformName from '../hooks/usePlatformName'
+import Banner from 'components/Banner'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -79,6 +80,9 @@ export default function App() {
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <Banner
+          text={`We are migrating to v2 and that rewards will go to 0 – and the date unlocking from epoch 2 will start`}
+        ></Banner>
         <HeaderWrapper>
           <Header />
         </HeaderWrapper>
