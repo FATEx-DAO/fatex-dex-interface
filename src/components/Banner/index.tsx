@@ -21,9 +21,9 @@ const CloseIcon = styled.div`
   }
 `
 
-const CloseColor = styled(Close)`
+const CloseColor = styled(Close)<{ color?: string }>`
   path {
-    stroke: ${({ theme }) => theme.text4};
+    stroke: ${({ color, theme }) => color ?? theme.text1};
   }
 `
 
@@ -41,7 +41,7 @@ export default function Banner({
   return (
     <StyledBox display={displayed ? 'flex' : 'none'} color={color} backgroundColor={backgroundColor}>
       {text}
-      <CloseIcon onClick={() => setDisplayed(!displayed)}>
+      <CloseIcon color={color} onClick={() => setDisplayed(!displayed)}>
         <CloseColor />
       </CloseIcon>
     </StyledBox>
