@@ -208,7 +208,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
           multiplier = JSBI.BigInt('125')
         } else {
-          multiplier = JSBI.BigInt('1')
+          // copy previous epoch's logic
+          multiplier = JSBI.BigInt('125')
         }
 
         let divisor
@@ -217,7 +218,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
           divisor = JSBI.BigInt('10')
         } else {
-          divisor = JSBI.BigInt('1')
+          // copy previous epoch's logic
+          divisor = JSBI.BigInt('10')
         }
 
         const baseBlockRewards = new TokenAmount(

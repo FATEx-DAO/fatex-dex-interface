@@ -146,13 +146,13 @@ export default function Manage({
     lockAmountPercent = '80%'
     unlockAmountPercent = '20%'
   } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
-    epochLengthWeeks = 8
+    epochLengthWeeks = 16
     lockAmountPercent = '92%'
     unlockAmountPercent = '8%'
   } else {
-    epochLengthWeeks = 13
-    lockAmountPercent = '?%'
-    unlockAmountPercent = '?%'
+    epochLengthWeeks = 16
+    lockAmountPercent = '92%'
+    unlockAmountPercent = '8%'
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
