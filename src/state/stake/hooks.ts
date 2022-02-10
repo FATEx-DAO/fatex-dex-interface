@@ -21,6 +21,7 @@ import { useQuery } from 'react-apollo'
 import { lockedRewardsByPool } from '../../apollo/queries'
 import { BIG_INT_ZERO } from '../../constants'
 import { rewardsClient } from '../../apollo/client'
+import { getEpochFromWeekIndex } from '../../constants/epoch'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -90,14 +91,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     JSBI.BigInt(302400)
   )
 
-  let epoch: JSBI
-  if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
-    epoch = JSBI.BigInt('0')
-  } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
-    epoch = JSBI.BigInt('1')
-  } else {
-    epoch = JSBI.BigInt('2')
-  }
+  const epoch = getEpochFromWeekIndex(weekIndex)
 
   const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
     client: rewardsClient,
@@ -206,19 +200,21 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
       ) {
         const startsAtBlock = parseInt(startBlock.result?.[0].toString() ?? '0')
 
+        const epoch = getEpochFromWeekIndex(weekIndex)
+
         let multiplier
-        if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+        if (JSBI.equal(epoch, JSBI.BigInt('0'))) {
           multiplier = JSBI.BigInt('5')
-        } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+        } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
           multiplier = JSBI.BigInt('125')
         } else {
           multiplier = JSBI.BigInt('1')
         }
 
         let divisor
-        if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
+        if (JSBI.equal(epoch, JSBI.BigInt('0'))) {
           divisor = JSBI.BigInt('1')
-        } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
+        } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
           divisor = JSBI.BigInt('10')
         } else {
           divisor = JSBI.BigInt('1')

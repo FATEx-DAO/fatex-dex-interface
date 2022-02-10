@@ -31,6 +31,7 @@ import { BIG_INT_ZERO } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
+import { getEpochFromWeekIndex } from '../../constants/epoch'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -135,14 +136,7 @@ export default function Manage({
     JSBI.BigInt(302400)
   )
 
-  let epoch: JSBI
-  if (JSBI.lessThan(weekIndex, JSBI.BigInt('13'))) {
-    epoch = JSBI.BigInt('0')
-  } else if (JSBI.lessThan(weekIndex, JSBI.BigInt('21'))) {
-    epoch = JSBI.BigInt('1')
-  } else {
-    epoch = JSBI.BigInt('2')
-  }
+  const epoch = getEpochFromWeekIndex(weekIndex)
 
   let epochLengthWeeks: number
   let lockAmountPercent: string
