@@ -28,7 +28,7 @@ const ContentWrapper = styled(AutoColumn)`
 `
 
 const ModalUpper = styled(DataCard)`
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   /*background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ff007a 0%, #021d43 100%);*/
   background: ${({ theme }) => theme.bg3};
 `
@@ -115,7 +115,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <TYPE.white fontWeight={700} fontSize={36}>
-                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} {govToken?.symbol}
+                {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} {govToken?.symbol}
               </TYPE.white>
             </CardSection>
             <Break />
@@ -165,7 +165,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               </TYPE.largeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
-                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} {govToken?.symbol}
+                  {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} {govToken?.symbol}
                 </Text>
               )}
               {parsedAddress && (

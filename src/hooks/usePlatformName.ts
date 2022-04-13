@@ -11,6 +11,6 @@ export default function usePlatformName(): string {
     case Blockchain.ETHEREUM:
       return 'FATExDEX'
     default:
-      return 'FATEx'
+      return 'FATExDEX'
   }
 }

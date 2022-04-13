@@ -33,6 +33,7 @@ export const BASE_WRAPPED_CURRENCY: Currency = generatedBaseCurrencies[1]
 export const BLOCKCHAIN: Blockchain = getBlockchain(NETWORK_CHAIN_ID)
 
 let networkLibrary: Web3Provider | undefined
+
 export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
@@ -47,8 +48,7 @@ export const injected = new InjectedConnector({
 export const walletconnect = new WalletConnectConnector({
   rpc: { 1: NETWORK_URL },
   bridge: 'https://bridge.walletconnect.org',
-  qrcode: true,
-  pollingInterval: 15000
+  qrcode: true
 })
 
 // mainnet only

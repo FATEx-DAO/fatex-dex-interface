@@ -1,4 +1,4 @@
-import { PRELOADED_PROPOSALS } from './../../constants/index'
+import { PRELOADED_PROPOSALS } from '../../constants'
 import { ChainId, TokenAmount } from '@fatex-dao/sdk'
 import { isAddress } from 'ethers/lib/utils'
 import { useGovernanceContract, useUniContract } from '../../hooks/useContract'
@@ -58,6 +58,8 @@ export function useProposalCount(chainId: ChainId): number | undefined {
   return undefined
 }
 
+const eventParser = new ethers.utils.Interface(GOV_ABI)
+
 /**
  * Need proposal events to get description data emitted from
  * new proposal event.
@@ -68,13 +70,13 @@ export function useDataFromEventLogs() {
   const govContract = useGovernanceContract(chainId ?? ChainId.HARMONY_MAINNET)
 
   // create filter for these specific events
-  const filter = {
-    ...govContract?.filters?.['ProposalCreated'](),
-    fromBlock: 0,
-    toBlock: 'latest'
-  }
-  const eventParser = new ethers.utils.Interface(GOV_ABI)
-
+  const filter = useMemo(() => {
+    return {
+      ...govContract?.filters?.['ProposalCreated'](),
+      fromBlock: 0,
+      toBlock: 'latest'
+    }
+  }, [govContract])
   useEffect(() => {
     async function fetchData() {
       const pastEvents = await library?.getLogs(filter)
@@ -106,7 +108,7 @@ export function useDataFromEventLogs() {
     if (!formattedEvents) {
       fetchData()
     }
-  }, [eventParser, filter, library, formattedEvents])
+  }, [filter, library, formattedEvents])
 
   return formattedEvents
 }
@@ -268,7 +270,9 @@ export function useVoteCallback(): {
 
   const voteCallback = useCallback(
     (proposalId: string | undefined, support: boolean) => {
-      if (!account || !govContract || !proposalId) return
+      if (!account || !govContract || !proposalId) {
+        return undefined
+      }
       const args = [proposalId, support]
       return govContract.estimateGas.castVote(...args, {}).then(estimatedGasLimit => {
         return govContract

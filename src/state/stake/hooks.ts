@@ -83,14 +83,15 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const blockNumber = useBlockNumber()
   const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
 
-  const weekIndex = JSBI.divide(
-    JSBI.subtract(
-      JSBI.BigInt(blockNumber ?? 0),
-      startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber ?? 0)
-    ),
-    JSBI.BigInt(302400)
-  )
-
+  const weekIndex = useMemo(() => {
+    return JSBI.divide(
+      JSBI.subtract(
+        JSBI.BigInt(blockNumber ?? 0),
+        startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber ?? 0)
+      ),
+      JSBI.BigInt(302400)
+    )
+  }, [blockNumber, startBlock.result])
   const epoch = getEpochFromWeekIndex(weekIndex)
 
   const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
@@ -323,21 +324,25 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     }, [])
   }, [
     chainId,
-    masterInfo,
-    tokensWithPrices,
     weth,
     govToken,
-    govTokenWETHPrice,
     pids,
+    masterInfo,
     poolInfos,
     userInfos,
     pendingRewards,
     lpTokenTotalSupplies,
     lpTokenReserves,
     lpTokenBalances,
-    blocksPerYear,
+    poolRewardsPerBlock,
     startBlock,
-    poolRewardsPerBlock
+    currentBlock,
+    weekIndex,
+    lockedRewardsMap,
+    tokensWithPrices,
+    wethBusdPrice,
+    govTokenWETHPrice,
+    blocksPerYear
   ])
 }
 

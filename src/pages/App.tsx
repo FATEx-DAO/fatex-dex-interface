@@ -28,6 +28,7 @@ import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, Redirec
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
 import usePlatformName from '../hooks/usePlatformName'
+import URLWarning from '../components/Header/URLWarning'
 
 const AppWrapper = styled.div`
   display: flex;
@@ -79,6 +80,7 @@ export default function App() {
     <Suspense fallback={null}>
       <Route component={DarkModeQueryParamReader} />
       <AppWrapper>
+        <URLWarning />
         <HeaderWrapper>
           <Header />
         </HeaderWrapper>

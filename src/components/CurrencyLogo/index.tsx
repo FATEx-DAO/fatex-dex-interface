@@ -83,7 +83,7 @@ export default function CurrencyLogo({
     return <StyledEthereumLogo src={EthereumLogo} size={size} style={style} />
   } else {
     const wrappedCurrency = currency instanceof Token ? baseCurrencies(currency.chainId)[1] : undefined
-    if (currency === HARMONY || currency === (wrappedCurrency && blockchain === Blockchain.HARMONY)) {
+    if (currency === HARMONY || (currency === wrappedCurrency && blockchain === Blockchain.HARMONY)) {
       return <StyledEthereumLogo src={HarmonyLogo} size={size} style={style} />
     } else if (
       currency === BINANCE_COIN ||

@@ -174,7 +174,7 @@ export const WEB_INTERFACES: { [chainId in ChainId]: string[] } = {
   [ChainId.KOVAN]: [''],
   [ChainId.BSC_MAINNET]: [''],
   [ChainId.BSC_TESTNET]: [''],
-  [ChainId.HARMONY_MAINNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org'],
+  [ChainId.HARMONY_MAINNET]: ['app.fatex.fi', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org'],
   [ChainId.HARMONY_TESTNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org']
 }
 

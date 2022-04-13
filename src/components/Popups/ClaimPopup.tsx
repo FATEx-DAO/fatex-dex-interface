@@ -3,7 +3,7 @@ import React, { useEffect } from 'react'
 import { X } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
 import getTokenLogo from '../../utils/getTokenLogo'
-import { ButtonPrimary } from '../../components/Button'
+import { ButtonPrimary } from '../Button'
 import { useActiveWeb3React } from '../../hooks'
 import { ApplicationModal } from '../../state/application/actions'
 import {
@@ -26,7 +26,7 @@ const StyledClaimPopup = styled(AutoColumn)`
   overflow: hidden;
   position: relative;
   max-width: 360px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 `
 
 const StyledClose = styled(X)`
@@ -87,7 +87,7 @@ export default function ClaimPopup() {
           <AutoColumn style={{ padding: '2rem 0', zIndex: 10 }} justify="center">
             <UniToken width="48px" src={getTokenLogo()} />{' '}
             <TYPE.white style={{ marginTop: '1rem' }} fontSize={36} fontWeight={600}>
-              {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI
+              {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} UNI
             </TYPE.white>
             <TYPE.white style={{ paddingTop: '1.25rem', textAlign: 'center' }} fontWeight={600} color="white">
               <span role="img" aria-label="party">

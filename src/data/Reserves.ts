@@ -36,7 +36,7 @@ export function usePairs(
       tokens.map(([tokenA, tokenB]) => {
         return tokenA && tokenB && !tokenA.equals(tokenB) ? Pair.getAddress(tokenA, tokenB, pairType) : undefined
       }),
-    [tokens]
+    [pairType, tokens]
   )
 
   const results = useMultipleContractSingleData(pairAddresses, PAIR_INTERFACE, 'getReserves')
@@ -57,7 +57,7 @@ export function usePairs(
         new Pair(new TokenAmount(token0, reserve0.toString()), new TokenAmount(token1, reserve1.toString()), pairType)
       ]
     })
-  }, [results, tokens])
+  }, [pairType, results, tokens])
 }
 
 export function usePair(

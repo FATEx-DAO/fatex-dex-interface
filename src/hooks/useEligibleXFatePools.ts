@@ -37,5 +37,5 @@ export default function useEligibleXFatePools(
     }
 
     return [claimFrom, claimTo]
-  }, [pairs, balanceResultsMap])
+  }, [pairs, balanceResultsMap, totalSupplies])
 }

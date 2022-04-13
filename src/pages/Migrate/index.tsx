@@ -178,7 +178,7 @@ export default function Pool() {
   const [sushiBalances] = useTokenBalancesWithLoadingIndicator(account ?? undefined, sushiLpTokens)
   const sushiPairsWithBalances = useMemo(() => {
     return sushiPairs.filter(([, pair]) => pair && sushiBalances[pair.liquidityToken.address]?.greaterThan('0'))
-  }, [sushiLpTokens])
+  }, [sushiBalances, sushiPairs])
   const sushiMigratorContract = useSushiMigrator()
 
   const viperPairs = usePairs(trackedTokenPairs, PairType.VIPER)
@@ -190,7 +190,7 @@ export default function Pool() {
     return viperPairs.filter(([, pair]) => {
       return pair && viperBalances[pair.liquidityToken.address]?.greaterThan('0')
     })
-  }, [viperLpTokens])
+  }, [viperBalances, viperPairs])
   const viperMigratorContract = useViperMigrator()
 
   const kingdomPairs = usePairs(trackedTokenPairs, PairType.DEFI_KINGDOM)
@@ -202,7 +202,7 @@ export default function Pool() {
     return kingdomPairs.filter(([, pair]) => {
       return pair && kingdomBalances[pair.liquidityToken.address]?.greaterThan('0')
     })
-  }, [kingdomLpTokens])
+  }, [kingdomBalances, kingdomPairs])
   const kingdomMigratorContract = useDeFiKingdomsMigrator()
 
   const selectedPairsToMigrate = useMemo(() => {
@@ -216,7 +216,7 @@ export default function Pool() {
       console.error('invalid selectedTabIndex at selectedPairsToMigrate')
       return []
     }
-  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
+  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances, kingdomPairsWithBalances])
   const selectedPairBalances = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperBalances
@@ -228,7 +228,7 @@ export default function Pool() {
       console.error('invalid selectedTabIndex at selectedPairBalances')
       return {}
     }
-  }, [selectedTabIndex, viperBalances, sushiBalances])
+  }, [selectedTabIndex, viperBalances, sushiBalances, kingdomBalances])
   const selectedPairsWithBalancesMap = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperPairsWithBalances
@@ -240,7 +240,7 @@ export default function Pool() {
       console.error('invalid selectedTabIndex at selectedPairsToMigrate')
       return []
     }
-  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances])
+  }, [selectedTabIndex, viperPairsWithBalances, sushiPairsWithBalances, kingdomPairsWithBalances])
   const selectedPair = useMemo(() => {
     if (typeof selectedPairIndex === 'number' && selectedPairIndex < selectedPairsToMigrate.length) {
       return selectedPairsToMigrate[selectedPairIndex][1]
@@ -252,7 +252,7 @@ export default function Pool() {
       return selectedPairBalances[selectedPair.liquidityToken.address]
     }
     return undefined
-  }, [selectedPair, selectedPairsWithBalancesMap])
+  }, [selectedPair, selectedPairBalances])
   const selectedMigratorContract = useMemo(() => {
     if (selectedTabIndex === 0) {
       return viperMigratorContract

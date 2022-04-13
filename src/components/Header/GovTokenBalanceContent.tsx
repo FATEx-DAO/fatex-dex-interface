@@ -136,7 +136,7 @@ export default function GovTokenBalanceContent({
     return allPairs
       .filter(pair => pair[0].address === govToken.address || pair[1].address === govToken.address)
       .map(pair => Pair.getAddress(pair[0], pair[1]))
-  }, [govToken])
+  }, [allPairs, govToken])
   const lpBalanceMap = useAddressesTokenBalance(pairAddresses, govToken)
   const lpBalance = govToken
     ? Object.values(lpBalanceMap).reduce<TokenAmount>((memo, value) => {

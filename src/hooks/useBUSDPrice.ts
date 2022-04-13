@@ -16,7 +16,9 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
   const busdTicker =
     chainId === ChainId.HARMONY_TESTNET ? '1BUSD' : chainId === ChainId.HARMONY_MAINNET ? '1USDC' : 'BUSD'
   const busd: Token | undefined = getToken(chainId, busdTicker)
-  const divisor = busdTicker.includes('BUSD') ? JSBI.BigInt('1') : JSBI.BigInt('1000000000000')
+  const divisor = useMemo(() => {
+    return busdTicker.includes('BUSD') ? JSBI.BigInt('1') : JSBI.BigInt('1000000000000')
+  }, [busdTicker])
 
   const tokenPairs: [Currency | undefined, Currency | undefined][] = useMemo(
     () => [
@@ -81,5 +83,17 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
       }
     }
     return undefined
-  }, [chainId, busd, currency, ethPair, ethPairState, busdEthPair, busdEthPairState, busdPair, busdPairState, wrapped])
+  }, [
+    currency,
+    wrapped,
+    chainId,
+    busd,
+    ethPair,
+    busdEthPair,
+    busdPairState,
+    busdPair,
+    ethPairState,
+    busdEthPairState,
+    divisor
+  ])
 }

@@ -7,12 +7,13 @@ import { useTokenBalance } from '../state/wallet/hooks'
 import useGovernanceToken from 'hooks/useGovernanceToken'
 import { useTotalSupply } from '../data/TotalSupply'
 
+const multiplier = utils.parseEther('1').toString()
+
 export default function useXFateRatio(): Fraction | undefined {
   const govToken = useGovernanceToken()
   const xFate = useXFateToken()
   const xFateTotalSupply = useTotalSupply(xFate)
   const xFateGovTokenBalance = useTokenBalance(xFate?.address, govToken)
-  const multiplier = utils.parseEther('1').toString()
 
   return useMemo(() => {
     if (xFateTotalSupply?.equalTo('0')) {
@@ -22,5 +23,5 @@ export default function useXFateRatio(): Fraction | undefined {
         ? xFateGovTokenBalance?.divide(xFateTotalSupply?.raw.toString()).multiply(multiplier)
         : undefined
     }
-  }, [govToken, xFate, xFateTotalSupply, xFateGovTokenBalance])
+  }, [xFateTotalSupply, xFateGovTokenBalance])
 }

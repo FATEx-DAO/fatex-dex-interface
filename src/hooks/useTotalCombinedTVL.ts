@@ -13,5 +13,5 @@ export default function useTotalCombinedTVL(stakingInfos: StakingInfo[]): Record
       totalXFateTVL: totalXFateTVL ? totalXFateTVL : undefined,
       totalCombinedTVL: totalStakingPoolTVL && totalXFateTVL ? totalStakingPoolTVL.add(totalXFateTVL) : undefined
     }
-  }, [stakingInfos, totalStakingPoolTVL, totalXFateTVL])
+  }, [totalStakingPoolTVL, totalXFateTVL])
 }

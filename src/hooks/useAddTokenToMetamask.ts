@@ -1,4 +1,4 @@
-import { getTokenFallbackLogoURL } from './../components/CurrencyLogo/index'
+import { getTokenFallbackLogoURL } from '../components/CurrencyLogo'
 import { wrappedCurrency } from 'utils/wrappedCurrency'
 import { Currency, Token } from '@fatex-dao/sdk'
 import { useCallback, useState } from 'react'
@@ -19,7 +19,6 @@ export default function useAddTokenToMetamask(
         .request({
           method: 'wallet_watchAsset',
           params: {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore // need this for incorrect ethers provider type
             type: 'ERC20',
             options: {

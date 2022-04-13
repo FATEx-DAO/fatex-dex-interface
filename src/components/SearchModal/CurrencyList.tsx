@@ -186,7 +186,7 @@ export default function CurrencyList({
       formatted = [...formatted.slice(0, breakIndex), undefined, ...formatted.slice(breakIndex, formatted.length)]
     }
     return formatted
-  }, [breakIndex, baseCurrencyList, currencies, showETH])
+  }, [showETH, currencies, baseCurrencyList, breakIndex, chainId])
 
   const theme = useTheme()
 

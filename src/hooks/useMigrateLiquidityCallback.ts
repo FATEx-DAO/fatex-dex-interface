@@ -121,5 +121,5 @@ export function useMigrateLiquidityCallback(
         console.debug('Failed to migrate LP token', error)
         throw error
       })
-  }, [pair, pairType, amount, contract, addTransaction])
+  }, [burnInfoError, pair, pairType, amount, contract, parsedAmounts, allowedSlippage, deadline, addTransaction])
 }

@@ -19,5 +19,5 @@ export default function useXFateTVL(): Fraction | undefined {
 
   return useMemo(() => {
     return govTokenBusdPrice ? xFateGovTokenBalance?.multiply(govTokenBusdPrice?.raw) : undefined
-  }, [govToken, govTokenBusdPrice, xFate, xFateGovTokenBalance])
+  }, [govTokenBusdPrice, xFateGovTokenBalance])
 }
