@@ -1,4 +1,4 @@
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@fatex-dao/default-token-list'
 import { ChainId, Token } from '@fatex-dao/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
@@ -45,7 +45,8 @@ const EMPTY_LIST: TokenAddressMap = {
   [ChainId.BSC_MAINNET]: {},
   [ChainId.BSC_TESTNET]: {},
   [ChainId.HARMONY_MAINNET]: {},
-  [ChainId.HARMONY_TESTNET]: {}
+  [ChainId.HARMONY_TESTNET]: {},
+  [ChainId.POLYGON_MAINNET]: {}
 }
 
 const listCache: WeakMap<TokenList, TokenAddressMap> | null =
@@ -104,7 +105,8 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
     56: { ...map1[56], ...map2[56] },
     97: { ...map1[97], ...map2[97] },
     1666600000: { ...map1[1666600000], ...map2[1666600000] },
-    1666700000: { ...map1[1666700000], ...map2[1666700000] }
+    1666700000: { ...map1[1666700000], ...map2[1666700000] },
+    137: { ...map1[137], ...map2[137] }
   }
 }
 

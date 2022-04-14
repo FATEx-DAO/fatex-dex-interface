@@ -200,7 +200,7 @@ export default function WalletModal({
     connector &&
       activate(connector, undefined, true).catch(error => {
         if (error instanceof UnsupportedChainIdError) {
-          activate(connector) // a little janky...can't use setError because the connector isn't set
+          activate(connector) // a little janky... can't use setError because the connector isn't set
         } else {
           setPendingError(true)
         }
@@ -263,7 +263,7 @@ export default function WalletModal({
               />
             )
           } else {
-            return null //dont want to return install twice
+            return null // don't want to return `install` twice
           }
         }
         // don't return metamask if injected provider isn't metamask
@@ -292,7 +292,7 @@ export default function WalletModal({
             color={option.color}
             link={option.href}
             header={option.name}
-            subheader={null} //use option.descriptio to bring back multi-line
+            subheader={null} // use option.description to bring back multi-line
             icon={require('../../assets/images/' + option.iconName).default}
           />
         )
@@ -375,6 +375,14 @@ export default function WalletModal({
                 <>
                   <span>New to Harmony? &nbsp;</span>{' '}
                   <ExternalLink href="https://docs.harmony.one/home/network/wallets/browser-extensions-wallets/metamask-wallet">
+                    Learn more about wallets
+                  </ExternalLink>
+                </>
+              )}
+              {blockchain === Blockchain.POLYGON && (
+                <>
+                  <span>New to Polygon? &nbsp;</span>{' '}
+                  <ExternalLink href="https://docs.polygon.technology/docs/develop/wallets/getting-started">
                     Learn more about wallets
                   </ExternalLink>
                 </>

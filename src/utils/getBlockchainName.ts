@@ -14,6 +14,8 @@ export default function getBlockchainName(chainId: ChainId | undefined): string 
     case ChainId.HARMONY_MAINNET:
     case ChainId.HARMONY_TESTNET:
       return 'Harmony'
+    case ChainId.POLYGON_MAINNET:
+      return 'Polygon'
     default:
       return 'Ethereum'
   }

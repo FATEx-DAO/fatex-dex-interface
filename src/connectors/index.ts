@@ -38,7 +38,7 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
-const supportedChainIds = [1666600000, 1666700000]
+const supportedChainIds = [137]
 
 export const injected = new InjectedConnector({
   supportedChainIds: supportedChainIds

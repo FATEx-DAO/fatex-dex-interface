@@ -5,7 +5,7 @@ import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BigNumber } from '@ethersproject/bignumber'
 import { abi as IUniswapV2Router02ABI } from '../constants/abis/uniswap-router.json'
 import { ROUTER_ADDRESSES } from '../constants'
-import { ChainId, JSBI, Percent, Token, CurrencyAmount, Currency, DEFAULT_CURRENCIES } from '@fatex-dao/sdk'
+import { ChainId, Currency, CurrencyAmount, DEFAULT_CURRENCIES, JSBI, Percent, Token } from '@fatex-dao/sdk'
 import { TokenAddressMap } from '../state/lists/hooks'
 import { useActiveWeb3React } from '../hooks/index'
 
@@ -27,7 +27,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   56: 'bscscan.com',
   97: 'testnet.bscscan.com',
   1666600000: 'explorer.harmony.one/#',
-  1666700000: 'explorer.testnet.harmony.one/#'
+  1666700000: 'explorer.testnet.harmony.one/#',
+  137: 'polygonscan.com'
 }
 
 export function getEtherscanLink(
@@ -36,7 +37,7 @@ export function getEtherscanLink(
   type: 'transaction' | 'token' | 'address' | 'block'
 ): string {
   let prefix = `https://${ETHERSCAN_PREFIXES[chainId] || ETHERSCAN_PREFIXES[1]}`
-  prefix = [56, 97, 1666600000, 1666700000].includes(chainId) ? prefix : `${prefix}etherscan.io`
+  prefix = [56, 97, 1666600000, 1666700000, 137].includes(chainId) ? prefix : `${prefix}etherscan.io`
 
   switch (type) {
     case 'transaction': {
@@ -112,8 +113,7 @@ export function getRouterContract(chainId: number, library: Web3Provider, accoun
 
 export function useRouterContractAddress(): string | undefined {
   const { chainId } = useActiveWeb3React()
-  const routerAddress = (chainId && ROUTER_ADDRESSES[chainId]) as string
-  return routerAddress
+  return (chainId && ROUTER_ADDRESSES[chainId]) as string
 }
 
 export function escapeRegExp(string: string): string {

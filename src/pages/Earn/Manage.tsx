@@ -1,18 +1,17 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
 import { JSBI } from '@fatex-dao/sdk'
-import { RouteComponentProps } from 'react-router-dom'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
-import { useWalletModalToggle, useBlockNumber } from '../../state/application/hooks'
+import { useWalletModalToggle } from '../../state/application/hooks'
 import { TYPE } from '../../theme'
 
 import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
 import { useStakingInfo } from '../../state/stake/hooks'
@@ -32,6 +31,7 @@ import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
 import { getEpochFromWeekIndex } from '../../constants/epoch'
+import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -70,14 +70,15 @@ const StyledBottomCard = styled(DataCard)<{ dim: any }>`
 
 const PoolData = styled(DataCard)`
   background: none;
-  /*border: 1px solid ${({ theme }) => theme.bg4};*/
+    /*border: 1px solid ${({ theme }) => theme.bg4};*/
   padding: 1rem 0.5rem;
   z-index: 1;
-  
+
   > div > div {
     :nth-of-type(1) {
       font-size: 18px;
     }
+
     :nth-of-type(2) {
       font-size: 26px;
     }
@@ -124,16 +125,18 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
-  const blockNumber = useBlockNumber() ?? 0
+  const currentTimestamp = useCurrentBlockTimestamp() ?? 0
   const fateRewardController = useFateRewardController()
-  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+  const rewardsStartTimestamp = useSingleCallResult(fateRewardController, 'startTimestamp')
 
   const weekIndex = JSBI.divide(
     JSBI.subtract(
-      JSBI.BigInt(blockNumber),
-      startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber)
+      JSBI.BigInt(currentTimestamp),
+      rewardsStartTimestamp.result?.[0]
+        ? JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString())
+        : JSBI.BigInt(currentTimestamp)
     ),
-    JSBI.BigInt(302400)
+    JSBI.BigInt(604800)
   )
 
   const epoch = getEpochFromWeekIndex(weekIndex)
@@ -142,28 +145,23 @@ export default function Manage({
   let lockAmountPercent: string
   let unlockAmountPercent: string
   if (JSBI.equal(epoch, JSBI.BigInt('0'))) {
-    epochLengthWeeks = 13
-    lockAmountPercent = '80%'
-    unlockAmountPercent = '20%'
-  } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
-    epochLengthWeeks = 16
+    epochLengthWeeks = 52
     lockAmountPercent = '92%'
     unlockAmountPercent = '8%'
   } else {
-    epochLengthWeeks = 16
+    epochLengthWeeks = 52
     lockAmountPercent = '92%'
     unlockAmountPercent = '8%'
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
 
-  const currentBlock = useBlockNumber()
-
   const rewardsStarted = useMemo<boolean>(() => {
-    return stakingInfo && currentBlock
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentBlock), JSBI.BigInt(stakingInfo.startBlock))
+    return rewardsStartTimestamp && currentTimestamp
+      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), JSBI.BigInt(rewardsStartTimestamp)) &&
+          JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
       : false
-  }, [stakingInfo, currentBlock])
+  }, [rewardsStartTimestamp, currentTimestamp])
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)

@@ -561,7 +561,7 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">
-          FATEx<span>DAO</span>
+          FATEx<span>FI</span>
         </Title>
         <MobileHeader>
           <HeaderLinks>
