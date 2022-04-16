@@ -10,7 +10,7 @@ import { ApplicationModal } from '../../state/application/actions'
 import { useModalOpen, useToggleSelfClaimModal } from '../../state/application/hooks'
 import { useClaimCallback, useUserClaimData, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useUserHasSubmittedClaim } from '../../state/transactions/hooks'
-import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, UniTokenAnimated } from '../../theme'
+import { CloseIcon, CustomLightSpinner, ExternalLink, TYPE, FateTokenAnimated } from '../../theme'
 import { getEtherscanLink } from '../../utils'
 import { ButtonPrimary } from '../Button'
 import { AutoColumn, ColumnCenter } from '../Column'
@@ -179,7 +179,7 @@ export default function ClaimModal() {
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={getTokenLogo()} />
+              <FateTokenAnimated width="72px" src={getTokenLogo()} />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>

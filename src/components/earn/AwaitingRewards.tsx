@@ -14,7 +14,6 @@ export default function AwaitingRewards() {
   const govToken = useGovernanceToken()
 
   const rewardsStartTimestamp = useSingleCallResult(fateRewardController, 'startTimestamp').result?.[0]
-  console.log('rewardsStartTimestamp', rewardsStartTimestamp)
   const currentTimestamp = useCurrentBlockTimestamp()
 
   const rewardsStarted = useMemo<boolean>(() => {
@@ -24,14 +23,15 @@ export default function AwaitingRewards() {
       : false
   }, [rewardsStartTimestamp, currentTimestamp])
 
-  const rewardStartString = JSBI.equal(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
-    ? moment(new Date(JSBI.BigInt(rewardsStartTimestamp).toString())).format('lll')
-    : 'Unknown Timestamp'
+  const rewardStartString =
+    rewardsStartTimestamp && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
+      ? moment(new Date(JSBI.BigInt(rewardsStartTimestamp).toString())).format('lll')
+      : 'Unknown Timestamp'
 
   return (
     <>
       {rewardsStartTimestamp && !rewardsStarted && (
-        <BlueCard>
+        <BlueCard width={'100%'}>
           <AutoColumn gap="10px">
             <TYPE.link fontWeight={400} color={'text1'}>
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>

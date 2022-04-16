@@ -49,7 +49,7 @@ export const GOVERNANCE_START_BLOCK: { [chainId in ChainId]: number } = {
   [ChainId.POLYGON_MAINNET]: 0
 }
 
-export const TIMELOCK_ADDRESS = {
+export const TIMELOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
   [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
@@ -58,7 +58,8 @@ export const TIMELOCK_ADDRESS = {
   [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: '0x6B7A6163714d3D3244A74be798E0194df6650D6A',
-  [ChainId.HARMONY_TESTNET]: '0x73499F9B609fBb61291C90230454D73CC849e8cC'
+  [ChainId.HARMONY_TESTNET]: '0x73499F9B609fBb61291C90230454D73CC849e8cC',
+  [ChainId.POLYGON_MAINNET]: ZERO_ONE_ADDRESS
 }
 
 export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
@@ -285,10 +286,14 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]: { [address: string]:
   }
 }
 
+export const MERKLE_DISTRIBUTOR_PROOF_URL =
+  'https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/0x5215eb008425edf5fe396be6bfb783296de51084.json'
+
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: undefined,
   [ChainId.HARMONY_MAINNET]: undefined,
-  [ChainId.HARMONY_TESTNET]: undefined
+  [ChainId.HARMONY_TESTNET]: undefined,
+  [ChainId.POLYGON_MAINNET]: undefined
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -308,7 +313,12 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC],
-  [ChainId.POLYGON_MAINNET]: [...WETH_ONLY[ChainId.POLYGON_MAINNET], POLYGON_PAXG, POLYGON_USDC],
+  [ChainId.POLYGON_MAINNET]: [
+    ...WETH_ONLY[ChainId.POLYGON_MAINNET],
+    GOVERNANCE_TOKEN[ChainId.POLYGON_MAINNET],
+    POLYGON_PAXG,
+    POLYGON_USDC
+  ],
   [ChainId.HARMONY_MAINNET]: [
     ...WETH_ONLY[ChainId.HARMONY_MAINNET],
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
@@ -345,7 +355,6 @@ export const SUGGESTED_BASES: ChainTokenList = {
     getTokenWithDefault(ChainId.HARMONY_TESTNET, 'FATE')
   ],
   [ChainId.POLYGON_MAINNET]: [
-    ...WETH_ONLY[ChainId.POLYGON_MAINNET],
     getTokenWithDefault(ChainId.POLYGON_MAINNET, 'FATE'),
     getTokenWithDefault(ChainId.POLYGON_MAINNET, 'PAXG'),
     getTokenWithDefault(ChainId.POLYGON_MAINNET, 'USDC')

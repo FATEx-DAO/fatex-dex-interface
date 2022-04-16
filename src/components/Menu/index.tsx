@@ -221,12 +221,10 @@ export default function Menu() {
           <Book size={14} />
           Green Paper
         </MenuItem>
-        {blockchain === Blockchain.HARMONY && (
-          <MenuItem id="link" href="https://info.fatex.io">
-            <PieChart size={14} />
-            DEX Analytics
-          </MenuItem>
-        )}
+        <MenuItem id="link" href="https://info.fatex.io">
+          <PieChart size={14} />
+          DEX Analytics
+        </MenuItem>
         <SocialLinks>
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
             <img src={TwitterLogo} alt={'twitter logo'} />
@@ -250,11 +248,6 @@ export default function Menu() {
             <img src={LinkedinLogo} alt={'linkedin logo'} />
           </a>
         </SocialLinks>
-        {account && blockchain === Blockchain.ETHEREUM && (
-          <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-            Claim {govToken?.symbol}
-          </ButtonPrimary>
-        )}
       </StyledMenuDesktop>
       <StyledMenuMobile ref={node as any} isStaking={isStaking}>
         <StyledMenuButton onClick={toggle}>
@@ -282,12 +275,10 @@ export default function Menu() {
               <Book size={14} />
               Green Paper
             </MenuItem>
-            {blockchain === Blockchain.HARMONY && (
-              <MenuItem id="link" href="https://info.fatex.io">
-                <PieChart size={14} />
-                DEX Analytics
-              </MenuItem>
-            )}
+            <MenuItem id="link" href="https://info.fatex.io">
+              <PieChart size={14} />
+              DEX Analytics
+            </MenuItem>
             <SocialLinks>
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
                 <img src={TwitterLogo} alt={'twitter logo'} />
@@ -311,9 +302,9 @@ export default function Menu() {
                 <img src={LinkedinLogo} alt={'linkedin logo'} />
               </a>
             </SocialLinks>
-            {account && blockchain === Blockchain.ETHEREUM && (
+            {account && blockchain === Blockchain.POLYGON && (
               <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-                Claim {govToken?.symbol}
+                CLAIM {govToken?.symbol}
               </ButtonPrimary>
             )}
           </MenuFlyout>

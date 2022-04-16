@@ -244,7 +244,6 @@ export default function Earn() {
       />
 
       <PoolSectionsWrapper>
-        <AwaitingRewards />
         <PoolSection>
           <Pool />
         </PoolSection>
@@ -265,7 +264,7 @@ export default function Earn() {
                     LP tokens you hold for any of the pairs shown below can be staked to receive rewards.
                   </TYPE.white>
                   <TYPE.white fontSize={14}>
-                    Stake your LP tokens to receive FATE, the FATExDAO governance token.
+                    Stake your LP tokens to receive FATE, the FATExFI governance token.
                   </TYPE.white>
                 </InfoLeft>
                 <InfoRight>
@@ -284,6 +283,10 @@ export default function Earn() {
             </TitleCard>
             <CardBGImage />
             <CardNoise />
+          </StakingInfo>
+
+          <StakingInfo>
+            <AwaitingRewards />
           </StakingInfo>
 
           <StakingSection>

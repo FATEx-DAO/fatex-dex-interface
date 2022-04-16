@@ -7,7 +7,7 @@ import { abi as FATE_REWARD_CONTROLLER_READER_ABI } from '../constants/abis/fate
 import { abi as LIQUIDITY_MIGRATOR_ABI } from '../constants/abis/liquidity-migrator.json'
 import { abi as X_FATE_ABI } from '../constants/abis/xfate-token.json'
 import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/fee-token-converter-to-fate.json'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import { abi as MERKLE_DISTRIBUTOR_ABI } from '../constants/abis/merkle-distributor.json'
 import { ChainId, WETH } from '@fatex-dao/sdk'
 import { abi as IUniswapV2PairABI } from '../constants/abis/uniswap-v2-pair.json'
 import { useMemo } from 'react'

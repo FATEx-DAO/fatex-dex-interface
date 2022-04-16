@@ -2432,10 +2432,10 @@
   resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-12.0.0.tgz#afce67b7e923007a14fae3f08f46cf0617b66295"
   integrity sha512-OxDGqMWjND+gSczKq2pBcHEhh9+cdaqgxtb90S1LXDYxv6omd5o0YhTokF0TkmSiVLc6Seof7gjPMUmL8AG6Vw==
 
-"@fatex-dao/sdk-extra@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-2.2.0.tgz#2e0fe26acead37018f1744e23ad4b3c919492c31"
-  integrity sha512-8GRucbP8WpcEwYQ0wJ8SpCAZwf0tqGK0tgumHUy9UFJHlcN6uD7yLKqBzB/gEMcrdZYMc1sQGW6S2Fb6VT6wuA==
+"@fatex-dao/sdk-extra@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-2.2.1.tgz#cb1253f9f2d8fc65f2226325aaea9740d425d102"
+  integrity sha512-nhbswa4QC7NqJTQtVe0xNOOxio8d/wHZWjppJ0nmiNYTnwuw43xqVfj6re4q81bR3mCZI8fTtpGxyzK2xtTpJQ==
   dependencies:
     "@ethersproject/address" "^5.3.0"
     "@ethersproject/contracts" "^5.3.0"
@@ -2443,14 +2443,14 @@
     "@ethersproject/solidity" "^5.3.0"
     "@fatex-dao/community-token-list" "^3.0.0"
     "@fatex-dao/default-token-list" "^12.0.0"
-    "@fatex-dao/sdk" "^2.2.0"
+    "@fatex-dao/sdk" "^2.2.1"
     "@types/lodash.random" "^3.2.6"
     lodash.random "^3.2.0"
 
-"@fatex-dao/sdk@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk/-/sdk-2.2.0.tgz#e8bd1bc2a7454aba1d1cb2d397f8ee61b6b93035"
-  integrity sha512-rPqskOWFbJg2yRHVYOSWBOZqLNtvSp3zUo8BnaLJLt76tcIm3FUVhUZEFaNln9qsv6nMhjuunzPIUNeTEKlL2g==
+"@fatex-dao/sdk@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk/-/sdk-2.2.1.tgz#bd9fd9b1a366bb9092bc305a45e8877f01f47f48"
+  integrity sha512-9XbbdAt8xPDBCvSm8avB+jUOk7QvIlKcSTQDM/3MiG7+IGo5bcPtdJfaevLEAM2j1gSaL+CNulZBXEOHkDTMmg==
   dependencies:
     "@uniswap/v2-core" "^1.0.1"
     big.js "^5.2.2"

@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled from 'styled-components'
 import { DataCard, CardSection, Break } from '../earn/styled'
 import { RowBetween } from '../Row'
-import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, UniTokenAnimated } from '../../theme'
+import { TYPE, ExternalLink, CloseIcon, CustomLightSpinner, FateTokenAnimated } from '../../theme'
 import { ButtonPrimary } from '../Button'
 import { useClaimCallback, useUserUnclaimedAmount, useUserHasAvailableClaim } from '../../state/claim/hooks'
 import getTokenLogo from '../../utils/getTokenLogo'
@@ -22,6 +22,7 @@ import { getEtherscanLink, shortenAddress } from '../../utils'
 import useBlockchain from '../../hooks/useBlockchain'
 import getExplorerName from '../../utils/getExplorerName'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import useTheme from '../../hooks/useTheme'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -50,6 +51,7 @@ const ConfirmedIcon = styled(ColumnCenter)`
 export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boolean; onDismiss: () => void }) {
   const { chainId } = useActiveWeb3React()
 
+  const theme = useTheme()
   const blockchain = useBlockchain()
   const explorerName = getExplorerName(blockchain)
   const govToken = useGovernanceToken()
@@ -66,7 +68,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
   // used for UI loading states
   const [attempting, setAttempting] = useState<boolean>(false)
 
-  // monitor the status of the claim from contracts and txns
+  // monitor the status of the claim from contracts and transactions
   const { claimCallback } = useClaimCallback(parsedAddress)
   const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(parsedAddress)
 
@@ -123,12 +125,18 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
               Enter an address to trigger a {govToken?.symbol} claim. If the address has any claimable{' '}
-              {govToken?.symbol}
-              it will be sent to them on submission.
+              {govToken?.symbol} it will be sent to them on submission.
+              <br />
+              <br />
+              Addresses that are eligible for claiming FATE either 1) participated in FATE&apos;s ecosystem on Harmony
+              or 2) have locked rewards from a prior epoch that have begun vesting.
             </TYPE.subHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
-            {parsedAddress && !hasAvailableClaim && (
+            {parsedAddress && unclaimedAmount.equalTo('0') && (
               <TYPE.error error={true}>Address has no available claim</TYPE.error>
+            )}
+            {parsedAddress && !hasAvailableClaim && (
+              <TYPE.error error={true}>Address may not claim until vesting starts</TYPE.error>
             )}
             <ButtonPrimary
               disabled={!isAddress(parsedAddress ?? '') || !hasAvailableClaim}
@@ -155,21 +163,21 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
             {!claimConfirmed ? (
               <CustomLightSpinner src={Circle} alt="loader" size={'90px'} />
             ) : (
-              <UniTokenAnimated width="72px" src={getTokenLogo()} />
+              <FateTokenAnimated width="72px" src={getTokenLogo()} />
             )}
           </ConfirmedIcon>
           <AutoColumn gap="100px" justify={'center'}>
             <AutoColumn gap="12px" justify={'center'}>
-              <TYPE.largeHeader fontWeight={600} color="black">
+              <TYPE.largeHeader fontWeight={600} color={theme.text1}>
                 {claimConfirmed ? 'Claimed' : 'Claiming'}
               </TYPE.largeHeader>
               {!claimConfirmed && (
-                <Text fontSize={36} color={'#ff007a'} fontWeight={800}>
+                <Text fontSize={36} color={theme.text1} fontWeight={800}>
                   {unclaimedAmount?.toFixed(0, { groupSeparator: ',' })} {govToken?.symbol}
                 </Text>
               )}
               {parsedAddress && (
-                <TYPE.largeHeader fontWeight={600} color="black">
+                <TYPE.largeHeader fontWeight={600} color={theme.text1}>
                   for {shortenAddress(parsedAddress)}
                 </TYPE.largeHeader>
               )}
@@ -180,7 +188,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                   <span role="img" aria-label="party-hat">
                     🎉{' '}
                   </span>
-                  Welcome to team Unicorn :){' '}
+                  Welcome to team FATExFI{' '}
                   <span role="img" aria-label="party-hat">
                     🎉
                   </span>
@@ -188,7 +196,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               </>
             )}
             {attempting && !hash && (
-              <TYPE.subHeader color="black">Confirm this transaction in your wallet</TYPE.subHeader>
+              <TYPE.subHeader color={theme.text1}>Confirm this transaction in your wallet</TYPE.subHeader>
             )}
             {attempting && hash && !claimConfirmed && chainId && hash && (
               <ExternalLink href={getEtherscanLink(chainId, hash, 'transaction')} style={{ zIndex: 99 }}>

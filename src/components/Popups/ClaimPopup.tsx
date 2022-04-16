@@ -64,18 +64,17 @@ export default function ClaimPopup() {
   const showClaimModal = useModalOpen(ApplicationModal.SELF_CLAIM)
   const toggleSelfClaimModal = useToggleSelfClaimModal()
 
-  // const userHasAvailableclaim = useUserHasAvailableClaim()
-  const userHasAvailableclaim: boolean = useUserHasAvailableClaim(account)
+  const userHasAvailableClaim: boolean = useUserHasAvailableClaim(account)
   const unclaimedAmount: TokenAmount | undefined = useUserUnclaimedAmount(account)
 
   // listen for available claim and show popup if needed
   useEffect(() => {
-    if (userHasAvailableclaim) {
+    if (userHasAvailableClaim) {
       toggleShowClaimPopup()
     }
     // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userHasAvailableclaim])
+  }, [userHasAvailableClaim])
 
   return (
     <>

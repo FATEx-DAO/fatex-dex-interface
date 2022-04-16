@@ -1,4 +1,4 @@
-import { ChainId, TokenAmount } from '@fatex-dao/sdk'
+import { Blockchain, ChainId, TokenAmount } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
@@ -23,11 +23,15 @@ import { ExternalLink } from '../../theme'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
 import { X_FATE } from '../../constants'
-//import useBlockchain from '../../hooks/useBlockchain'
 import { useAddressesTokenBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalGovTokensEarned, useTotalLockedGovTokens } from '../../state/stake/hooks'
 import { useGovTokenSupply } from '../../data/TotalSupply'
 import useXFateRatio from '../../hooks/useXFateRatio'
+import { ButtonPrimary } from '../Button'
+import useBlockchain from '../../hooks/useBlockchain'
+import { useToggleModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/actions'
+import { isMobile } from 'react-device-detect'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -486,6 +490,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
+  const blockchain = useBlockchain()
   const { t } = useTranslation()
 
   const govToken = useGovernanceToken()
@@ -493,8 +498,8 @@ export default function Header() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
-  //const blockchain = useBlockchain()
   const govTokenBalance = useTokenBalance(account ?? undefined, govToken)
   const xFateUserBalance = useTokenBalance(account ?? undefined, X_FATE[chainId ?? ChainId.HARMONY_MAINNET])
   const unlockedGovTokensToClaim = useTotalGovTokensEarned()
@@ -507,9 +512,6 @@ export default function Header() {
           .add(lockedGovTokensToClaim)
           .add(unlockedGovTokensToClaim)
       : undefined
-
-  //const location = useLocation()
-  //const isStaking = false //location.pathname === '/staking'
 
   const totalSupply = useGovTokenSupply()
   const outOfCirculationBalances = [
@@ -584,15 +586,15 @@ export default function Header() {
               </StyledNavLink>
             </Column>
             <Column>
-              <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+              <StyledNavLink id={`xfate-nav-link`} to={`/xFATE`}>
                 xFATE
               </StyledNavLink>
               {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
               {/*  Vote*/}
               {/*</StyledNavLink>*/}
-              <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-                Migrate
-              </StyledNavLink>
+              {/*<StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>*/}
+              {/*  Migrate*/}
+              {/*</StyledNavLink>*/}
               <BridgeWrapper />
             </Column>
           </HeaderLinks>
@@ -615,15 +617,15 @@ export default function Header() {
             <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
               {t('swap')}
             </StyledNavLink>
-            <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+            <StyledNavLink id={`xfate-nav-link`} to={`/xFATE`}>
               xFATE
             </StyledNavLink>
             {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
             {/*  Vote*/}
             {/*</StyledNavLink>*/}
-            <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-              Migrate
-            </StyledNavLink>
+            {/*<StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>*/}
+            {/*  Migrate*/}
+            {/*</StyledNavLink>*/}
             <BridgeWrapper />
             {/*<ExternalLink id={'link'} href={`https://fatexdao.gitbook.io/fatexdao/`}>
               Learn
@@ -721,6 +723,14 @@ export default function Header() {
                 }
               />
             </HeaderElementWrap>
+          )}
+          {account && !isMobile && blockchain === Blockchain.POLYGON && (
+            // <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+            //   Claim {govToken?.symbol}
+            // </ButtonPrimary>
+            <div>
+              <StyledMenuButton onClick={openClaimModal}>CLAIM {govToken?.symbol}</StyledMenuButton>
+            </div>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             <Web3Status />

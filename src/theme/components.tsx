@@ -55,6 +55,7 @@ export const Button = styled.button.attrs<{ warning: boolean }, { backgroundColo
 
 export const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
+  stroke: white;
 `
 
 // for wrapper react feather icons
@@ -191,7 +192,7 @@ const rotateImg = keyframes`
   }
 `
 
-export const UniTokenAnimated = styled.img`
+export const FateTokenAnimated = styled.img`
   animation: ${rotateImg} 5s cubic-bezier(0.83, 0, 0.17, 1) infinite;
   padding: 2rem 0 0 0;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
