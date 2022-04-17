@@ -97,11 +97,12 @@ export const LinkStyledButton = styled.button<{ disabled?: boolean }>`
 `
 
 // An internal link from the react-router-dom library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const StyledInternalLink = styled(Link)<{ width?: string }>`
   text-decoration: none;
   cursor: pointer;
   color: ${({ theme }) => theme.text1};
   font-weight: 500;
+  width: ${({ width }) => (width ? width : '100%')};
 
   :hover {
     text-decoration: underline;

@@ -3,11 +3,11 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
-import { JSBI } from '@fatex-dao/sdk'
+import { Fraction, JSBI } from '@fatex-dao/sdk'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
-import { TYPE } from '../../theme'
+import { ExternalLink, TYPE } from '../../theme'
 
 import { RowBetween } from '../../components/Row'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
@@ -32,6 +32,8 @@ import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
 import { getEpochFromWeekIndex } from '../../constants/epoch'
 import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
+import { LightQuestionHelper } from '../../components/QuestionHelper'
+import moment from 'moment'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -116,6 +118,7 @@ export default function Manage({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
   const govToken = useGovernanceToken()
+  const controller = useFateRewardController()
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -155,11 +158,33 @@ export default function Manage({
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
+  const percentInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
+  const rewardFeePercentResult = useSingleCallResult(controller, 'getLockedRewardsFeePercent', percentInputs)
+  const lpFeePercentResult = useSingleCallResult(controller, 'getLPWithdrawFeePercent', percentInputs)
+  const membershipInfoResult = useSingleCallResult(controller, 'userMembershipInfo', percentInputs)
+
+  const rewardFeePercent = rewardFeePercentResult.result?.[0]
+    ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
+    : undefined
+
+  const lpFeePercent = lpFeePercentResult.result?.[0]
+    ? new Fraction(lpFeePercentResult.result?.[0].toString(), '10000')
+    : undefined
+
+  const lastWithdrawalTimestamp = membershipInfoResult.result?.[1]
+    ? new Date(Number(membershipInfoResult.result?.[1].toString()) * 1000)
+    : undefined
+
+  const depositDuration = lastWithdrawalTimestamp
+    ? moment.duration(moment().diff(moment(lastWithdrawalTimestamp)))
+    : undefined
 
   const rewardsStarted = useMemo<boolean>(() => {
-    return rewardsStartTimestamp && currentTimestamp
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), JSBI.BigInt(rewardsStartTimestamp)) &&
-          JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
+    return rewardsStartTimestamp.result?.[0] && currentTimestamp
+      ? JSBI.greaterThanOrEqual(
+          JSBI.BigInt(currentTimestamp),
+          JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString())
+        ) && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
       : false
   }, [rewardsStartTimestamp, currentTimestamp])
 
@@ -193,6 +218,8 @@ export default function Manage({
     }
   }, [account, toggleWalletModal])
 
+  const liquidityTokenSymbol = `${stakingTokenPair?.token0.symbol}-${stakingTokenPair?.token1.symbol}-LP`
+
   return (
     <PageWrapper gap="lg" justify="center">
       <RowBetween style={{ gap: '24px' }}>
@@ -220,9 +247,90 @@ export default function Manage({
               {stakingInfo
                 ? stakingInfo.active
                   ? `${stakingInfo.poolRewardsPerBlock.toSignificant(4, { groupSeparator: ',' })} 
-                  ${govToken?.symbol} / block`
-                  : `0 ${govToken?.symbol} / block`
+                  ${govToken?.symbol} / second`
+                  : `0 ${govToken?.symbol} / second`
                 : '-'}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+      </DataRow>
+      <DataRow style={{ gap: '0px' }}>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>Deposit Timestamp</TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {lastWithdrawalTimestamp ? moment(lastWithdrawalTimestamp).format('lll') : '-'}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>Deposit Duration</TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {depositDuration
+                ? `${depositDuration.get('days') >= 2 ? `${depositDuration.get('days')} days ` : ''}` +
+                  `${
+                    depositDuration.get('days') >= 1 && depositDuration.get('days') < 2
+                      ? `${depositDuration.get('days')} day `
+                      : ''
+                  }` +
+                  `${depositDuration.get('hours') >= 2 ? `${depositDuration.get('hours')} hours ` : ''}` +
+                  `${
+                    depositDuration.get('hours') >= 1 && depositDuration.get('hours') < 2
+                      ? `${depositDuration.get('hours')} hour `
+                      : ''
+                  }` +
+                  `${
+                    depositDuration.get('minutes') >= 2 || depositDuration.get('minutes') < 1
+                      ? `${depositDuration.get('minutes')} minutes `
+                      : ''
+                  }` +
+                  `${
+                    depositDuration.get('minutes') >= 1 && depositDuration.get('minutes') < 2
+                      ? `${depositDuration.get('minutes')} minute `
+                      : ''
+                  }`
+                : '-'}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+      </DataRow>
+      <DataRow style={{ gap: '0px' }}>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>
+              {govToken.symbol} Reward Fee %{' '}
+              <LightQuestionHelper
+                text={`This is the amount of ${govToken.symbol} paid in fees upon initiating a withdrawal or deposit. 
+                Meaning, if you have 100 unclaimed ${govToken.symbol} and a fee percent of 90%, you will only receive 
+                10 ${govToken.symbol} in your wallet. To decrease the fee, keep your deposits in the reward contract 
+                longer.`}
+              />
+            </TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {rewardFeePercent ? `${rewardFeePercent.multiply('100').toFixed(2)}%` : '-'}
+            </TYPE.body>
+            <TYPE.body>
+              <ExternalLink href={'https://google.com'}>View Fee Schedule ↗</ExternalLink>
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>
+              LP Withdrawal Fee %{' '}
+              <LightQuestionHelper
+                text={`This is the amount of ${liquidityTokenSymbol} paid in fees upon initiating a withdrawal. Meaning,
+                 if you have 100 deposited ${liquidityTokenSymbol} and a fee percent of 90%, you will only receive 
+                 10 ${liquidityTokenSymbol} in your wallet. To decrease the fee, keep your deposits in the rewards 
+                 contract longer.`}
+              />
+            </TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
+            </TYPE.body>
+            <TYPE.body>
+              <ExternalLink href={'https://google.com'}>View Fee Schedule ↗</ExternalLink>
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -235,11 +343,11 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get FATEx-LP Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>Step 1. Get FATExFI-LP Liquidity tokens</TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`FATEx-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  {`FATExFI-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -293,7 +401,7 @@ export default function Manage({
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
                   <TYPE.white>
-                    FATEx-LP {currencyA?.symbol}-{currencyB?.symbol}
+                    FATExFI-LP {currencyA?.symbol}-{currencyB?.symbol}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -367,7 +475,7 @@ export default function Manage({
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATEx-LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATExFI-LP Tokens'}
               </ButtonPrimary>
             )}
 
@@ -397,7 +505,9 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>You have {userLiquidityUnstaked.toSignificant(6)} FATEx-LP tokens available to deposit</TYPE.main>
+          <TYPE.main>
+            You have {userLiquidityUnstaked.toSignificant(6)} FATExFI-LP tokens available to deposit
+          </TYPE.main>
         )}
       </PositionInfo>
     </PageWrapper>

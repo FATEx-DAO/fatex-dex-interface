@@ -25,7 +25,7 @@ export default function AwaitingRewards() {
 
   const rewardStartString =
     rewardsStartTimestamp && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
-      ? moment(new Date(JSBI.BigInt(rewardsStartTimestamp).toString())).format('lll')
+      ? moment(Number(rewardsStartTimestamp.toString()) * 1000).format('lll')
       : 'Unknown Timestamp'
 
   return (

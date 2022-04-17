@@ -1,17 +1,14 @@
 import React from 'react'
 import { JSBI } from '@fatex-dao/sdk'
-import { BLOCKCHAIN_SETTINGS } from '@fatex-dao/sdk-extra'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO } from '../../constants/staking'
 import { useStakingInfo } from '../../state/stake/hooks'
 import { TYPE } from '../../theme'
-//import { ButtonPrimary } from '../../components/Button'
 import PoolCard from '../../components/earn/PoolCard'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
 import { RowBetween } from '../../components/Row'
-import { CardSection, ExtraDataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-//import { Countdown } from './Countdown'
+import { CardBGImage, CardNoise, CardSection, ExtraDataCard } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import { useActiveWeb3React } from '../../hooks'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -60,22 +57,13 @@ flex-direction: column;
 export default function EarnArchived() {
   const { chainId, account } = useActiveWeb3React()
   const govToken = useGovernanceToken()
-  const blockchainSettings = chainId ? BLOCKCHAIN_SETTINGS[chainId] : undefined
   const allStakingInfos = useStakingInfo(true)
   const stakingInfos = useFilterStakingInfos(allStakingInfos, false)
-
-  /**
-   * only show staking cards with balance
-   * @todo only account for this if rewards are inactive
-   */
-  //const stakingInfosWithBalance = stakingInfos?.filter(s => JSBI.greaterThan(s.stakedAmount.raw, BIG_INT_ZERO))
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   const baseRewards = useBaseStakingRewardsSchedule()
-  const blocksPerMinute = blockchainSettings?.blockTime ? 60 / blockchainSettings.blockTime : 0
-  const rewardsPerMinute =
-    baseRewards && blockchainSettings ? baseRewards.multiply(JSBI.BigInt(blocksPerMinute)) : undefined
+  const rewardsPerMinute = baseRewards ? baseRewards.multiply(JSBI.BigInt('60')) : undefined
 
   const inactiveStakingInfos = useFilterStakingInfos(stakingInfos, false)
 

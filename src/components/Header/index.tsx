@@ -515,17 +515,17 @@ export default function Header() {
 
   const totalSupply = useGovTokenSupply()
   const outOfCirculationBalances = [
-    '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27', // FateRewardController
-    '0x3170e252D06f01a846e92CB0139Cdb16c69E867d', // FateRewardVault
-    '0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44', // FGCD Vault
-    '0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226', // Legal Vault
-    '0xA402084A04c222e25ae5748CFB12C76445a2a709', // Growth Vault
-    '0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6', // Presale Vault
-    '0x5b351d270216848026DB6ac9fafBf4d422d5Ca43', // Founder Vault
-    '0xFe2976Fc317667743d72D232DCEdd4E250170f1B', // Advisor Vault
-    '0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34', // Advisor Vault
-    '0xFD266a3D4DA9d185A0491f71cE61C5a22014d874', // Team Vault
-    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc' // founder address EOA? // has some FATE in xFATE which messes up count
+    '0x7a8B2780189fa8758bf212321DabDbd3856D1155', // FateRewardController
+    '0x7aB7B87B4a90042f655CAe53cA984305EBb17a18', // FateRewardVault
+    '0xa608dE0761eb27878423d74cD78a2A731695cac4', // Community Vault
+    '0x0619f9A8961b1B57b602B5BA6214c2dF5695582d', // FGCD Vault
+    '0x4BC7080cd426ca067B5658d2a8d261Cf7D5b5622', // Growth Vault
+    '0x04Ca98cf10e94863741B42f53E384Bcd36dDb579', // Legal Vault
+    '0x78a3A4e7722c61e391a02b8e1393219F6b5bFBF8', // Presale Vault
+    '0x279A93B959cb4a76c882a2685377A2fACcf14d49', // Advisor Vault
+    '0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6' // Advisor Vault
+    // '', // Team Vault
+    // '' // founder address EOA? // has some FATE in xFATE which messes up count
     // '0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb' // team address EOA? // has some FATE in xFATE which messes up count
   ]
   const totalLockedSupplyMap = useAddressesTokenBalance(outOfCirculationBalances, govToken)

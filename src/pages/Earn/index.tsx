@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { JSBI } from '@fatex-dao/sdk'
-import { BLOCKCHAIN_SETTINGS } from '@fatex-dao/sdk-extra'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO } from '../../constants/staking'
@@ -9,8 +7,7 @@ import { StyledInternalLink, TYPE } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { CustomButtonWhite } from '../../components/Button'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
-//import { RowBetween } from '../../components/Row'
-import { CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardBGImage, CardNoise } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import ClaimAllRewardsModal from '../../components/earn/ClaimAllRewardsModal'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,7 +18,6 @@ import useBaseStakingRewardsSchedule from '../../hooks/useBaseStakingRewardsSche
 import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
-//import GovTokenBalanceContent from '../../components/Header/GovTokenBalanceContent'
 import Pool from '../Pool'
 
 const PageWrapper = styled(AutoColumn)`
@@ -142,9 +138,7 @@ const RightSideWrapper = styled.div<{ tvlLoaded: boolean }>`
   display: inline-block;
   vertical-align: top;
   margin-left: 5%;
-  ${({ tvlLoaded }) => tvlLoaded && 'margin-top: -20px;'}
-
-  @media screen and (max-width: 2000px) {
+  ${({ tvlLoaded }) => tvlLoaded && 'margin-top: -20px;'} @media screen and(max-width: 2000 px) {
     margin-left: 4%;
   }
 
@@ -209,10 +203,15 @@ const InfoRight = styled.div`
   }
 `
 
+const ArchivedWrapper = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+`
+
 export default function Earn() {
   const { chainId, account } = useActiveWeb3React()
   const govToken = useGovernanceToken()
-  const blockchainSettings = chainId ? BLOCKCHAIN_SETTINGS[chainId] : undefined
   const activePoolsOnly = true
   const stakingInfos = useStakingInfo(activePoolsOnly)
 
@@ -221,9 +220,7 @@ export default function Earn() {
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   const baseRewards = useBaseStakingRewardsSchedule()
-  const blocksPerMinute = blockchainSettings?.blockTime ? 60 / blockchainSettings.blockTime : 0
-  const rewardsPerMinute =
-    baseRewards && blockchainSettings ? baseRewards.multiply(JSBI.BigInt(blocksPerMinute)) : undefined
+  const rewardsPerMinute = baseRewards ? baseRewards.multiply('60') : undefined
 
   const activeStakingInfos = useFilterStakingInfos(stakingInfos, activePoolsOnly)
   const inactiveStakingInfos = useFilterStakingInfos(stakingInfos, false)
@@ -313,6 +310,7 @@ export default function Earn() {
               })
             )}
           </StakingSection>
+
           <StakingSection>
             {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
               <LoaderWrapper second={true}>
@@ -334,14 +332,17 @@ export default function Earn() {
                 )
               })
             )}
-            {hasArchivedStakingPools && (
-              <StyledInternalLink to={`/depository/archived`}>
+          </StakingSection>
+
+          {hasArchivedStakingPools && (
+            <ArchivedWrapper>
+              <StyledInternalLink width={'50%'} to={`/depository/archived`}>
                 <CustomButtonWhite padding="8px" borderRadius="8px">
                   Archived Pools
                 </CustomButtonWhite>
               </StyledInternalLink>
-            )}
-          </StakingSection>
+            </ArchivedWrapper>
+          )}
         </RightSideWrapper>
 
         {stakingRewardsExist && baseRewards && (
@@ -350,7 +351,7 @@ export default function Earn() {
               ☁️
             </span>
             The base rewards rate is currently <b>{baseRewards.toSignificant(4, { groupSeparator: ',' })}</b>{' '}
-            {govToken?.symbol} per block.w
+            {govToken?.symbol} per second.
             <br />
             <b>{rewardsPerMinute?.toSignificant(4, { groupSeparator: ',' })}</b> {govToken?.symbol}
             will be minted every minute given the current rewards schedule.

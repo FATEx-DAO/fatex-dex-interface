@@ -240,8 +240,8 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
             {stakingInfo
               ? stakingInfo.active
                 ? `${stakingInfo.poolRewardsPerBlock.toSignificant(4, { groupSeparator: ',' })} 
-                ${govToken?.symbol} / block`
-                : `0 ${govToken?.symbol} / block`
+                ${govToken?.symbol} / second`
+                : `0 ${govToken?.symbol} / second`
               : '-'}
           </TYPE.white>
         </RowBetween>

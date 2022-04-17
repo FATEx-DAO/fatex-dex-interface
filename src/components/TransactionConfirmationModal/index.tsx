@@ -1,5 +1,5 @@
 import { ChainId, Currency } from '@fatex-dao/sdk'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
@@ -85,7 +85,10 @@ function TransactionSubmittedContent({
   const { library } = useActiveWeb3React()
   const blockchain = useBlockchain()
   const explorerName = getExplorerName(blockchain)
-  const currencyToAddAdjusted = getBlockchainAdjustedCurrency(blockchain, currencyToAdd)
+  const currencyToAddAdjusted = useMemo(() => getBlockchainAdjustedCurrency(blockchain, currencyToAdd), [
+    blockchain,
+    currencyToAdd
+  ])
   const { addToken, success } = useAddTokenToMetamask(currencyToAddAdjusted)
 
   return (

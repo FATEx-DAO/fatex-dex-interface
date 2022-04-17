@@ -1,10 +1,9 @@
-import { CurrencyAmount, JSBI, Token, TokenAmount, Pair, Fraction } from '@fatex-dao/sdk'
+import { CurrencyAmount, Fraction, JSBI, Pair, Token, TokenAmount } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { useActiveWeb3React } from '../../hooks'
-import { useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
+import { useMultipleContractSingleData, useSingleCallResult, useSingleContractMultipleData } from '../multicall/hooks'
 import { tryParseAmount } from '../swap/hooks'
 import { useFateRewardController, useFateRewardControllerReader } from '../../hooks/useContract'
-import { useMultipleContractSingleData } from '../multicall/hooks'
 import { abi as IUniswapV2PairABI } from '../../constants/abis/uniswap-v2-pair.json'
 import { Interface } from '@ethersproject/abi'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
@@ -17,12 +16,9 @@ import calculateApr from '../../utils/calculateApr'
 import validStakingInfo from '../../utils/validStakingInfo'
 import determineBaseToken from '../../utils/determineBaseToken'
 import { useBlockNumber } from '../application/hooks'
-import { useQuery } from 'react-apollo'
-import { lockedRewardsByPool } from '../../apollo/queries'
-import { BIG_INT_ZERO } from '../../constants'
-import { rewardsClient } from '../../apollo/client'
 import { getEpochFromWeekIndex } from '../../constants/epoch'
 import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
+import { MaxUint256 } from '@ethersproject/constants'
 
 const PAIR_INTERFACE = new Interface(IUniswapV2PairABI)
 
@@ -96,22 +92,6 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
       JSBI.BigInt(604800)
     )
   }, [currentTimestamp, startTimestamp.result])
-
-  // const epoch = getEpochFromWeekIndex(weekIndex)
-  // const { data: lockedRewards } = useQuery(lockedRewardsByPool, {
-  //   client: rewardsClient,
-  //   variables: {
-  //     account: account ?? '',
-  //     epoch: parseInt(epoch.toString()),
-  //     blockNumber: currentTimestamp
-  //   }
-  // })
-  // const lockedRewardsMap = useMemo(() => {
-  //   return lockedRewards?.userEpochTotalLockedRewardByPools.reduce((memo: { [key: string]: any }, rewardInfo: any) => {
-  //     memo[rewardInfo.poolId] = rewardInfo
-  //     return memo
-  //   }, {})
-  // }, [lockedRewards])
 
   const masterInfo = useFilterStakingRewardsInfo(chainId, active, pairToFilterBy)
 
@@ -205,6 +185,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           currentBlock
         )
       ) {
+        const hasRewardsStarted =
+          startTimestamp.result?.[0].toString() && MaxUint256.toString() !== startTimestamp.result?.[0].toString()
         const startsAtTimestamp = parseInt(startTimestamp.result?.[0].toString() ?? '0')
 
         const epoch = getEpochFromWeekIndex(weekIndex)
@@ -264,19 +246,11 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         )
         const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
         const totalRewardDebt = new TokenAmount(govToken, lockedFateBigInt)
-        // const rewardDebtDecimal = lockedRewardsMap?.[pid.toString()]?.amountFate
-        // const totalRewardDebt = new TokenAmount(
-        //   govToken,
-        //   JSBI.add(
-        //     tryParseAmount(rewardDebtDecimal, govToken)?.raw ?? BIG_INT_ZERO,
-        //     JSBI.divide(JSBI.multiply(totalPendingRewardAmount.raw, JSBI.subtract(multiplier, divisor)), divisor)
-        //   )
-        // )
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result
         const allocPoint = JSBI.BigInt(poolInfoResult && poolInfoResult[1])
-        const active = !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0))
+        const active = !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0)) || !hasRewardsStarted
 
         const baseToken = determineBaseToken(tokensWithPrices, tokens)
 
