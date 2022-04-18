@@ -3,7 +3,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO } from '../../constants/staking'
 import { useStakingInfo } from '../../state/stake/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { CustomButtonWhite } from '../../components/Button'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
@@ -19,6 +19,7 @@ import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
 import Pool from '../Pool'
+import { FEES_URL } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1800px;
@@ -262,6 +263,16 @@ export default function Earn() {
                   </TYPE.white>
                   <TYPE.white fontSize={14}>
                     Stake your LP tokens to receive FATE, the FATExFI governance token.
+                  </TYPE.white>
+                  <TYPE.white fontSize={14}>
+                    {/*<span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>*/}
+                    {/*  💡*/}
+                    {/*</span>*/}
+                    NOTE: There are no deposit fees, but there <i>are</i> withdrawal fees. Learn more{' '}
+                    <ExternalLink style={{ textDecoration: 'underline' }} href={FEES_URL}>
+                      here
+                    </ExternalLink>{' '}
+                    before depositing.
                   </TYPE.white>
                 </InfoLeft>
                 <InfoRight>

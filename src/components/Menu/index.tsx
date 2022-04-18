@@ -223,7 +223,7 @@ export default function Menu() {
         </MenuItem>
         <MenuItem id="link" href="https://info.fatex.io">
           <PieChart size={14} />
-          DEX Analytics
+          Analytics
         </MenuItem>
         <SocialLinks>
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
@@ -277,7 +277,7 @@ export default function Menu() {
             </MenuItem>
             <MenuItem id="link" href="https://info.fatex.io">
               <PieChart size={14} />
-              DEX Analytics
+              Analytics
             </MenuItem>
             <SocialLinks>
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">

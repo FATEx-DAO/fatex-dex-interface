@@ -3,7 +3,7 @@ import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { Link, RouteComponentProps } from 'react-router-dom'
 
-import { Fraction, JSBI } from '@fatex-dao/sdk'
+import { Fraction, JSBI, TokenAmount } from '@fatex-dao/sdk'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
 import { useWalletModalToggle } from '../../state/application/hooks'
@@ -26,7 +26,7 @@ import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { currencyId } from '../../utils/currencyId'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, FEES_URL } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
@@ -34,6 +34,7 @@ import { getEpochFromWeekIndex } from '../../constants/epoch'
 import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 import { LightQuestionHelper } from '../../components/QuestionHelper'
 import moment from 'moment'
+import Loader from '../../components/Loader'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -131,6 +132,9 @@ export default function Manage({
   const currentTimestamp = useCurrentBlockTimestamp() ?? 0
   const fateRewardController = useFateRewardController()
   const rewardsStartTimestamp = useSingleCallResult(fateRewardController, 'startTimestamp')
+  // const rewardsStartTimestamp = {
+  //   result: [JSBI.BigInt(new Date().getMilliseconds() - 5000)]
+  // }
 
   const weekIndex = JSBI.divide(
     JSBI.subtract(
@@ -163,28 +167,35 @@ export default function Manage({
   const lpFeePercentResult = useSingleCallResult(controller, 'getLPWithdrawFeePercent', percentInputs)
   const membershipInfoResult = useSingleCallResult(controller, 'userMembershipInfo', percentInputs)
 
-  const rewardFeePercent = rewardFeePercentResult.result?.[0]
-    ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
-    : undefined
+  const lastWithdrawalTimestampLoading = membershipInfoResult.loading
+  const lastWithdrawalTimestamp =
+    membershipInfoResult.result?.[1] && membershipInfoResult.result?.[1].toString() !== '0'
+      ? new Date(Number(membershipInfoResult.result?.[1].toString()) * 1000)
+      : undefined
 
-  const lpFeePercent = lpFeePercentResult.result?.[0]
-    ? new Fraction(lpFeePercentResult.result?.[0].toString(), '10000')
-    : undefined
-
-  const lastWithdrawalTimestamp = membershipInfoResult.result?.[1]
-    ? new Date(Number(membershipInfoResult.result?.[1].toString()) * 1000)
-    : undefined
-
+  const depositDurationLoading = membershipInfoResult.loading
   const depositDuration = lastWithdrawalTimestamp
     ? moment.duration(moment().diff(moment(lastWithdrawalTimestamp)))
     : undefined
+
+  const rewardFeePercentLoading = rewardFeePercentResult.loading
+  const rewardFeePercent =
+    rewardFeePercentResult.result?.[0] && lastWithdrawalTimestamp
+      ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
+      : undefined
+
+  const lpFeePercentLoading = lpFeePercentResult.loading
+  const lpFeePercent =
+    lpFeePercentResult.result?.[0] && lastWithdrawalTimestamp
+      ? new Fraction(lpFeePercentResult.result?.[0].toString(), '10000')
+      : undefined
 
   const rewardsStarted = useMemo<boolean>(() => {
     return rewardsStartTimestamp.result?.[0] && currentTimestamp
       ? JSBI.greaterThanOrEqual(
           JSBI.BigInt(currentTimestamp),
           JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString())
-        ) && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
+        ) && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString()), JSBI.BigInt('0'))
       : false
   }, [rewardsStartTimestamp, currentTimestamp])
 
@@ -205,7 +216,14 @@ export default function Manage({
 
   const backgroundColor = useColor(stakingInfo?.baseToken)
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  // For testing purposes
+  // if (stakingInfo) {
+  //   stakingInfo.earnedAmount = new TokenAmount(govToken, '123000000000000000000')
+  // }
+  const countUpAmount =
+    rewardFeePercent && rewardFeePercent.lessThan('1') && stakingInfo
+      ? stakingInfo.earnedAmount.multiply(new Fraction('1').subtract(rewardFeePercent).invert()).toFixed(6)
+      : '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   const toggleWalletModal = useWalletModalToggle()
@@ -235,7 +253,7 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>Total Deposits</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd?.greaterThan('0')
-                ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(0, { groupSeparator: ',' })}`
+                ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(2, { groupSeparator: ',' })}`
                 : '-'}
             </TYPE.body>
           </AutoColumn>
@@ -259,7 +277,13 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Deposit Timestamp</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {lastWithdrawalTimestamp ? moment(lastWithdrawalTimestamp).format('lll') : '-'}
+              {lastWithdrawalTimestampLoading ? (
+                <Loader />
+              ) : lastWithdrawalTimestamp ? (
+                moment(lastWithdrawalTimestamp).format('lll')
+              ) : (
+                '-'
+              )}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -267,30 +291,40 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>Deposit Duration</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {depositDuration
-                ? `${depositDuration.get('days') >= 2 ? `${depositDuration.get('days')} days ` : ''}` +
-                  `${
-                    depositDuration.get('days') >= 1 && depositDuration.get('days') < 2
-                      ? `${depositDuration.get('days')} day `
-                      : ''
-                  }` +
-                  `${depositDuration.get('hours') >= 2 ? `${depositDuration.get('hours')} hours ` : ''}` +
-                  `${
-                    depositDuration.get('hours') >= 1 && depositDuration.get('hours') < 2
-                      ? `${depositDuration.get('hours')} hour `
-                      : ''
-                  }` +
-                  `${
-                    depositDuration.get('minutes') >= 2 || depositDuration.get('minutes') < 1
-                      ? `${depositDuration.get('minutes')} minutes `
-                      : ''
-                  }` +
-                  `${
-                    depositDuration.get('minutes') >= 1 && depositDuration.get('minutes') < 2
-                      ? `${depositDuration.get('minutes')} minute `
-                      : ''
-                  }`
-                : '-'}
+              {depositDurationLoading ? (
+                <Loader />
+              ) : depositDuration ? (
+                `${depositDuration.get('years') >= 2 ? `${depositDuration.get('years')} years ` : ''}` +
+                `${
+                  depositDuration.get('years') >= 1 && depositDuration.get('years') < 2
+                    ? `${depositDuration.get('years')} year `
+                    : ''
+                }` +
+                `${depositDuration.get('days') >= 2 ? `${depositDuration.get('days')} days ` : ''}` +
+                `${
+                  depositDuration.get('days') >= 1 && depositDuration.get('days') < 2
+                    ? `${depositDuration.get('days')} day `
+                    : ''
+                }` +
+                `${depositDuration.get('hours') >= 2 ? `${depositDuration.get('hours')} hours ` : ''}` +
+                `${
+                  depositDuration.get('hours') >= 1 && depositDuration.get('hours') < 2
+                    ? `${depositDuration.get('hours')} hour `
+                    : ''
+                }` +
+                `${
+                  depositDuration.get('minutes') >= 2 || depositDuration.get('minutes') < 1
+                    ? `${depositDuration.get('minutes')} minutes `
+                    : ''
+                }` +
+                `${
+                  depositDuration.get('minutes') >= 1 && depositDuration.get('minutes') < 2
+                    ? `${depositDuration.get('minutes')} minute `
+                    : ''
+                }`
+              ) : (
+                '-'
+              )}
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -308,10 +342,16 @@ export default function Manage({
               />
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {rewardFeePercent ? `${rewardFeePercent.multiply('100').toFixed(2)}%` : '-'}
+              {rewardFeePercentLoading ? (
+                <Loader />
+              ) : rewardFeePercent ? (
+                `${rewardFeePercent.multiply('100').toFixed(2)}%`
+              ) : (
+                '-'
+              )}
             </TYPE.body>
             <TYPE.body>
-              <ExternalLink href={'https://google.com'}>View Fee Schedule ↗</ExternalLink>
+              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -327,10 +367,10 @@ export default function Manage({
               />
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
-              {lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
+              {lpFeePercentLoading ? <Loader /> : lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
             </TYPE.body>
             <TYPE.body>
-              <ExternalLink href={'https://google.com'}>View Fee Schedule ↗</ExternalLink>
+              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -455,27 +495,28 @@ export default function Manage({
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above represents {unlockAmountPercent} of your rewards.
+              The unclaimed {govToken?.symbol} amount above represents unlocked rewards for the current epoch.
               <br />
-              The other {lockAmountPercent} can be claimed later, once this {epochLengthWeeks} week epoch period is
-              over. Learn more{' '}
-              <a
+              <br />
+              The locked rewards are distributed after the end of this epoch. Learn more{' '}
+              <ExternalLink
                 href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
-                target={'_blank'}
-                rel="noreferrer"
+                style={{ textDecoration: 'underline' }}
               >
                 here
-              </a>
-              .
+              </ExternalLink>{' '}
+              and please note there <i>ARE</i> withdrawal fees.
             </TYPE.main>
           )}
         </>
-        <AwaitingRewards />
+        {!rewardsStarted && <AwaitingRewards />}
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATExFI-LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0))
+                  ? 'Deposit'
+                  : `Deposit ${stakingTokenPair.liquidityToken.symbol} Tokens`}
               </ButtonPrimary>
             )}
 

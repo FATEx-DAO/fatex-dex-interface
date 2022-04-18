@@ -37,8 +37,8 @@ export interface StakingInfo {
   allocPoint: JSBI
   // start timestamp for all the rewards pools
   startTimestamp: number
-  // base rewards per block
-  baseRewardsPerBlock: TokenAmount
+  // base rewards per second
+  baseRewardsPerSecond: TokenAmount
   // pool specific rewards per block
   poolRewardsPerBlock: TokenAmount
   // blocks generated per year
@@ -143,7 +143,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   let adjustedPids = pids.map(pid => pid + 1)
   adjustedPids = [...[0], ...adjustedPids]
 
-  const poolRewardsPerSecond = useSingleContractMultipleData(
+  const poolRewardsPerSeconds = useSingleContractMultipleData(
     fateRewardController,
     'getNewRewardPerSecond',
     adjustedPids.map(adjustedPids => [adjustedPids])
@@ -167,8 +167,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
       const lpTokenBalance = lpTokenBalances[index]
 
       // poolRewardsPerBlock indexes have to be +1'd to get the actual specific pool data
-      const baseRewardsPerSecond = poolRewardsPerSecond[0]
-      const specificPoolRewardsPerSecond = poolRewardsPerSecond[index + 1]
+      const poolRewardsPerSecond = poolRewardsPerSeconds[0]
+      const specificPoolRewardsPerSecond = poolRewardsPerSeconds[index + 1]
 
       if (
         validStakingInfo(
@@ -176,7 +176,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           poolInfo,
           pendingReward,
           userInfo,
-          baseRewardsPerSecond,
+          poolRewardsPerSecond,
           specificPoolRewardsPerSecond,
           lpTokenTotalSupply,
           lpTokenReserve,
@@ -207,9 +207,9 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           divisor = JSBI.BigInt('10')
         }
 
-        const baseBlockRewards = new TokenAmount(
+        const baseRewardsPerSecond = new TokenAmount(
           govToken,
-          JSBI.divide(JSBI.multiply(JSBI.BigInt(baseRewardsPerSecond?.result?.[0] ?? 0), multiplier), divisor)
+          JSBI.divide(JSBI.multiply(JSBI.BigInt(poolRewardsPerSecond?.result?.[0] ?? 0), multiplier), divisor)
         )
 
         const poolBlockRewards = specificPoolRewardsPerSecond?.result?.[0]
@@ -220,9 +220,9 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
                 divisor
               )
             )
-          : baseBlockRewards
+          : baseRewardsPerSecond
 
-        const poolShare = new Fraction(poolBlockRewards.raw, baseBlockRewards.raw)
+        const poolShare = new Fraction(poolBlockRewards.raw, baseRewardsPerSecond.raw)
 
         const lockedRewardsPercentageUnits = 0
         const unlockedRewardsPercentageUnits = 100
@@ -268,7 +268,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           wethBusdPrice && totalStakedAmountWETH && totalStakedAmountWETH.multiply(wethBusdPrice?.raw)
 
         const apr = totalStakedAmountWETH
-          ? calculateApr(govTokenWETHPrice, baseBlockRewards, blocksPerYear, poolShare, totalStakedAmountWETH)
+          ? calculateApr(govTokenWETHPrice, baseRewardsPerSecond, blocksPerYear, poolShare, totalStakedAmountWETH)
           : undefined
 
         const stakingInfo: StakingInfo = {
@@ -277,7 +277,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           tokens: tokens,
           baseToken: baseToken,
           startTimestamp: startsAtTimestamp,
-          baseRewardsPerBlock: baseBlockRewards,
+          baseRewardsPerSecond: baseRewardsPerSecond,
           poolRewardsPerBlock: poolBlockRewards,
           blocksPerYear: blocksPerYear,
           poolShare: poolShare,
@@ -313,7 +313,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     lpTokenTotalSupplies,
     lpTokenReserves,
     lpTokenBalances,
-    poolRewardsPerSecond,
+    poolRewardsPerSeconds,
     startTimestamp,
     currentBlock,
     weekIndex,

@@ -649,14 +649,14 @@ export default function Header() {
                     <Label>FATE price:</Label>
                     <Value>
                       {fatePrice ? '$' : ''}
-                      {fatePrice?.toFixed(4) ?? '-'}
+                      {fatePrice?.toSignificant(8) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>
                     <Label>xFATE price:</Label>
                     <Value>
                       {xFATEPrice ? '$' : ''}
-                      {xFATEPrice?.toFixed(4) ?? '-'}
+                      {xFATEPrice?.toSignificant(8) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>

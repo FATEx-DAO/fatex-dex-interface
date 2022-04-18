@@ -289,6 +289,8 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]: { [address: string]:
 export const MERKLE_DISTRIBUTOR_PROOF_URL =
   'https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/0x5215eb008425edf5fe396be6bfb783296de51084.json'
 
+export const FEES_URL = 'https://google.com'
+
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: undefined,
   [ChainId.HARMONY_MAINNET]: undefined,
