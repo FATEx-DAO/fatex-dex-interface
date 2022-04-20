@@ -1,4 +1,4 @@
-import { Blockchain, ChainId, TokenAmount } from '@fatex-dao/sdk'
+import { Blockchain, ChainId, Fraction, TokenAmount } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
@@ -425,10 +425,14 @@ const BridgeWrapper = () => {
         }}
       >
         <BridgePopoverInner>
-          <StyledExternalLink href={'https://bridge.harmony.one'}>Ethereum</StyledExternalLink>
-          <StyledExternalLink href={'https://bridge.harmony.one'}>BSC</StyledExternalLink>
-          <StyledExternalLink href={'https://anyswap.exchange/#/bridge'}>AnySwap</StyledExternalLink>
-          <StyledExternalLink href={'https://synapseprotocol.com'}>Synapse</StyledExternalLink>
+          <StyledExternalLink href={'https://wallet.polygon.technology/bridge'}>Official Polygon</StyledExternalLink>
+          <StyledExternalLink
+            href={'https://app.hop.exchange/#/send?token=ETH&sourceNetwork=ethereum&destNetwork=polygon'}
+          >
+            Hop
+          </StyledExternalLink>
+          <StyledExternalLink href={'https://anyswap.exchange/#/router'}>AnySwap</StyledExternalLink>
+          <StyledExternalLink href={'https://synapseprotocol.com/?outputChain=137'}>Synapse</StyledExternalLink>
         </BridgePopoverInner>
       </Popover>
     </>
@@ -649,14 +653,14 @@ export default function Header() {
                     <Label>FATE price:</Label>
                     <Value>
                       {fatePrice ? '$' : ''}
-                      {fatePrice?.toSignificant(8) ?? '-'}
+                      {fatePrice?.toFixed(fatePrice?.lessThan(new Fraction('2', '100')) ? 5 : 2) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>
                     <Label>xFATE price:</Label>
                     <Value>
                       {xFATEPrice ? '$' : ''}
-                      {xFATEPrice?.toSignificant(8) ?? '-'}
+                      {xFATEPrice?.toFixed(xFATEPrice?.lessThan(new Fraction('2', '100')) ? 5 : 2) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>
@@ -709,15 +713,21 @@ export default function Header() {
                     </InfoRow>
                     <InfoRow>
                       <Label>Unlocked $ Amount:</Label>
-                      <Value>{unlockedTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {unlockedTokensPrice ? `$${unlockedTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                     <InfoRow>
                       <Label>Locked $ Amount:</Label>
-                      <Value>{lockedTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {lockedTokensPrice ? `$${lockedTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                     <InfoRow>
                       <Label>Total $ Amount:</Label>
-                      <Value>{totalTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {totalTokensPrice ? `$${totalTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                   </>
                 }

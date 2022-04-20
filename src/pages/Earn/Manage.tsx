@@ -35,6 +35,7 @@ import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 import { LightQuestionHelper } from '../../components/QuestionHelper'
 import moment from 'moment'
 import Loader from '../../components/Loader'
+import useRewardsStartTimestamp from '../../hooks/useRewardsStartTimestamp'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -130,18 +131,12 @@ export default function Manage({
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
   const currentTimestamp = useCurrentBlockTimestamp() ?? 0
-  const fateRewardController = useFateRewardController()
-  const rewardsStartTimestamp = useSingleCallResult(fateRewardController, 'startTimestamp')
-  // const rewardsStartTimestamp = {
-  //   result: [JSBI.BigInt(new Date().getMilliseconds() - 5000)]
-  // }
+  const rewardsStartTimestamp = useRewardsStartTimestamp()
 
   const weekIndex = JSBI.divide(
     JSBI.subtract(
       JSBI.BigInt(currentTimestamp),
-      rewardsStartTimestamp.result?.[0]
-        ? JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString())
-        : JSBI.BigInt(currentTimestamp)
+      rewardsStartTimestamp ? JSBI.BigInt(rewardsStartTimestamp) : JSBI.BigInt(currentTimestamp)
     ),
     JSBI.BigInt(604800)
   )
@@ -162,6 +157,11 @@ export default function Manage({
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
+  // if (stakingTokenPair.liquidityToken.address.toLowerCase() === '0xfdf6f1a2d3a0a24807de2cdb3afd2a813920436e') {
+  //   if (stakingInfo) {
+  //     stakingInfo.earnedAmount = new TokenAmount(govToken, '100000000000000000000')
+  //   }
+  // }
   const percentInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
   const rewardFeePercentResult = useSingleCallResult(controller, 'getLockedRewardsFeePercent', percentInputs)
   const lpFeePercentResult = useSingleCallResult(controller, 'getLPWithdrawFeePercent', percentInputs)
@@ -191,11 +191,8 @@ export default function Manage({
       : undefined
 
   const rewardsStarted = useMemo<boolean>(() => {
-    return rewardsStartTimestamp.result?.[0] && currentTimestamp
-      ? JSBI.greaterThanOrEqual(
-          JSBI.BigInt(currentTimestamp),
-          JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString())
-        ) && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp.result?.[0].toString()), JSBI.BigInt('0'))
+    return rewardsStartTimestamp && currentTimestamp
+      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), rewardsStartTimestamp)
       : false
   }, [rewardsStartTimestamp, currentTimestamp])
 

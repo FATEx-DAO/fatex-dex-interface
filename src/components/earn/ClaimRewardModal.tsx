@@ -14,7 +14,6 @@ import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useSingleCallResult } from '../../state/multicall/hooks'
-import moment from 'moment'
 import { Fraction } from '@fatex-dao/sdk'
 
 const ContentWrapper = styled(AutoColumn)`

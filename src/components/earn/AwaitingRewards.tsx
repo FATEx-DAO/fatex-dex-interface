@@ -2,29 +2,27 @@ import React, { useMemo } from 'react'
 import { AutoColumn } from '../Column'
 import { JSBI } from '@fatex-dao/sdk'
 import { TYPE } from '../../theme'
-import { useSingleCallResult } from '../../state/multicall/hooks'
-import { useFateRewardController } from '../../hooks/useContract'
 import { BlueCard } from '../Card'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 import moment from 'moment'
+import useRewardsStartTimestamp from '../../hooks/useRewardsStartTimestamp'
+import { MaxUint256 } from '@ethersproject/constants'
 
 export default function AwaitingRewards() {
-  const fateRewardController = useFateRewardController()
   const govToken = useGovernanceToken()
 
-  const rewardsStartTimestamp = useSingleCallResult(fateRewardController, 'startTimestamp').result?.[0]
+  const rewardsStartTimestamp = useRewardsStartTimestamp()
   const currentTimestamp = useCurrentBlockTimestamp()
 
   const rewardsStarted = useMemo<boolean>(() => {
     return rewardsStartTimestamp && currentTimestamp
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), JSBI.BigInt(rewardsStartTimestamp)) &&
-          JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
+      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), rewardsStartTimestamp)
       : false
   }, [rewardsStartTimestamp, currentTimestamp])
 
   const rewardStartString =
-    rewardsStartTimestamp && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt('0'))
+    rewardsStartTimestamp && JSBI.notEqual(rewardsStartTimestamp, JSBI.BigInt(MaxUint256.toString()))
       ? moment(Number(rewardsStartTimestamp.toString()) * 1000).format('lll')
       : 'Unknown Timestamp'
 

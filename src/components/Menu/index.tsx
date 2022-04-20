@@ -104,7 +104,7 @@ const MenuFlyout = styled.span<{ isStaking: boolean }>`
     }`}
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.75rem;
+    top: -20rem;
     right: 0rem;
     left: auto;
   `};
@@ -205,6 +205,9 @@ export default function Menu() {
         <MenuItem id="link" href={'https://fatex.io'}>
           FATEx.io
         </MenuItem>
+        <MenuItem id="link" href={'https://fatex.io'}>
+          V2 FAQ
+        </MenuItem>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
@@ -258,6 +261,9 @@ export default function Menu() {
           <MenuFlyout isStaking={isStaking}>
             <MenuItem id="link" href={'https://fatex.io'}>
               FATEx.io
+            </MenuItem>
+            <MenuItem id="link" href={'https://fatex.io'}>
+              V2 FAQ
             </MenuItem>
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
               <Code size={14} />
