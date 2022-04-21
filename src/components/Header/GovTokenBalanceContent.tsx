@@ -208,7 +208,7 @@ export default function GovTokenBalanceContent({
                 <Label>FATE price:</Label>
                 <Value>
                   {fatePrice ? '$' : ''}
-                  {fatePrice?.toFixed(4) ?? '-'}
+                  {fatePrice?.toFixed(8) ?? '-'}
                 </Value>
               </InfoRow>
               <InfoRow>
