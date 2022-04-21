@@ -26,13 +26,11 @@ export const StyledClose = styled(X)`
 `
 
 export default function URLWarning() {
-  // const toggleURLWarning = useURLWarningToggle()
-  // const showURLWarning = useURLWarningVisible()
-  const showURLWarning = true
   const { chainId } = useActiveWeb3React()
   const webInterfaces = chainId && WEB_INTERFACES[chainId]
   const defaultHostname = webInterfaces?.[0]
   const currentHostname = window.location.hostname
+  const showURLWarning = currentHostname === 'old.app.fatex.io' || currentHostname === 'fatex-dao-old.web.app'
 
   return (
     <PhishAlert isActive={showURLWarning}>

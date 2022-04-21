@@ -27,7 +27,8 @@ const ETHERSCAN_PREFIXES: { [chainId in ChainId]: string } = {
   56: 'bscscan.com',
   97: 'testnet.bscscan.com',
   1666600000: 'explorer.harmony.one/#',
-  1666700000: 'explorer.testnet.harmony.one/#'
+  1666700000: 'explorer.testnet.harmony.one/#',
+  137: 'polygonscan.com'
 }
 
 export function getEtherscanLink(

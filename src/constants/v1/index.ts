@@ -12,7 +12,8 @@ const V1_FACTORY_ADDRESSES: { [chainId in ChainId]: string | undefined } = {
   [ChainId.BSC_MAINNET]: undefined,
   [ChainId.BSC_TESTNET]: undefined,
   [ChainId.HARMONY_MAINNET]: undefined,
-  [ChainId.HARMONY_TESTNET]: undefined
+  [ChainId.HARMONY_TESTNET]: undefined,
+  [ChainId.POLYGON_MAINNET]: undefined
 }
 
 const V1_FACTORY_INTERFACE = new Interface(V1_FACTORY_ABI)

@@ -23,5 +23,12 @@ export const GOVERNANCE_TOKEN: { [chainId in ChainId]: Token } = {
     18,
     'FATE',
     'Fate'
+  ),
+  [ChainId.POLYGON_MAINNET]: new Token(
+    ChainId.POLYGON_MAINNET,
+    '0x4853365bC81f8270D902076892e13F27c27e7266',
+    18,
+    'FATE',
+    'Fate'
   )
 }
