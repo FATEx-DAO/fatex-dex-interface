@@ -113,7 +113,7 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
           {currencyToAddAdjusted && library?.provider?.isMetaMask && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+            <ButtonPrimary mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
                   Add {currencyToAddAdjusted.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
@@ -124,7 +124,7 @@ function TransactionSubmittedContent({
                   <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
-            </ButtonLight>
+            </ButtonPrimary>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>
