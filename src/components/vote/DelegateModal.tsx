@@ -103,7 +103,7 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               <TYPE.mediumHeader fontWeight={500}>{title}</TYPE.mediumHeader>
               <StyledClosed stroke="black" onClick={wrappedOnDismiss} />
             </RowBetween>
-            <TYPE.body>Earned FATE tokens represent voting shares in FATExFI governance.</TYPE.body>
+            <TYPE.body>Earned FATE tokens represent voting shares in FATExFi governance.</TYPE.body>
             <TYPE.body>
               You can either vote on each proposal yourself or delegate your votes to a third party.
             </TYPE.body>

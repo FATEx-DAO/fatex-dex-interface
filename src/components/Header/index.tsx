@@ -395,6 +395,11 @@ const BridgePopoverInner = styled.div`
   background: ${({ theme }) => theme.text1};
 `
 
+const BridgeLinkWrapper = styled.div`
+  margin-top: 4px;
+  margin-bottom: 4px;
+`
+
 const BridgeWrapper = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -412,7 +417,7 @@ const BridgeWrapper = () => {
   return (
     <>
       <BridgeButton aria-describedby={id} onClick={handleClick}>
-        Bridge
+        Matic
       </BridgeButton>
       <Popover
         id={id}
@@ -425,14 +430,15 @@ const BridgeWrapper = () => {
         }}
       >
         <BridgePopoverInner>
-          <StyledExternalLink href={'https://wallet.polygon.technology/bridge'}>Official Polygon</StyledExternalLink>
-          <StyledExternalLink
-            href={'https://app.hop.exchange/#/send?token=ETH&sourceNetwork=ethereum&destNetwork=polygon'}
-          >
-            Hop
-          </StyledExternalLink>
-          <StyledExternalLink href={'https://anyswap.exchange/#/router'}>AnySwap</StyledExternalLink>
-          <StyledExternalLink href={'https://synapseprotocol.com/?outputChain=137'}>Synapse</StyledExternalLink>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://wallet.polygon.technology/bridge'}>Bridge</StyledExternalLink>
+          </BridgeLinkWrapper>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://polygonscan.com/'}>Explorer</StyledExternalLink>
+          </BridgeLinkWrapper>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://wallet.polygon.technology/wallet/'}>Wallet</StyledExternalLink>
+          </BridgeLinkWrapper>
         </BridgePopoverInner>
       </Popover>
     </>
@@ -567,7 +573,7 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">
-          FATEx<span>FI</span>
+          FATEx<span>Fi</span>
         </Title>
         <MobileHeader>
           <HeaderLinks>
@@ -739,7 +745,7 @@ export default function Header() {
             //   Claim {govToken?.symbol}
             // </ButtonPrimary>
             <div>
-              <StyledMenuButton onClick={openClaimModal}>CLAIM {govToken?.symbol}</StyledMenuButton>
+              <StyledMenuButton onClick={openClaimModal}>VESTED {govToken?.symbol}</StyledMenuButton>
             </div>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>

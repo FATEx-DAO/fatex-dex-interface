@@ -57,7 +57,7 @@ flex-direction: column;
 export default function EarnArchived() {
   const { chainId, account } = useActiveWeb3React()
   const govToken = useGovernanceToken()
-  const allStakingInfos = useStakingInfo(true)
+  const allStakingInfos = useStakingInfo()
   const stakingInfos = useFilterStakingInfos(allStakingInfos, false)
 
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
@@ -76,7 +76,7 @@ export default function EarnArchived() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>{govToken?.symbol} liquidity mining</TYPE.white>
+                <TYPE.white fontWeight={600}>{govToken?.symbol} Liquidity Mining</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>
@@ -102,9 +102,9 @@ export default function EarnArchived() {
           {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
             <Loader style={{ margin: 'auto' }} />
           ) : account && !stakingRewardsExist ? (
-            <OutlineCard>No active pools</OutlineCard>
+            <OutlineCard>No archived pools</OutlineCard>
           ) : account && stakingInfos?.length !== 0 && !inactiveStakingInfos ? (
-            <OutlineCard>No active pools</OutlineCard>
+            <OutlineCard>No archived pools</OutlineCard>
           ) : !account ? (
             <OutlineCard>Please connect your wallet to see available pools</OutlineCard>
           ) : (

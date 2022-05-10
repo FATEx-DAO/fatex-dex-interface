@@ -82,6 +82,7 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
   return Boolean(
     userClaimData &&
       !startTimestamp.loading &&
+      startTimestamp.result &&
       new Fraction(startTimestamp.result?.[0].toString())?.lessThan(currentTimestamp.toString())
   )
 }

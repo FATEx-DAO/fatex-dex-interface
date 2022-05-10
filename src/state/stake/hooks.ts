@@ -244,7 +244,11 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           dummyPair.liquidityToken,
           JSBI.BigInt(lpTokenTotalSupply.result?.[0] ?? 0)
         )
-        const totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
+        let totalPendingRewardAmount = new TokenAmount(govToken, calculatedTotalPendingRewards)
+        // TODO delete
+        if (dummyPair.liquidityToken.address.toLowerCase() === '0xfdf6f1a2d3a0a24807de2cdb3afd2a813920436e') {
+          totalPendingRewardAmount = new TokenAmount(govToken, '100000000000000000000')
+        }
         const totalRewardDebt = new TokenAmount(govToken, lockedFateBigInt)
 
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256

@@ -13,7 +13,6 @@ import useGovernanceToken from './useGovernanceToken'
 export default function useBUSDPrice(currency?: Currency): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
-  // const busdTicker = chainId === ChainId.HARMONY_TESTNET ? '1BUSD' : chainId === ChainId.HARMONY_MAINNET ? '1USDC' : 'BUSD'
   let busdTicker: string
   if (chainId === ChainId.HARMONY_TESTNET) {
     busdTicker = '1BUSD'

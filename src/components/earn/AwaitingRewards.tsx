@@ -16,9 +16,11 @@ export default function AwaitingRewards() {
   const currentTimestamp = useCurrentBlockTimestamp()
 
   const rewardsStarted = useMemo<boolean>(() => {
-    return rewardsStartTimestamp && currentTimestamp
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), rewardsStartTimestamp)
-      : false
+    if (!rewardsStartTimestamp || !currentTimestamp) {
+      return true
+    }
+
+    return JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp.toString()), rewardsStartTimestamp)
   }, [rewardsStartTimestamp, currentTimestamp])
 
   const rewardStartString =
@@ -35,8 +37,9 @@ export default function AwaitingRewards() {
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              <b>{govToken?.symbol}</b> rewards haven&apos;t started yet - they will be activated at{' '}
-              <b>{rewardStartString}</b>.
+              <b>NOTICE: </b>
+              {govToken?.symbol} rewards haven&apos;t started yet - they will be activated on <b>{rewardStartString}</b>
+              .
               <br />
               <br />
               <br />

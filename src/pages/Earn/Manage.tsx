@@ -130,7 +130,7 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
-  const currentTimestamp = useCurrentBlockTimestamp() ?? 0
+  const currentTimestamp = useCurrentBlockTimestamp()
   const rewardsStartTimestamp = useRewardsStartTimestamp()
 
   const weekIndex = JSBI.divide(
@@ -157,11 +157,6 @@ export default function Manage({
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
-  // if (stakingTokenPair.liquidityToken.address.toLowerCase() === '0xfdf6f1a2d3a0a24807de2cdb3afd2a813920436e') {
-  //   if (stakingInfo) {
-  //     stakingInfo.earnedAmount = new TokenAmount(govToken, '100000000000000000000')
-  //   }
-  // }
   const percentInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
   const rewardFeePercentResult = useSingleCallResult(controller, 'getLockedRewardsFeePercent', percentInputs)
   const lpFeePercentResult = useSingleCallResult(controller, 'getLPWithdrawFeePercent', percentInputs)
@@ -191,9 +186,11 @@ export default function Manage({
       : undefined
 
   const rewardsStarted = useMemo<boolean>(() => {
-    return rewardsStartTimestamp && currentTimestamp
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp), rewardsStartTimestamp)
-      : false
+    if (!rewardsStartTimestamp || !currentTimestamp) {
+      return true
+    }
+
+    return JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp.toString()), rewardsStartTimestamp)
   }, [rewardsStartTimestamp, currentTimestamp])
 
   // detect existing unstaked LP position to show add button if none found
@@ -331,12 +328,29 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
               {govToken.symbol} Reward Fee %{' '}
-              <LightQuestionHelper
-                text={`This is the amount of ${govToken.symbol} paid in fees upon initiating a withdrawal or deposit. 
-                Meaning, if you have 100 unclaimed ${govToken.symbol} and a fee percent of 90%, you will only receive 
-                10 ${govToken.symbol} in your wallet. To decrease the fee, keep your deposits in the reward contract 
-                longer.`}
-              />
+              <ExternalLink href={'https://fatex.io'}>
+                <LightQuestionHelper
+                  text={
+                    <div>
+                      <span>
+                        This is the percent that will be taken from your FATE rewards upon initiating a withdrawal based
+                        on the duration of your capital contribution.
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
+                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
+                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
+                        decrease substantially overtime.
+                      </span>
+                      <br />
+                      <br />
+                      <span>Learn more by clicking on this question mark tooltip.</span>
+                    </div>
+                  }
+                />
+              </ExternalLink>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {rewardFeePercentLoading ? (
@@ -356,12 +370,29 @@ export default function Manage({
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
               LP Withdrawal Fee %{' '}
-              <LightQuestionHelper
-                text={`This is the amount of ${liquidityTokenSymbol} paid in fees upon initiating a withdrawal. Meaning,
-                 if you have 100 deposited ${liquidityTokenSymbol} and a fee percent of 90%, you will only receive 
-                 10 ${liquidityTokenSymbol} in your wallet. To decrease the fee, keep your deposits in the rewards 
-                 contract longer.`}
-              />
+              <ExternalLink href={'https://fatex.io'}>
+                <LightQuestionHelper
+                  text={
+                    <div>
+                      <span>
+                        This is the percent that will be taken from your LP tokens upon initiating a withdrawal based on
+                        the duration of your capital contribution.
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
+                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
+                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
+                        decrease substantially overtime.
+                      </span>
+                      <br />
+                      <br />
+                      <span>Learn more by clicking on this question mark tooltip.</span>
+                    </div>
+                  }
+                />
+              </ExternalLink>
             </TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {lpFeePercentLoading ? <Loader /> : lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
@@ -380,11 +411,11 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get FATExFI-LP Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>Step 1. Get FATExFi-LP Liquidity tokens</TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`FATExFI-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  {`FATExFi-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -438,7 +469,7 @@ export default function Manage({
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
                   <TYPE.white>
-                    FATExFI-LP {currencyA?.symbol}-{currencyB?.symbol}
+                    FATExFi-LP {currencyA?.symbol}-{currencyB?.symbol}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -544,7 +575,7 @@ export default function Manage({
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
           <TYPE.main>
-            You have {userLiquidityUnstaked.toSignificant(6)} FATExFI-LP tokens available to deposit
+            You have {userLiquidityUnstaked.toSignificant(6)} FATExFi-LP tokens available to deposit
           </TYPE.main>
         )}
       </PositionInfo>

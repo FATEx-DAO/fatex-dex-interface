@@ -5,12 +5,12 @@ export default function usePlatformName(): string {
   const blockchain = useBlockchain()
   switch (blockchain) {
     case Blockchain.BINANCE_SMART_CHAIN:
-      return 'FATExFI'
+      return 'FATExFi'
     case Blockchain.HARMONY:
-      return 'FATExFI'
+      return 'FATExFi'
     case Blockchain.ETHEREUM:
-      return 'FATExFI'
+      return 'FATExFi'
     default:
-      return 'FATExFI'
+      return 'FATExFi'
   }
 }

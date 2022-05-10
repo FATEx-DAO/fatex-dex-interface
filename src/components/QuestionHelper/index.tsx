@@ -64,7 +64,7 @@ export default function QuestionHelper({ text }: { text: string }) {
   )
 }
 
-export function LightQuestionHelper({ text }: { text: string }) {
+export function LightQuestionHelper({ text, lightBulb }: { text: string | React.ReactNode; lightBulb?: boolean }) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
@@ -74,7 +74,7 @@ export function LightQuestionHelper({ text }: { text: string }) {
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <LightQuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <QuestionMark>?</QuestionMark>
+          <QuestionMark>{lightBulb ? '?' : '💡'}</QuestionMark>
         </LightQuestionWrapper>
       </Tooltip>
     </span>

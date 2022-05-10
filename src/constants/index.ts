@@ -187,7 +187,7 @@ export const X_FATE: { [chainId in ChainId]: Token } = {
     '0x56BE76031A4614370fA1f188e01e18a1CF16E642',
     18,
     'xFATE',
-    'xFATExFI'
+    'xFATExFi'
   )
 }
 

@@ -199,11 +199,10 @@ export default function PoolCard({ stakingInfo, isArchived }: { stakingInfo: Sta
           <TYPE.white fontWeight={500} style={{ fontSize: '18px', lineHeight: '32px', fontWeight: 300 }}>
             {stakingInfo.apr && stakingInfo.apr.greaterThan('0')
               ? `${stakingInfo.apr.multiply('100').toSignificant(4, { groupSeparator: ',' })}%`
-              : 'TBD'}
+              : ''}
           </TYPE.white>
           <TYPE.white style={{ fontSize: '20px', lineHeight: '32px', marginLeft: '6px', fontWeight: 300 }}>
-            {' '}
-            APR
+            {stakingInfo.apr && stakingInfo.apr.greaterThan('0') ? ` APR` : `No Rewards`}
           </TYPE.white>
         </div>
       </TopSection>

@@ -9,6 +9,6 @@ export default function useRewardsStartTimestamp(): JSBI | undefined {
   // return rewardsStartTimestampResult.result?.[0]
   return useMemo(() => {
     const buffer = 86400 * 7
-    return JSBI.BigInt(Math.floor(new Date().getTime() / 1000) + buffer)
+    return JSBI.BigInt(Math.floor(new Date().getTime() / 1000) - buffer)
   }, [])
 }

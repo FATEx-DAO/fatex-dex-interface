@@ -1,6 +1,6 @@
 {
   "name": "@fatex-dao/interface",
-  "description": "FATExFI Interface",
+  "description": "FATExFi Interface",
   "homepage": ".",
   "private": true,
   "devDependencies": {
