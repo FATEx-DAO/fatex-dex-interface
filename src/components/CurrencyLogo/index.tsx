@@ -44,6 +44,8 @@ export const getTokenFallbackLogoURL = (currency: Currency) => {
     return 'https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282'
   } else if (currency.symbol?.includes('LINK')) {
     return 'https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/LINK.png'
+  } else if (currency.symbol?.includes('ETH')) {
+    return 'https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880'
   } else {
     return `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${currency.symbol}.png`
   }

@@ -67,5 +67,5 @@ export const portis = new PortisConnector({
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
   appName: 'FATExFi',
-  appLogoUrl: 'https://app.fatex.io/images/96x96_App_Icon.png'
+  appLogoUrl: 'https://app.fatex.io/images/192x192_App_Icon.png'
 })

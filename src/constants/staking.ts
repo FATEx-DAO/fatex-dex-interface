@@ -45,6 +45,16 @@ export const STAKING_REWARDS_INFO: {
       pid: 6,
       tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'FATE/xFATE'),
       active: false
+    },
+    {
+      pid: 7,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WETH/PAXG'),
+      active: false
+    },
+    {
+      pid: 8,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WBTC/PAXG'),
+      active: false
     }
   ],
   [ChainId.HARMONY_MAINNET]: [

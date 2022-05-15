@@ -327,6 +327,42 @@ export default function Manage({
         <PoolData>
           <AutoColumn gap="sm">
             <TYPE.body style={{ margin: 0 }}>
+              LP Withdrawal Fee %{' '}
+              <ExternalLink href={'https://fatex.io'}>
+                <LightQuestionHelper
+                  text={
+                    <div>
+                      <span>
+                        This is the percent that will be taken from your LP tokens upon initiating a withdrawal based on
+                        the duration of your capital contribution.
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
+                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
+                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
+                        decrease substantially overtime.
+                      </span>
+                      <br />
+                      <br />
+                      <span>Learn more by clicking on this question mark tooltip.</span>
+                    </div>
+                  }
+                />
+              </ExternalLink>
+            </TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {lpFeePercentLoading ? <Loader /> : lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
+            </TYPE.body>
+            <TYPE.body>
+              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>
               {govToken.symbol} Reward Fee %{' '}
               <ExternalLink href={'https://fatex.io'}>
                 <LightQuestionHelper
@@ -360,42 +396,6 @@ export default function Manage({
               ) : (
                 '-'
               )}
-            </TYPE.body>
-            <TYPE.body>
-              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
-            </TYPE.body>
-          </AutoColumn>
-        </PoolData>
-        <PoolData>
-          <AutoColumn gap="sm">
-            <TYPE.body style={{ margin: 0 }}>
-              LP Withdrawal Fee %{' '}
-              <ExternalLink href={'https://fatex.io'}>
-                <LightQuestionHelper
-                  text={
-                    <div>
-                      <span>
-                        This is the percent that will be taken from your LP tokens upon initiating a withdrawal based on
-                        the duration of your capital contribution.
-                      </span>
-                      <br />
-                      <br />
-                      <span>
-                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
-                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
-                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
-                        decrease substantially overtime.
-                      </span>
-                      <br />
-                      <br />
-                      <span>Learn more by clicking on this question mark tooltip.</span>
-                    </div>
-                  }
-                />
-              </ExternalLink>
-            </TYPE.body>
-            <TYPE.body fontSize={24} fontWeight={500}>
-              {lpFeePercentLoading ? <Loader /> : lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
             </TYPE.body>
             <TYPE.body>
               <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
