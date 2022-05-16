@@ -74,7 +74,7 @@ export function LightQuestionHelper({ text, lightBulb }: { text: string | React.
     <span style={{ marginLeft: 4 }}>
       <Tooltip text={text} show={show}>
         <LightQuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
-          <QuestionMark>{lightBulb ? '?' : '💡'}</QuestionMark>
+          <QuestionMark>{!lightBulb ? '?' : '💡'}</QuestionMark>
         </LightQuestionWrapper>
       </Tooltip>
     </span>

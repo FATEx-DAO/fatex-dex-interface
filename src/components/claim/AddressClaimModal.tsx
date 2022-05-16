@@ -124,12 +124,14 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
           </ModalUpper>
           <AutoColumn gap="md" style={{ padding: '1rem', paddingTop: '0' }} justify="center">
             <TYPE.subHeader fontWeight={500}>
-              Enter an address to trigger a {govToken?.symbol} claim. If the address has any claimable{' '}
-              {govToken?.symbol} it will be sent to them on submission.
+              Vested FATE are locked tokens earned from a prior rewards epoch or participants of the token swap options
+              given to FATExDAO members who used FATExDEX on Harmony One.
               <br />
               <br />
-              Addresses that are eligible for claiming FATE either 1) participated in FATE&apos;s ecosystem on Harmony
-              or 2) have locked rewards from a prior epoch that have begun vesting.
+              Vested FATE are unlocked evenly over the current epoch period on a per block rate schedule.
+              <br />
+              <br />
+              Enter an address and press &quot;Claim Unlocked FATE&quot; to have unlocked FATE sent to it.
             </TYPE.subHeader>
             <AddressInputPanel value={typed} onChange={handleRecipientType} />
             {parsedAddress && unclaimedAmount.equalTo('0') && (
@@ -146,7 +148,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               mt="1rem"
               onClick={onClaim}
             >
-              Claim {govToken?.symbol}
+              Claim Unlocked {govToken?.symbol}
             </ButtonPrimary>
           </AutoColumn>
         </ContentWrapper>

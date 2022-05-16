@@ -24,9 +24,11 @@ export default function SwapHeader() {
               <span>
                 NOTE: FATExFi is not a traditional &quot;dex&quot;. It is a liquidity pooling protocol for members to
                 contribute capital and join via acquiring the DAO governance token &quot;FATE,&quot; which allows a
-                member to participate in the development of DLT/crypto. Please read the V2 FAQ for details.
+                member to participate in the development of web 3.0 FinTch applications i.e. FxD. Please read the V2 FAQ
+                for details.
               </span>
             }
+            lightBulb={true}
           />
         </TYPE.black>
         <Settings />

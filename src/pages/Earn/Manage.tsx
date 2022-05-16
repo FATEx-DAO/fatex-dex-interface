@@ -133,14 +133,15 @@ export default function Manage({
   const currentTimestamp = useCurrentBlockTimestamp()
   const rewardsStartTimestamp = useRewardsStartTimestamp()
 
-  const weekIndex = JSBI.divide(
-    JSBI.subtract(
-      JSBI.BigInt(currentTimestamp),
-      rewardsStartTimestamp ? JSBI.BigInt(rewardsStartTimestamp) : JSBI.BigInt(currentTimestamp)
-    ),
-    JSBI.BigInt(604800)
-  )
-
+  const weekIndex = currentTimestamp
+    ? JSBI.divide(
+        JSBI.subtract(
+          JSBI.BigInt(currentTimestamp),
+          rewardsStartTimestamp ? JSBI.BigInt(rewardsStartTimestamp) : JSBI.BigInt(currentTimestamp)
+        ),
+        JSBI.BigInt(604800)
+      )
+    : JSBI.BigInt(0)
   const epoch = getEpochFromWeekIndex(weekIndex)
 
   let epochLengthWeeks: number

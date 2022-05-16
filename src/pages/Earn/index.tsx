@@ -262,7 +262,7 @@ export default function Earn() {
                     LP tokens you hold for any of the pairs shown below can be staked to receive rewards.
                   </TYPE.white>
                   <TYPE.white fontSize={14}>
-                    Stake your LP tokens to receive FATE, the FATExFi governance token.
+                    Stake your LP tokens to receive FATE, the FATExDAO governance token.
                   </TYPE.white>
                   <TYPE.white fontSize={14}>
                     {/*<span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>*/}
