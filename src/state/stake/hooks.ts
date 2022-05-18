@@ -254,7 +254,8 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         // poolInfo: lpToken address, allocPoint uint256, lastRewardBlock uint256, accGovTokenPerShare uint256
         const poolInfoResult = poolInfo.result
         const allocPoint = JSBI.BigInt(poolInfoResult && poolInfoResult[1])
-        const active = !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0)) || !hasRewardsStarted
+        const active =
+          !!(poolInfoResult && JSBI.GT(JSBI.BigInt(allocPoint), 0)) || (!hasRewardsStarted && masterInfo[index].active)
 
         const baseToken = determineBaseToken(tokensWithPrices, tokens)
 

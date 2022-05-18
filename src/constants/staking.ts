@@ -48,7 +48,7 @@ export const STAKING_REWARDS_INFO: {
     },
     {
       pid: 7,
-      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WETH/PAXG'),
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'ETH/PAXG'),
       active: false
     },
     {

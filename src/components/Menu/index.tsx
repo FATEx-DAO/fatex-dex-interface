@@ -205,7 +205,7 @@ export default function Menu() {
         <MenuItem id="link" href={'https://fatex.io'}>
           FATEx.io
         </MenuItem>
-        <MenuItem id="link" href={'https://fatex.io'}>
+        <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq'}>
           V2 FAQ
         </MenuItem>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
@@ -258,7 +258,7 @@ export default function Menu() {
             <MenuItem id="link" href={'https://fatex.io'}>
               FATEx.io
             </MenuItem>
-            <MenuItem id="link" href={'https://fatex.io'}>
+            <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq'}>
               V2 FAQ
             </MenuItem>
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
