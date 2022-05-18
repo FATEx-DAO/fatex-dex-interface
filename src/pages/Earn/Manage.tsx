@@ -191,7 +191,10 @@ export default function Manage({
       return true
     }
 
-    return JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp.toString()), rewardsStartTimestamp)
+    return JSBI.greaterThanOrEqual(
+      JSBI.BigInt(currentTimestamp.toString()),
+      JSBI.BigInt(rewardsStartTimestamp.toString())
+    )
   }, [rewardsStartTimestamp, currentTimestamp])
 
   // detect existing unstaked LP position to show add button if none found
@@ -293,6 +296,12 @@ export default function Manage({
                 `${
                   depositDuration.get('years') >= 1 && depositDuration.get('years') < 2
                     ? `${depositDuration.get('years')} year `
+                    : ''
+                }` +
+                `${depositDuration.get('months') >= 2 ? `${depositDuration.get('months')} months ` : ''}` +
+                `${
+                  depositDuration.get('months') >= 1 && depositDuration.get('months') < 2
+                    ? `${depositDuration.get('months')} month `
                     : ''
                 }` +
                 `${depositDuration.get('days') >= 2 ? `${depositDuration.get('days')} days ` : ''}` +

@@ -20,11 +20,11 @@ export default function AwaitingRewards() {
       return true
     }
 
-    return JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp.toString()), rewardsStartTimestamp)
+    return JSBI.greaterThanOrEqual(JSBI.BigInt(currentTimestamp.toString()), JSBI.BigInt(rewardsStartTimestamp))
   }, [rewardsStartTimestamp, currentTimestamp])
 
   const rewardStartString =
-    rewardsStartTimestamp && JSBI.notEqual(rewardsStartTimestamp, JSBI.BigInt(MaxUint256.toString()))
+    rewardsStartTimestamp && JSBI.notEqual(JSBI.BigInt(rewardsStartTimestamp), JSBI.BigInt(MaxUint256.toString()))
       ? moment(Number(rewardsStartTimestamp.toString()) * 1000).format('lll')
       : 'Unknown Timestamp'
 

@@ -4,7 +4,6 @@ import { PairState, usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '.'
 import { wrappedCurrency } from '../utils/wrappedCurrency'
 import getToken from '../utils/getToken'
-import useGovernanceToken from './useGovernanceToken'
 
 /**
  * Returns the price in BUSD of the input currency
@@ -42,14 +41,9 @@ export default function useBUSDPrice(currency?: Currency): Price | undefined {
 
   const [[ethPairState, ethPair], [busdPairState, busdPair], [busdEthPairState, busdEthPair]] = usePairs(tokenPairs)
 
-  const govToken = useGovernanceToken()
   return useMemo(() => {
     if (!currency || !wrapped || !chainId) {
       return undefined
-    }
-    // TODO remove
-    if (currency?.symbol === govToken.symbol) {
-      return new Price(govToken, getToken(chainId, 'USDC'), '100', '10')
     }
     // handle weth/eth
     if (wrapped.equals(WETH[chainId])) {

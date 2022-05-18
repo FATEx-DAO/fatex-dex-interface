@@ -95,7 +95,7 @@
   "scripts": {
     "start": "react-scripts start",
     "start:service-worker": "yarn build && yarn serve -s build",
-    "deploy:public": "firebase deploy --only hosting:fatex-dao",
+    "deploy:public": "firebase deploy --only hosting:fatex-fi",
     "deploy:private": "firebase hosting:channel:deploy fatex-dao-private",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

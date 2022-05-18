@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Book, Code, PieChart } from 'react-feather'
+import { Book, Code, PieChart, Check } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -212,15 +212,15 @@ export default function Menu() {
           <Code size={14} />
           Code
         </MenuItem>
-        <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
-          <img src={Checkmark} />
-          DAO Voting
+        <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
+          <Check size={14} />
+          DAO Links
         </MenuItem>
         <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
           <Book size={14} />
           Green Paper
         </MenuItem>
-        <MenuItem id="link" href="https://info.fatex.io">
+        <MenuItem id="link" href="https://info.fatexfi.io">
           <PieChart size={14} />
           Analytics
         </MenuItem>
@@ -256,7 +256,7 @@ export default function Menu() {
         {open && (
           <MenuFlyout isStaking={isStaking}>
             <MenuItem id="link" href={'https://fatex.io'}>
-              FATEx.io
+              FATExDAO.io
             </MenuItem>
             <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq'}>
               V2 FAQ
@@ -265,15 +265,15 @@ export default function Menu() {
               <Code size={14} />
               Code
             </MenuItem>
-            <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
+            <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
               <img src={Checkmark} />
-              DAO Voting
+              DAO Links
             </MenuItem>
             <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
               <Book size={14} />
               Green Paper
             </MenuItem>
-            <MenuItem id="link" href="https://info.fatex.io">
+            <MenuItem id="link" href="https://info.fatexfi.io">
               <PieChart size={14} />
               Analytics
             </MenuItem>
