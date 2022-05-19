@@ -209,11 +209,10 @@ export default function Menu() {
           <Code size={14} />
           Code
         </MenuItem>
-        <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
-          <img src={DiscourseLogo} />
+        <MenuItem id="link" href={'https://t.me/FATExDAO'}>
           DAO Forum
         </MenuItem>
-        <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
+        <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
           <img src={Checkmark} />
           DAO Voting
         </MenuItem>
@@ -270,11 +269,10 @@ export default function Menu() {
               <Code size={14} />
               Code
             </MenuItem>
-            <MenuItem id="link" href={'https://gov.daodiscourse.fatex.io/categories'}>
-              <img src={DiscourseLogo} />
+            <MenuItem id="link" href={'https://t.me/FATExDAO'}>
               DAO Forum
             </MenuItem>
-            <MenuItem id="link" href={'https://gov.harmony.one/#/fatexdao'}>
+            <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
               <img src={Checkmark} />
               DAO Voting
             </MenuItem>
