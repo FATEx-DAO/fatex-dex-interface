@@ -20,9 +20,11 @@ import DiscordLogo from '../../assets/images/discord-logo.svg'
 import YouTubeLogo from '../../assets/images/youtube-logo.svg'
 import RedditLogo from '../../assets/images/reddit-logo.svg'
 import MediumLogo from '../../assets/images/medium-logo.svg'
+import SubstackLogo from '../../assets/images/substack-logo.svg'
 import DiscourseLogo from '../../assets/images/discourse-logo.svg'
 import LinkedinLogo from '../../assets/images/linkedin-logo.svg'
 import Checkmark from '../../assets/images/checkmark-icon.svg'
+import ChainIcon from '../../assets/images/chain-icon.svg'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -79,7 +81,7 @@ const StyledMenuMobile = styled.div<{ isStaking: boolean }>`
 `
 
 const MenuFlyout = styled.span<{ isStaking: boolean }>`
-  min-width: 15rem;
+  min-width: 16rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
     0 24px 32px rgba(0, 0, 0, 0.01);
@@ -209,8 +211,9 @@ export default function Menu() {
           <Code size={14} />
           Code
         </MenuItem>
-        <MenuItem id="link" href={'https://t.me/FATExDAO'}>
-          DAO Forum
+        <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
+          <img src={ChainIcon} />
+          DAO Links
         </MenuItem>
         <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
           <img src={Checkmark} />
@@ -242,6 +245,9 @@ export default function Menu() {
           <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
             <img src={DiscordLogo} alt={'discord logo'} />
           </a>
+          <a href={'https://fatex.substack.com/'} target={'_blank'} rel="noreferrer">
+            <img style={{ filter: 'brightness(100)' }} src={SubstackLogo} alt={'substack logo'} />
+          </a>
           <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
             <img src={YouTubeLogo} alt={'youtube logo'} />
           </a>
@@ -269,8 +275,9 @@ export default function Menu() {
               <Code size={14} />
               Code
             </MenuItem>
-            <MenuItem id="link" href={'https://t.me/FATExDAO'}>
-              DAO Forum
+            <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
+              <img src={ChainIcon} />
+              DAO Links
             </MenuItem>
             <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
               <img src={Checkmark} />
@@ -301,6 +308,9 @@ export default function Menu() {
               </a>
               <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
                 <img src={DiscordLogo} alt={'discord logo'} />
+              </a>
+              <a href={'https://fatex.substack.com/'} target={'_blank'} rel="noreferrer">
+                <img style={{ filter: 'brightness(100)' }} src={SubstackLogo} alt={'substack logo'} />
               </a>
               <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
                 <img src={YouTubeLogo} alt={'youtube logo'} />
