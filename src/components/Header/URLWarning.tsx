@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { AlertTriangle, X } from 'react-feather'
+import { X } from 'react-feather'
+import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
@@ -22,20 +23,15 @@ export const StyledClose = styled(X)`
 `
 
 export default function URLWarning() {
-  // const { chainId } = useActiveWeb3React()
-  // const webInterfaces = chainId && WEB_INTERFACES[chainId]
-  // const defaultHostname = webInterfaces?.[0]
-  // const currentHostname = window.location.hostname
-  // const showURLWarning = currentHostname === 'old.app.fatex.io' || currentHostname === 'fatex-dao-old.web.app'
-  const showURLWarning = true
+  const blockTimestamp = useCurrentBlockTimestamp()?.toNumber() ?? Math.floor(new Date().getTime() / 1000)
+  const showURLWarning = useMemo(() => blockTimestamp < 1654142400, [blockTimestamp])
 
   return (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} />
-        NOTICE: This DAPP is &quot;LIVE&quot; BUT FATE REWARDS HAVE NOT STARTED & THERE IS NO CIRCULATING SUPPLY. Users
-        may create LPs to prepare for when FATE supply is deployed & the DAO’s treasury provides sufficient liquidity to
-        swap FATE, MATIC and USDC. CLICK ON: DAO LINKS TO KEEP UP-TO-DATE on the FATExFi Launch.
+        This DAPP is &quot;LIVE.&quot; THERE IS NO CIRCULATING FATE. DAO Treasury will provide liquidity for FATE:USDC
+        LP +/-24 hours before FATE rewards start-time: June 1, 2022 8PM (UTC-4 EDT) for users to create LPs/buy FATE.
+        CLICK ON: DAO LINKS FOR UP-TO-DATE FATExFi launch FAQ.
       </div>
     </PhishAlert>
   )
