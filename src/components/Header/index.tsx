@@ -544,7 +544,8 @@ export default function Header() {
         return memo.add(value ?? new TokenAmount(govToken, '0'))
       }, new TokenAmount(govToken, '0'))
     : undefined
-  const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
+  // const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
+  const totalUnlockedSupply = govToken ? new TokenAmount(govToken, '0') : undefined
 
   const govTokenPrice = useBUSDPrice(govToken)
   const fatePrice =

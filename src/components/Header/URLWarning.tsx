@@ -2,10 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { AlertTriangle, X } from 'react-feather'
-import { useURLWarningToggle, useURLWarningVisible } from '../../state/user/hooks'
-import { isMobile } from 'react-device-detect'
-import { useActiveWeb3React } from '../../hooks'
-import { WEB_INTERFACES } from '../../constants'
 
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
@@ -26,21 +22,20 @@ export const StyledClose = styled(X)`
 `
 
 export default function URLWarning() {
-  const { chainId } = useActiveWeb3React()
-  const webInterfaces = chainId && WEB_INTERFACES[chainId]
-  const defaultHostname = webInterfaces?.[0]
-  const currentHostname = window.location.hostname
-  const showURLWarning = currentHostname === 'old.app.fatex.io' || currentHostname === 'fatex-dao-old.web.app'
+  // const { chainId } = useActiveWeb3React()
+  // const webInterfaces = chainId && WEB_INTERFACES[chainId]
+  // const defaultHostname = webInterfaces?.[0]
+  // const currentHostname = window.location.hostname
+  // const showURLWarning = currentHostname === 'old.app.fatex.io' || currentHostname === 'fatex-dao-old.web.app'
+  const showURLWarning = true
 
   return (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> This is the old version of FATExDAO. If you are looking
-        for the current version of the site, visit{' '}
-        {/*<code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>{defaultHostname}</code>.*/}
-        <a href={'https://app.fatexfi.io'} style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>
-          {defaultHostname}
-        </a>
+        <AlertTriangle style={{ marginRight: 6 }} size={12} />
+        NOTICE: This DAPP is &quot;LIVE&quot; BUT FATE REWARDS HAVE NOT STARTED & THERE IS NO CIRCULATING SUPPLY. Users
+        may create LPs to prepare for when FATE supply is deployed & the DAO’s treasury provides sufficient liquidity to
+        swap FATE, MATIC and USDC. CLICK ON: DAO LINKS TO KEEP UP-TO-DATE on the FATExFi Launch.
       </div>
     </PhishAlert>
   )
