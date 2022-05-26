@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "site": "fatex-dao-old",
+    "site": "fatex-dao",
     "public": "build",
     "ignore": [
       "firebase.json",
