@@ -10,7 +10,7 @@ import { useLocation } from 'react-router-dom'
 const StyledPolling = styled.div<{ isStaking: boolean }>`
   position: fixed;
   display: flex;
-  right: 210px;
+  right: 245px;
   bottom: 6px;
   padding: 1rem;
   color: ${({ theme }) => theme.text1};
