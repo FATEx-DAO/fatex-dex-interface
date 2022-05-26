@@ -20,9 +20,10 @@ import DiscordLogo from '../../assets/images/discord-logo.svg'
 import YouTubeLogo from '../../assets/images/youtube-logo.svg'
 import RedditLogo from '../../assets/images/reddit-logo.svg'
 import MediumLogo from '../../assets/images/medium-logo.svg'
-import DiscourseLogo from '../../assets/images/discourse-logo.svg'
+import SubstackLogo from '../../assets/images/substack-logo.svg'
 import LinkedinLogo from '../../assets/images/linkedin-logo.svg'
 import Checkmark from '../../assets/images/checkmark-icon.svg'
+import { useDarkModeManager } from '../../state/user/hooks'
 
 const StyledMenuIcon = styled(MenuIcon)`
   path {
@@ -79,7 +80,7 @@ const StyledMenuMobile = styled.div<{ isStaking: boolean }>`
 `
 
 const MenuFlyout = styled.span<{ isStaking: boolean }>`
-  min-width: 15rem;
+  min-width: 16rem;
   background-color: ${({ theme }) => theme.bg2};
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.01), 0 4px 8px rgba(0, 0, 0, 0.04), 0 16px 24px rgba(0, 0, 0, 0.04),
     0 24px 32px rgba(0, 0, 0, 0.01);
@@ -164,7 +165,7 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const SocialLinks = styled.div`
+const SocialLinks = styled.div<{ darkMode: boolean }>`
   margin-top: 10px;
 
   a {
@@ -173,7 +174,7 @@ const SocialLinks = styled.div`
 
     img,
     svg {
-      filter: invert(1);
+      ${({ darkMode }) => darkMode && 'filter: invert(1);'}
       width: 20px;
       opacity: 0.6;
 
@@ -194,6 +195,8 @@ export default function Menu() {
   const toggle = useToggleModal(ApplicationModal.MENU)
   useOnClickOutside(node, open ? toggle : undefined)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
+
+  const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const location = useLocation()
   const isStaking = location.pathname === '/depository'
@@ -224,7 +227,7 @@ export default function Menu() {
           <PieChart size={14} />
           Analytics
         </MenuItem>
-        <SocialLinks>
+        <SocialLinks darkMode={darkMode}>
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
             <img src={TwitterLogo} alt={'twitter logo'} />
           </a>
@@ -239,6 +242,13 @@ export default function Menu() {
           </a>
           <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
             <img src={DiscordLogo} alt={'discord logo'} />
+          </a>
+          <a href={'https://fatex.substack.com/'} target={'_blank'} rel="noreferrer">
+            <img
+              style={{ filter: `brightness(100) ${darkMode ? '' : ' invert(1)'}` }}
+              src={SubstackLogo}
+              alt={'substack logo'}
+            />
           </a>
           <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
             <img src={YouTubeLogo} alt={'youtube logo'} />
@@ -277,7 +287,7 @@ export default function Menu() {
               <PieChart size={14} />
               Analytics
             </MenuItem>
-            <SocialLinks>
+            <SocialLinks darkMode={darkMode}>
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
                 <img src={TwitterLogo} alt={'twitter logo'} />
               </a>
@@ -292,6 +302,13 @@ export default function Menu() {
               </a>
               <a href={'https://discord.gg/uA6xrmsRfu'} target={'_blank'} rel="noreferrer">
                 <img src={DiscordLogo} alt={'discord logo'} />
+              </a>
+              <a href={'https://fatex.substack.com/'} target={'_blank'} rel="noreferrer">
+                <img
+                  style={{ filter: `brightness(100)${darkMode ? '' : ' invert(1)'}` }}
+                  src={SubstackLogo}
+                  alt={'substack logo'}
+                />
               </a>
               <a href={'https://youtube.com/channel/UCvD3ItDf063xc_I4412wXCg'} target={'_blank'} rel="noreferrer">
                 <img src={YouTubeLogo} alt={'youtube logo'} />
