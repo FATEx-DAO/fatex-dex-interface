@@ -38,13 +38,13 @@ export default function AwaitingRewards() {
                 💡
               </span>
               <b>NOTICE: </b>
-              {govToken?.symbol} rewards haven&apos;t started yet - they will be activated on <b>{rewardStartString}</b>
-              .
+              {govToken?.symbol} rewards haven&apos;t started yet - they will be activated on <b>{rewardStartString}</b>{' '}
+              local time.
               <br />
               <br />
               <br />
-              You can deposit your LP tokens now if you want to, and you&apos;ll start earning rewards at{' '}
-              <b>{rewardStartString}</b> and thereafter.
+              You can still deposit your LP tokens now, and you&apos;ll automatically start earning rewards when they
+              are activated. See the banner message regarding FATE circulating supply.
             </TYPE.link>
           </AutoColumn>
         </BlueCard>
