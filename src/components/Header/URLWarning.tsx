@@ -2,8 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { AlertTriangle, X } from 'react-feather'
-import { useActiveWeb3React } from '../../hooks'
-import { WEB_INTERFACES } from '../../constants'
 import { ExternalLink } from '../../theme'
 
 const PhishAlert = styled.div<{ isActive: any }>`
@@ -14,7 +12,7 @@ const PhishAlert = styled.div<{ isActive: any }>`
   font-size: 11px;
   justify-content: space-between;
   align-items: center;
-  //height: 64px;
+  height: 84px;
   display: ${({ isActive }) => (isActive ? 'flex' : 'none')};
 `
 
@@ -41,10 +39,9 @@ export default function URLWarning() {
           }
           style={{ fontWeight: 'bold' }}
         >
-          <AlertTriangle style={{ marginRight: 6 }} size={12} />
-          FATExDAO is moving to MATIC & deploying FATExFi. Any member who owns $FATE rewarded here (on HARMONY ONE) has
-          2 options: an automatic airdrop, and/or to apply for a limited, &quot;fair,&quot; FATExFi pre-launch token
-          swap. Click on this box for details.
+          FATExDAO is moving to MATIC & deploying FATExFi. Any member who owns FATE(h) rewarded here (on HARMONY ONE)
+          has had 2 options: an automatic airdrop, and/or to apply for a limited, &quot;fair,&quot; FATExFi pre-launch
+          swap. The DAO created these to ensure value for FATE(h) holders increases.
         </ExternalLink>
       </div>
     </PhishAlert>
