@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { AlertTriangle, X } from 'react-feather'
+import { X } from 'react-feather'
 import { ExternalLink } from '../../theme'
 
 const PhishAlert = styled.div<{ isActive: any }>`
@@ -39,9 +39,9 @@ export default function URLWarning() {
           }
           style={{ fontWeight: 'bold' }}
         >
-          FATExDAO is moving to MATIC & deploying FATExFi. Any member who owns FATE(h) rewarded here (on HARMONY ONE)
-          has had 2 options: an automatic airdrop, and/or to apply for a limited, &quot;fair,&quot; FATExFi pre-launch
-          swap. The DAO created these to ensure value for FATE(h) holders increases.
+          FATExDAO has moved to FATExFi.io on MATIC. This DApp and FATE on HARMONY is no longer used by the DAO. Any
+          member who owns FATE rewarded here, is receiving an allocation of FATE on MATIC automatically. Any remaining
+          user LPs etc. may be removed at their convenience. Click this for more info.
         </ExternalLink>
       </div>
     </PhishAlert>
