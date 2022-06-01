@@ -23,8 +23,9 @@ export const StyledClose = styled(X)`
 `
 
 export default function URLWarning() {
-  const blockTimestamp = useCurrentBlockTimestamp()?.toNumber() ?? Math.floor(new Date().getTime() / 1000)
-  const showURLWarning = useMemo(() => blockTimestamp < 1654142400, [blockTimestamp])
+  // const blockTimestamp = useCurrentBlockTimestamp()?.toNumber() ?? Math.floor(new Date().getTime() / 1000)
+  // const showURLWarning = useMemo(() => blockTimestamp < 1654142400, [blockTimestamp])
+  const showURLWarning = false
 
   return (
     <PhishAlert isActive={showURLWarning}>

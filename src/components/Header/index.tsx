@@ -527,16 +527,18 @@ export default function Header() {
   const outOfCirculationBalances = [
     '0x7a8B2780189fa8758bf212321DabDbd3856D1155', // FateRewardController
     '0x7aB7B87B4a90042f655CAe53cA984305EBb17a18', // FateRewardVault
-    '0xa608dE0761eb27878423d74cD78a2A731695cac4', // Community Vault
-    '0x0619f9A8961b1B57b602B5BA6214c2dF5695582d', // FGCD Vault
-    '0x4BC7080cd426ca067B5658d2a8d261Cf7D5b5622', // Growth Vault
-    '0x04Ca98cf10e94863741B42f53E384Bcd36dDb579', // Legal Vault
-    '0x78a3A4e7722c61e391a02b8e1393219F6b5bFBF8', // Presale Vault
-    '0x279A93B959cb4a76c882a2685377A2fACcf14d49', // Advisor Vault
-    '0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6' // Advisor Vault
-    // '', // Team Vault
+    '0x8430d8BCDc025960b491aE8D043648e9A9968949', // Founder Vault
+    '0xe3cac535fcb777a42dc2c234e0a8884049a4264e', // Growth Vault
+    '0x6f762d1B15E69cAD15a8351C631eA012B3fbC831', // Harmony Members Vault
+    '0xd75181c60490a0Fe6155E4Fa02Fa80A1fcDdaef5', // Legal Vault
+    '0x42f13D8880C971ce59a9f02fDb695208e5Ea2a06', // Pre-Harmony Members Vault
+    '0x279A93B959cb4a76c882a2685377A2fACcf14d49', // Team/Advisors/Investor Vault
+    '0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6', // Team/Advisors/Investor Vault
+    '0x1b6b226825ed7a94fbe118e62b6983d35c74407d', // Team/Advisors/Investor EOA
+    '0x4F5Fbb56314cB48fA4848bf1e0433F0DD8A12C49', // Team/Advisors/Investor EOA
+    '0x31881a03519C0Fc57F4BA6766ca2bFFe1f584eE3', // Team/Advisors/Investor EOA
+    '0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df' // DAO Gnosis Safe
     // '' // founder address EOA? // has some FATE in xFATE which messes up count
-    // '0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb' // team address EOA? // has some FATE in xFATE which messes up count
   ]
   const totalLockedSupplyMap = useAddressesTokenBalance(outOfCirculationBalances, govToken)
   const totalLockedSupply = govToken
@@ -544,8 +546,8 @@ export default function Header() {
         return memo.add(value ?? new TokenAmount(govToken, '0'))
       }, new TokenAmount(govToken, '0'))
     : undefined
-  // const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
-  const totalUnlockedSupply = govToken ? new TokenAmount(govToken, '0') : undefined
+  const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
+  // const totalUnlockedSupply = govToken ? new TokenAmount(govToken, '14722537305000000000000000') : undefined
 
   const govTokenPrice = useBUSDPrice(govToken)
   const fatePrice =
