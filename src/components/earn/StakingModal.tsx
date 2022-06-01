@@ -4,7 +4,7 @@ import Modal from '../Modal'
 import { AutoColumn, ColumnCenter } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { CloseIcon, TYPE } from '../../theme'
+import { CloseIcon, ExternalLink, TYPE } from '../../theme'
 import { ButtonConfirmed, ButtonError } from '../Button'
 import ProgressCircles from '../ProgressSteps'
 import CurrencyInputPanel from '../CurrencyInputPanel'
@@ -20,6 +20,7 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { LoadingView, SubmittedView } from '../ModalViews'
 import { BlueCard } from '../Card'
 import { calculateGasMargin } from '../../utils'
+import { FEES_URL } from '../../constants'
 
 /*const HypotheticalRewardRate = styled.div<{ dim: boolean }>`
   display: flex;
@@ -148,9 +149,27 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
                     {/*💡 There is <b>no</b> deposit or withdrawal fee!*/}
-                    {stakingInfo.active
-                      ? '💡 There is no deposit or withdrawal fee!'
-                      : 'This pool is archived. Depositing will not produce any rewards.'}
+                    {stakingInfo.active ? (
+                      <div>
+                        <span>💡 There are no deposit fees.</span>
+                        <br />
+                        <br />
+                        <span>
+                          NOTE: There <i>ARE</i> withdrawal fees.
+                        </span>
+                        <br />
+                        <br />
+                        <span>
+                          Learn more{' '}
+                          <ExternalLink style={{ textDecoration: 'underline' }} href={FEES_URL}>
+                            here
+                          </ExternalLink>{' '}
+                          before depositing.
+                        </span>
+                      </div>
+                    ) : (
+                      'This pool is archived. Depositing will not produce any rewards.'
+                    )}
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
@@ -194,7 +213,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Depositing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATExFi-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -202,7 +221,7 @@ export default function StakingModal({ isOpen, onDismiss, stakingInfo, userLiqui
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Deposited {parsedAmount?.toSignificant(4)} FATExFi-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

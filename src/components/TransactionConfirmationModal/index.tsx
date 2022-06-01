@@ -1,5 +1,5 @@
 import { ChainId, Currency } from '@fatex-dao/sdk'
-import React, { useContext } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styled, { ThemeContext } from 'styled-components'
 import Modal from '../Modal'
 import { ExternalLink } from '../../theme'
@@ -85,7 +85,10 @@ function TransactionSubmittedContent({
   const { library } = useActiveWeb3React()
   const blockchain = useBlockchain()
   const explorerName = getExplorerName(blockchain)
-  const currencyToAddAdjusted = getBlockchainAdjustedCurrency(blockchain, currencyToAdd)
+  const currencyToAddAdjusted = useMemo(() => getBlockchainAdjustedCurrency(blockchain, currencyToAdd), [
+    blockchain,
+    currencyToAdd
+  ])
   const { addToken, success } = useAddTokenToMetamask(currencyToAddAdjusted)
 
   return (
@@ -110,7 +113,7 @@ function TransactionSubmittedContent({
             </ExternalLink>
           )}
           {currencyToAddAdjusted && library?.provider?.isMetaMask && (
-            <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
+            <ButtonPrimary mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
                   Add {currencyToAddAdjusted.symbol} to Metamask <StyledLogo src={MetaMaskLogo} />
@@ -121,7 +124,7 @@ function TransactionSubmittedContent({
                   <CheckCircle size={'16px'} stroke={theme.green1} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}
-            </ButtonLight>
+            </ButtonPrimary>
           )}
           <ButtonPrimary onClick={onDismiss} style={{ margin: '20px 0 0 0' }}>
             <Text fontWeight={500} fontSize={20}>

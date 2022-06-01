@@ -38,7 +38,7 @@ export function getNetworkLibrary(): Web3Provider {
   return (networkLibrary = networkLibrary ?? new Web3Provider(network.provider as any))
 }
 
-const supportedChainIds = [1666600000, 1666700000]
+const supportedChainIds = [137]
 
 export const injected = new InjectedConnector({
   supportedChainIds: supportedChainIds
@@ -66,6 +66,6 @@ export const portis = new PortisConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
-  appName: 'FATExDAO',
-  appLogoUrl: 'https://app.fatex.io/images/96x96_App_Icon.png'
+  appName: 'FATExFi',
+  appLogoUrl: 'https://app.fatex.io/images/192x192_App_Icon.png'
 })

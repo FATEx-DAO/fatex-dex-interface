@@ -1,13 +1,13 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
 import { RowBetween } from '../Row'
-import { TYPE, CloseIcon } from '../../theme'
+import { TYPE, CloseIcon, ExternalLink } from '../../theme'
 import { ButtonError } from '../Button'
 import CurrencyInputPanel from '../CurrencyInputPanel'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
-import { TokenAmount, Pair } from '@fatex-dao/sdk'
+import { TokenAmount, Pair, Fraction } from '@fatex-dao/sdk'
 import { StakingInfo, useDerivedUnstakeInfo } from '../../state/stake/hooks'
 import { TransactionResponse } from '@ethersproject/providers'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -16,6 +16,12 @@ import { BlueCard } from '../Card'
 import { ColumnCenter } from '../Column'
 import { calculateGasMargin } from '../../utils'
 import { useFateRewardController } from '../../hooks/useContract'
+import { FEES_URL } from '../../constants'
+import { useSingleCallResult } from '../../state/multicall/hooks'
+import { useActiveWeb3React } from '../../hooks'
+import Loader from '../Loader'
+import useGovernanceToken from '../../hooks/useGovernanceToken'
+import useBUSDPrice from '../../hooks/useBUSDPrice'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -43,18 +49,32 @@ interface StakingModalProps {
 
 export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }: StakingModalProps) {
   // track and parse user input
+  const { account } = useActiveWeb3React()
+  const fateRewardController = useFateRewardController()
+  const govToken = useGovernanceToken()
   const [typedValue, setTypedValue] = useState('')
   const { parsedAmount, error } = useDerivedUnstakeInfo(typedValue, stakingInfo.stakedAmount)
-  /*const parsedAmountWrapped = wrappedCurrencyAmount(parsedAmount, chainId)
 
-  let hypotheticalRewardRate: TokenAmount = new TokenAmount(stakingInfo.rewardRate.token, '0')
-  if (parsedAmountWrapped?.greaterThan('0')) {
-    hypotheticalRewardRate = stakingInfo.getHypotheticalRewardRate(
-      stakingInfo.stakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalStakedAmount.add(parsedAmountWrapped),
-      stakingInfo.totalRewardRate
-    )
-  }*/
+  const methodInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
+  const rewardFeePercentResult = useSingleCallResult(fateRewardController, 'getLockedRewardsFeePercent', methodInputs)
+  const lpFeePercentResult = useSingleCallResult(fateRewardController, 'getLPWithdrawFeePercent', methodInputs)
+
+  const rewardFeePercentLoading = rewardFeePercentResult.loading
+  const rewardFeePercent: Fraction | undefined = rewardFeePercentResult.result?.[0]
+    ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
+    : undefined
+  const totalRewardAmount =
+    rewardFeePercent && rewardFeePercent.lessThan('1') && stakingInfo.earnedAmount
+      ? stakingInfo.earnedAmount.multiply(new Fraction('1').subtract(rewardFeePercent).invert())
+      : undefined
+  const govTokenPrice = useBUSDPrice(govToken)
+  // const govTokenPrice = new Fraction('10', '100') // $0.10
+
+  const lpFeePercentLoading = lpFeePercentResult.loading
+  const lpFeePercent: Fraction | undefined = lpFeePercentResult.result?.[0]
+    ? new Fraction(lpFeePercentResult.result?.[0].toString(), '10000')
+    : undefined
+  const lpFeeAmount = parsedAmount && lpFeePercent ? parsedAmount.multiply(lpFeePercent) : undefined
 
   // state for pending and submitted txn views
   const addTransaction = useTransactionAdder()
@@ -67,8 +87,6 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
     setFailed(false)
     onDismiss()
   }, [onDismiss])
-
-  const fateRewardController = useFateRewardController()
 
   // pair contract for this token to be staked
   const dummyPair = new Pair(new TokenAmount(stakingInfo.tokens[0], '0'), new TokenAmount(stakingInfo.tokens[1], '0'))
@@ -127,7 +145,63 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
               <BlueCard>
                 <AutoColumn gap="10px">
                   <TYPE.link fontWeight={400} color={'text1'}>
-                    💡 There is <b>no</b> withdrawal fee!
+                    💡 Fees are charged to discourage short-term yield farming & reward long-term member participation.
+                    Learn more{' '}
+                    <ExternalLink href={FEES_URL} style={{ textDecoration: 'underline' }}>
+                      here
+                    </ExternalLink>
+                    .
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'text1'}>
+                    The fees you will be charged if any amount is withdrawn from the staking contract are currently:
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'text1'}>
+                    1. LP withdrawal fee (paid to xFATE pool):
+                    <br />
+                    &nbsp;&nbsp;&nbsp;
+                    {lpFeePercentLoading ? (
+                      <Loader />
+                    ) : !lpFeeAmount ? (
+                      '-'
+                    ) : (
+                      lpFeeAmount.toSignificant(8) +
+                      ` ${stakingInfo.totalLpTokenSupply.token.symbol} (${lpFeePercent.multiply('100').toFixed(2)}%)`
+                    )}
+                    <br />
+                    <br />
+                    2. {govToken.symbol} rewards fee:
+                    <br />
+                    &nbsp;&nbsp;&nbsp;
+                    {rewardFeePercentLoading ? (
+                      <Loader />
+                    ) : !totalRewardAmount ? (
+                      '-'
+                    ) : (
+                      totalRewardAmount.multiply(rewardFeePercent).toSignificant(8) +
+                      ` ${govToken.symbol} (${rewardFeePercent.multiply('100').toFixed(2)}%)`
+                    )}
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'text1'}>
+                    The {stakingInfo.tokens[0].symbol}:{stakingInfo.tokens[1].symbol}-LP you will receive:
+                    <br />
+                    {!parsedAmount
+                      ? '-'
+                      : `${parsedAmount.multiply(new Fraction('1').subtract(lpFeePercent)).toSignificant(8)} ${
+                          stakingInfo.totalStakedAmount?.token.symbol
+                        } ($${stakingInfo.valueOfTotalStakedAmountInUsd
+                          .multiply(parsedAmount)
+                          .divide(stakingInfo.stakedAmount)
+                          .multiply(new Fraction('1').subtract(lpFeePercent))
+                          .toFixed(2, { groupSeparator: ',' })})`}
+                  </TYPE.link>
+                  <TYPE.link fontWeight={400} color={'text1'}>
+                    The {govToken.symbol} rewards you will receive:
+                    <br />
+                    {`${stakingInfo.earnedAmount.toSignificant(8)} ${
+                      govToken.symbol
+                    } ($${stakingInfo.earnedAmount
+                      .multiply(govTokenPrice ?? new Fraction('0'))
+                      .toFixed(2, { groupSeparator: ',' })})`}
                   </TYPE.link>
                 </AutoColumn>
               </BlueCard>
@@ -159,7 +233,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <LoadingView onDismiss={wrappedOnDismiss}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Withdrawing Liquidity</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
+            <TYPE.body fontSize={20}>{parsedAmount?.toSignificant(4)} FATExFi-LP</TYPE.body>
           </AutoColumn>
         </LoadingView>
       )}
@@ -167,7 +241,7 @@ export default function ModifiedStakingModal({ isOpen, onDismiss, stakingInfo }:
         <SubmittedView onDismiss={wrappedOnDismiss} hash={hash}>
           <AutoColumn gap="12px" justify={'center'}>
             <TYPE.largeHeader>Transaction Submitted</TYPE.largeHeader>
-            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} FATEx-LP</TYPE.body>
+            <TYPE.body fontSize={20}>Withdraw {parsedAmount?.toSignificant(4)} FATExFi-LP</TYPE.body>
           </AutoColumn>
         </SubmittedView>
       )}

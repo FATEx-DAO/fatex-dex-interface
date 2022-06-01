@@ -1,9 +1,20 @@
-import { Currency, Token, ETHER, HARMONY, BINANCE_COIN, DEFAULT_CURRENCIES, Blockchain } from '@fatex-dao/sdk'
+import {
+  Currency,
+  Token,
+  ETHER,
+  HARMONY,
+  BINANCE_COIN,
+  DEFAULT_CURRENCIES,
+  Blockchain,
+  ChainId,
+  MATIC
+} from '@fatex-dao/sdk'
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import HarmonyLogo from '../../assets/images/harmony-logo.png'
+import MaticLogo from '../../assets/images/matic-logo.png'
 import BinanceLogo from '../../assets/images/binance-logo.png'
 import useHttpLocations from '../../hooks/useHttpLocations'
 import { WrappedTokenInfo } from '../../state/lists/hooks'
@@ -33,6 +44,8 @@ export const getTokenFallbackLogoURL = (currency: Currency) => {
     return 'https://assets.coingecko.com/coins/images/18570/small/fAisLIV.png?1632449282'
   } else if (currency.symbol?.includes('LINK')) {
     return 'https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/LINK.png'
+  } else if (currency.symbol?.includes('ETH')) {
+    return 'https://assets.coingecko.com/coins/images/279/small/ethereum.png?1595348880'
   } else {
     return `https://d1xrz6ki9z98vb.cloudfront.net/venomswap/tokens/${currency.symbol}.png`
   }
@@ -67,7 +80,13 @@ export default function CurrencyLogo({
     if (currency && DEFAULT_CURRENCIES.includes(currency)) return []
 
     if (currency instanceof Token) {
-      const logoUrlLocation = [56, 97, 1666600000, 1666700000].includes(currency.chainId)
+      const logoUrlLocation = [
+        ChainId.BSC_MAINNET,
+        ChainId.BSC_TESTNET,
+        ChainId.POLYGON_MAINNET,
+        ChainId.HARMONY_MAINNET,
+        ChainId.HARMONY_TESTNET
+      ].includes(currency.chainId)
         ? getTokenFallbackLogoURL(currency)
         : getTokenLogoURL(currency.address)
 
@@ -90,6 +109,8 @@ export default function CurrencyLogo({
       (currency === wrappedCurrency && blockchain === Blockchain.BINANCE_SMART_CHAIN)
     ) {
       return <StyledEthereumLogo src={BinanceLogo} size={size} style={style} />
+    } else if (currency === MATIC || (currency === wrappedCurrency && blockchain === Blockchain.POLYGON)) {
+      return <StyledEthereumLogo src={MaticLogo} size={size} style={style} />
     }
   }
   return <StyledLogo size={size} srcs={srcs} alt={`${currency?.symbol ?? 'token'} logo`} style={style} />

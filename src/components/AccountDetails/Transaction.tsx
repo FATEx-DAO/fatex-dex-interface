@@ -18,6 +18,10 @@ const TransactionStatusText = styled.div`
   :hover {
     text-decoration: underline;
   }
+  color: ${({ theme }) => theme.text3};
+  :hover {
+    color: ${({ theme }) => theme.text2};
+  }
 `
 
 const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: boolean }>`
@@ -26,7 +30,7 @@ const TransactionState = styled(ExternalLink)<{ pending: boolean; success?: bool
   align-items: center;
   text-decoration: none !important;
   border-radius: 0.5rem;
-  padding: 0.25rem 0rem;
+  padding: 0.25rem 0;
   font-weight: 500;
   font-size: 0.825rem;
   color: ${({ theme }) => theme.primary1};

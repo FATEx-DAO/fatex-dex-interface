@@ -1,4 +1,4 @@
-import { Blockchain, Currency, ETHER, BINANCE_COIN, HARMONY } from '@fatex-dao/sdk'
+import { Blockchain, Currency, ETHER, BINANCE_COIN, HARMONY, MATIC } from '@fatex-dao/sdk'
 
 export default function getBlockchainAdjustedCurrency(
   blockchain: Blockchain,
@@ -11,6 +11,8 @@ export default function getBlockchainAdjustedCurrency(
       return BINANCE_COIN
     case Blockchain.HARMONY:
       return HARMONY
+    case Blockchain.POLYGON:
+      return MATIC
     default:
       return ETHER
   }

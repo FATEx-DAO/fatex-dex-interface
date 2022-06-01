@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Book, Code, PieChart } from 'react-feather'
+import { Book, Code, PieChart, Check } from 'react-feather'
 import styled from 'styled-components'
 import { ReactComponent as MenuIcon } from '../../assets/images/menu.svg'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,10 +21,8 @@ import YouTubeLogo from '../../assets/images/youtube-logo.svg'
 import RedditLogo from '../../assets/images/reddit-logo.svg'
 import MediumLogo from '../../assets/images/medium-logo.svg'
 import SubstackLogo from '../../assets/images/substack-logo.svg'
-import DiscourseLogo from '../../assets/images/discourse-logo.svg'
 import LinkedinLogo from '../../assets/images/linkedin-logo.svg'
 import Checkmark from '../../assets/images/checkmark-icon.svg'
-import ChainIcon from '../../assets/images/chain-icon.svg'
 import { useDarkModeManager } from '../../state/user/hooks'
 
 const StyledMenuIcon = styled(MenuIcon)`
@@ -107,7 +105,7 @@ const MenuFlyout = styled.span<{ isStaking: boolean }>`
     }`}
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    top: -17.75rem;
+    top: -20rem;
     right: 0rem;
     left: auto;
   `};
@@ -210,28 +208,25 @@ export default function Menu() {
         <MenuItem id="link" href={'https://fatex.io'}>
           FATEx.io
         </MenuItem>
+        <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq'}>
+          V2 FAQ
+        </MenuItem>
         <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
           <Code size={14} />
           Code
         </MenuItem>
         <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
-          <img src={ChainIcon} />
+          <Check size={14} />
           DAO Links
-        </MenuItem>
-        <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
-          <img src={Checkmark} />
-          DAO Voting
         </MenuItem>
         <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
           <Book size={14} />
           Green Paper
         </MenuItem>
-        {blockchain === Blockchain.HARMONY && (
-          <MenuItem id="link" href="https://info.fatex.io">
-            <PieChart size={14} />
-            DEX Analytics
-          </MenuItem>
-        )}
+        <MenuItem id="link" href="https://info.fatexfi.io">
+          <PieChart size={14} />
+          Analytics
+        </MenuItem>
         <SocialLinks darkMode={darkMode}>
           <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
             <img src={TwitterLogo} alt={'twitter logo'} />
@@ -262,11 +257,6 @@ export default function Menu() {
             <img src={LinkedinLogo} alt={'linkedin logo'} />
           </a>
         </SocialLinks>
-        {account && blockchain === Blockchain.ETHEREUM && (
-          <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-            Claim {govToken?.symbol}
-          </ButtonPrimary>
-        )}
       </StyledMenuDesktop>
       <StyledMenuMobile ref={node as any} isStaking={isStaking}>
         <StyledMenuButton onClick={toggle}>
@@ -276,30 +266,27 @@ export default function Menu() {
         {open && (
           <MenuFlyout isStaking={isStaking}>
             <MenuItem id="link" href={'https://fatex.io'}>
-              FATEx.io
+              FATExDAO.io
+            </MenuItem>
+            <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq'}>
+              V2 FAQ
             </MenuItem>
             <MenuItem id="link" href={'https://github.com/FATEx-DAO'}>
               <Code size={14} />
               Code
             </MenuItem>
             <MenuItem id="link" href={'https://linktr.ee/fatexdao'}>
-              <img src={ChainIcon} />
-              DAO Links
-            </MenuItem>
-            <MenuItem id="link" href={'https://snapshot.org/#/fatexdao.eth'}>
               <img src={Checkmark} />
-              DAO Voting
+              DAO Links
             </MenuItem>
             <MenuItem id="link" href={'https://fatexdao.gitbook.io/fatexdao'}>
               <Book size={14} />
               Green Paper
             </MenuItem>
-            {blockchain === Blockchain.HARMONY && (
-              <MenuItem id="link" href="https://info.fatex.io">
-                <PieChart size={14} />
-                DEX Analytics
-              </MenuItem>
-            )}
+            <MenuItem id="link" href="https://info.fatexfi.io">
+              <PieChart size={14} />
+              Analytics
+            </MenuItem>
             <SocialLinks darkMode={darkMode}>
               <a href={'https://www.twitter.com/FATExDAO'} target={'_blank'} rel="noreferrer">
                 <img src={TwitterLogo} alt={'twitter logo'} />
@@ -330,9 +317,9 @@ export default function Menu() {
                 <img src={LinkedinLogo} alt={'linkedin logo'} />
               </a>
             </SocialLinks>
-            {account && blockchain === Blockchain.ETHEREUM && (
+            {account && blockchain === Blockchain.POLYGON && (
               <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
-                Claim {govToken?.symbol}
+                VESTED {govToken?.symbol}
               </ButtonPrimary>
             )}
           </MenuFlyout>

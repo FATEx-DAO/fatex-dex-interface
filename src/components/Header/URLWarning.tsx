@@ -1,11 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
-import { AlertTriangle, X } from 'react-feather'
-import { useURLWarningToggle, useURLWarningVisible } from '../../state/user/hooks'
-import { isMobile } from 'react-device-detect'
-import { useActiveWeb3React } from '../../hooks'
-import { WEB_INTERFACES } from '../../constants'
+import { X } from 'react-feather'
+import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
 
 const PhishAlert = styled.div<{ isActive: any }>`
   width: 100%;
@@ -26,21 +23,16 @@ export const StyledClose = styled(X)`
 `
 
 export default function URLWarning() {
-  const { chainId } = useActiveWeb3React()
-  const webInterfaces = chainId && WEB_INTERFACES[chainId]
-  const defaultHostname = webInterfaces?.[0]
-  const currentHostname = window.location.hostname
-  const showURLWarning = currentHostname === 'old.app.fatex.io' || currentHostname === 'fatex-dao-old.web.app'
+  // const blockTimestamp = useCurrentBlockTimestamp()?.toNumber() ?? Math.floor(new Date().getTime() / 1000)
+  // const showURLWarning = useMemo(() => blockTimestamp < 1654142400, [blockTimestamp])
+  const showURLWarning = false
 
   return (
     <PhishAlert isActive={showURLWarning}>
       <div style={{ display: 'flex' }}>
-        <AlertTriangle style={{ marginRight: 6 }} size={12} /> This is the old version of FATExDAO. If you are looking
-        for the current version of the site, visit{' '}
-        {/*<code style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>{defaultHostname}</code>.*/}
-        <a href={'https://app.fatexfi.io'} style={{ padding: '0 4px', display: 'inline', fontWeight: 'bold' }}>
-          {defaultHostname}
-        </a>
+        This DAPP is &quot;LIVE.&quot; THERE IS NO CIRCULATING FATE. DAO Treasury will provide liquidity for FATE:USDC
+        LP +/-24 hours before FATE rewards start-time: June 1, 2022 8PM (UTC-4 EDT) for users to create LPs/buy FATE.
+        CLICK ON: DAO LINKS FOR UP-TO-DATE FATExFi launch FAQ.
       </div>
     </PhishAlert>
   )

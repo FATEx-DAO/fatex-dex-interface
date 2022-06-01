@@ -14,6 +14,8 @@ export default function getBlockchain(chainId: ChainId | undefined): Blockchain 
     case ChainId.HARMONY_MAINNET:
     case ChainId.HARMONY_TESTNET:
       return Blockchain.HARMONY
+    case ChainId.POLYGON_MAINNET:
+      return Blockchain.POLYGON
     default:
       return Blockchain.ETHEREUM
   }

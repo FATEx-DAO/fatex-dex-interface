@@ -1,4 +1,4 @@
-import { Currency, currencyEquals, JSBI, Token, Price, WETH, ChainId } from '@fatex-dao/sdk'
+import { ChainId, Currency, currencyEquals, JSBI, Price, Token, WETH } from '@fatex-dao/sdk'
 import { useMemo } from 'react'
 import { PairState, usePairs } from '../data/Reserves'
 import { useActiveWeb3React } from '.'
@@ -12,9 +12,16 @@ import getToken from '../utils/getToken'
 export default function useBUSDPrice(currency?: Currency): Price | undefined {
   const { chainId } = useActiveWeb3React()
   const wrapped = wrappedCurrency(currency, chainId)
-  // const busdTicker = chainId !== ChainId.HARMONY_TESTNET ? 'BUSD' : '1BUSD'
-  const busdTicker =
-    chainId === ChainId.HARMONY_TESTNET ? '1BUSD' : chainId === ChainId.HARMONY_MAINNET ? '1USDC' : 'BUSD'
+  let busdTicker: string
+  if (chainId === ChainId.HARMONY_TESTNET) {
+    busdTicker = '1BUSD'
+  } else if (chainId === ChainId.HARMONY_MAINNET) {
+    busdTicker = '1USDC'
+  } else if (chainId === ChainId.POLYGON_MAINNET) {
+    busdTicker = 'USDC'
+  } else {
+    busdTicker = 'USDC'
+  }
   const busd: Token | undefined = getToken(chainId, busdTicker)
   const divisor = useMemo(() => {
     return busdTicker.includes('BUSD') ? JSBI.BigInt('1') : JSBI.BigInt('1000000000000')

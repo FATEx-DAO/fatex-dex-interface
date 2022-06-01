@@ -7,9 +7,7 @@ export default function getTokenWithDefault(chainId: ChainId, symbol: string): T
   let token: Token
 
   switch (symbol) {
-    case 'WETH':
-    case 'WBNB':
-    case 'WONE':
+    case 'WMATIC':
       token = WETH[chainId]
       break
     default:

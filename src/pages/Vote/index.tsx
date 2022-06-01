@@ -152,7 +152,7 @@ export default function Vote() {
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>FATExDAO Governance</TYPE.white>
+                <TYPE.white fontWeight={600}>FATExFi Governance</TYPE.white>
               </RowBetween>
               <RowBetween>
                 <TYPE.white fontSize={14}>

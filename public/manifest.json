@@ -4,15 +4,15 @@
   "homepage_url": "https://fatex.io",
   "icons": [
     {
-      "src": "./images/96x96_App_Icon.png",
+      "src": "./images/192x192_App_Icon.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     }
   ],
   "orientation": "portrait",
-  "name": "FATExDEX",
-  "short_name": "FATExDEX",
+  "name": "FATExFi",
+  "short_name": "FATExFi",
   "start_url": ".",
   "theme_color": "#fff"
 }

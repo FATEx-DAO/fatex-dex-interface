@@ -1,4 +1,4 @@
-import { ChainId, TokenAmount } from '@fatex-dao/sdk'
+import { Blockchain, ChainId, Fraction, TokenAmount } from '@fatex-dao/sdk'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { darken } from 'polished'
@@ -23,11 +23,15 @@ import { ExternalLink } from '../../theme'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import useBUSDPrice from '../../hooks/useBUSDPrice'
 import { X_FATE } from '../../constants'
-//import useBlockchain from '../../hooks/useBlockchain'
 import { useAddressesTokenBalance, useTokenBalance } from '../../state/wallet/hooks'
 import { useTotalGovTokensEarned, useTotalLockedGovTokens } from '../../state/stake/hooks'
 import { useGovTokenSupply } from '../../data/TotalSupply'
 import useXFateRatio from '../../hooks/useXFateRatio'
+import { ButtonPrimary } from '../Button'
+import useBlockchain from '../../hooks/useBlockchain'
+import { useToggleModal } from '../../state/application/hooks'
+import { ApplicationModal } from '../../state/application/actions'
+import { isMobile } from 'react-device-detect'
 
 const HeaderFrame = styled.div`
   display: grid;
@@ -391,6 +395,11 @@ const BridgePopoverInner = styled.div`
   background: ${({ theme }) => theme.text1};
 `
 
+const BridgeLinkWrapper = styled.div`
+  margin-top: 4px;
+  margin-bottom: 4px;
+`
+
 const BridgeWrapper = () => {
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -408,7 +417,7 @@ const BridgeWrapper = () => {
   return (
     <>
       <BridgeButton aria-describedby={id} onClick={handleClick}>
-        Bridge
+        Matic
       </BridgeButton>
       <Popover
         id={id}
@@ -421,10 +430,15 @@ const BridgeWrapper = () => {
         }}
       >
         <BridgePopoverInner>
-          <StyledExternalLink href={'https://bridge.harmony.one'}>Ethereum</StyledExternalLink>
-          <StyledExternalLink href={'https://bridge.harmony.one'}>BSC</StyledExternalLink>
-          <StyledExternalLink href={'https://anyswap.exchange/#/bridge'}>AnySwap</StyledExternalLink>
-          <StyledExternalLink href={'https://synapseprotocol.com'}>Synapse</StyledExternalLink>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://wallet.polygon.technology/bridge'}>Bridge</StyledExternalLink>
+          </BridgeLinkWrapper>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://polygonscan.com/'}>Explorer</StyledExternalLink>
+          </BridgeLinkWrapper>
+          <BridgeLinkWrapper>
+            <StyledExternalLink href={'https://wallet.polygon.technology/wallet/'}>Wallet</StyledExternalLink>
+          </BridgeLinkWrapper>
         </BridgePopoverInner>
       </Popover>
     </>
@@ -486,6 +500,7 @@ const NETWORK_LABELS: { [chainId in ChainId]?: string } = {
 
 export default function Header() {
   const { account, chainId } = useActiveWeb3React()
+  const blockchain = useBlockchain()
   const { t } = useTranslation()
 
   const govToken = useGovernanceToken()
@@ -493,8 +508,8 @@ export default function Header() {
   const [darkMode, toggleDarkMode] = useDarkModeManager()
 
   const [showUniBalanceModal, setShowUniBalanceModal] = useState(false)
+  const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
-  //const blockchain = useBlockchain()
   const govTokenBalance = useTokenBalance(account ?? undefined, govToken)
   const xFateUserBalance = useTokenBalance(account ?? undefined, X_FATE[chainId ?? ChainId.HARMONY_MAINNET])
   const unlockedGovTokensToClaim = useTotalGovTokensEarned()
@@ -508,23 +523,22 @@ export default function Header() {
           .add(unlockedGovTokensToClaim)
       : undefined
 
-  //const location = useLocation()
-  //const isStaking = false //location.pathname === '/staking'
-
   const totalSupply = useGovTokenSupply()
   const outOfCirculationBalances = [
-    '0xef1a47106b5B1eb839a2995fb29Fa5a7Ff37Be27', // FateRewardController
-    '0x3170e252D06f01a846e92CB0139Cdb16c69E867d', // FateRewardVault
-    '0xcd9C194E47862CEDfC47bd6EDe9ba92EAb3d8B44', // FGCD Vault
-    '0xc7d76DA3F4Da35Bd85de3042CDD8c59dC8dc6226', // Legal Vault
-    '0xA402084A04c222e25ae5748CFB12C76445a2a709', // Growth Vault
-    '0xe5bA0b2f098cB2f2efA986bF605Bd6DBc8acD7D6', // Presale Vault
-    '0x5b351d270216848026DB6ac9fafBf4d422d5Ca43', // Founder Vault
-    '0xFe2976Fc317667743d72D232DCEdd4E250170f1B', // Advisor Vault
-    '0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34', // Advisor Vault
-    '0xFD266a3D4DA9d185A0491f71cE61C5a22014d874', // Team Vault
-    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc' // founder address EOA? // has some FATE in xFATE which messes up count
-    // '0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb' // team address EOA? // has some FATE in xFATE which messes up count
+    '0x7a8B2780189fa8758bf212321DabDbd3856D1155', // FateRewardController
+    '0x7aB7B87B4a90042f655CAe53cA984305EBb17a18', // FateRewardVault
+    '0x8430d8BCDc025960b491aE8D043648e9A9968949', // Founder Vault
+    '0xe3cac535fcb777a42dc2c234e0a8884049a4264e', // Growth Vault
+    '0x6f762d1B15E69cAD15a8351C631eA012B3fbC831', // Harmony Members Vault
+    '0xd75181c60490a0Fe6155E4Fa02Fa80A1fcDdaef5', // Legal Vault
+    '0x42f13D8880C971ce59a9f02fDb695208e5Ea2a06', // Pre-Harmony Members Vault
+    '0x279A93B959cb4a76c882a2685377A2fACcf14d49', // Team/Advisors/Investor Vault
+    '0xE07DEACbB15C45a09E7026888cA1e703Aa8217F6', // Team/Advisors/Investor Vault
+    '0x1b6b226825ed7a94fbe118e62b6983d35c74407d', // Team/Advisors/Investor EOA
+    '0x4F5Fbb56314cB48fA4848bf1e0433F0DD8A12C49', // Team/Advisors/Investor EOA
+    '0x31881a03519C0Fc57F4BA6766ca2bFFe1f584eE3', // Team/Advisors/Investor EOA
+    '0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df' // DAO Gnosis Safe
+    // '' // founder address EOA? // has some FATE in xFATE which messes up count
   ]
   const totalLockedSupplyMap = useAddressesTokenBalance(outOfCirculationBalances, govToken)
   const totalLockedSupply = govToken
@@ -533,6 +547,7 @@ export default function Header() {
       }, new TokenAmount(govToken, '0'))
     : undefined
   const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
+  // const totalUnlockedSupply = govToken ? new TokenAmount(govToken, '14722537305000000000000000') : undefined
 
   const govTokenPrice = useBUSDPrice(govToken)
   const fatePrice =
@@ -561,7 +576,7 @@ export default function Header() {
       </Modal>
       <HeaderRow>
         <Title href=".">
-          FATEx<span>DAO</span>
+          FATEx<span>Fi</span>
         </Title>
         <MobileHeader>
           <HeaderLinks>
@@ -584,15 +599,15 @@ export default function Header() {
               </StyledNavLink>
             </Column>
             <Column>
-              <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+              <StyledNavLink id={`xfate-nav-link`} to={`/xFATE`}>
                 xFATE
               </StyledNavLink>
               {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
               {/*  Vote*/}
               {/*</StyledNavLink>*/}
-              <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-                Migrate
-              </StyledNavLink>
+              {/*<StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>*/}
+              {/*  Migrate*/}
+              {/*</StyledNavLink>*/}
               <BridgeWrapper />
             </Column>
           </HeaderLinks>
@@ -615,15 +630,15 @@ export default function Header() {
             <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
               {t('swap')}
             </StyledNavLink>
-            <StyledNavLink id={`xfate-nav-link`} to={`${'/xFATE'}`}>
+            <StyledNavLink id={`xfate-nav-link`} to={`/xFATE`}>
               xFATE
             </StyledNavLink>
             {/*<StyledNavLink id={`vote-nav-link`} to={`${'/vote'}`}>*/}
             {/*  Vote*/}
             {/*</StyledNavLink>*/}
-            <StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>
-              Migrate
-            </StyledNavLink>
+            {/*<StyledNavLink id={`migrate-nav-link`} to={`/migrate`}>*/}
+            {/*  Migrate*/}
+            {/*</StyledNavLink>*/}
             <BridgeWrapper />
             {/*<ExternalLink id={'link'} href={`https://fatexdao.gitbook.io/fatexdao/`}>
               Learn
@@ -647,14 +662,14 @@ export default function Header() {
                     <Label>FATE price:</Label>
                     <Value>
                       {fatePrice ? '$' : ''}
-                      {fatePrice?.toFixed(8) ?? '-'}
+                      {fatePrice?.toFixed(fatePrice?.lessThan(new Fraction('2', '100')) ? 5 : 2) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>
                     <Label>xFATE price:</Label>
                     <Value>
                       {xFATEPrice ? '$' : ''}
-                      {xFATEPrice?.toFixed(8) ?? '-'}
+                      {xFATEPrice?.toFixed(xFATEPrice?.lessThan(new Fraction('2', '100')) ? 5 : 2) ?? '-'}
                     </Value>
                   </InfoRow>
                   <InfoRow>
@@ -707,20 +722,34 @@ export default function Header() {
                     </InfoRow>
                     <InfoRow>
                       <Label>Unlocked $ Amount:</Label>
-                      <Value>{unlockedTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {unlockedTokensPrice ? `$${unlockedTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                     <InfoRow>
                       <Label>Locked $ Amount:</Label>
-                      <Value>{lockedTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {lockedTokensPrice ? `$${lockedTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                     <InfoRow>
                       <Label>Total $ Amount:</Label>
-                      <Value>{totalTokensPrice?.toFixed(2, { groupSeparator: ',' }) || '0.00'}</Value>
+                      <Value>
+                        {totalTokensPrice ? `$${totalTokensPrice?.toFixed(2, { groupSeparator: ',' })}` : '$0.00'}
+                      </Value>
                     </InfoRow>
                   </>
                 }
               />
             </HeaderElementWrap>
+          )}
+          {account && !isMobile && blockchain === Blockchain.POLYGON && (
+            // <ButtonPrimary onClick={openClaimModal} padding="8px 16px" width="100%" borderRadius="12px" mt="0.5rem">
+            //   Claim {govToken?.symbol}
+            // </ButtonPrimary>
+            <div>
+              <StyledMenuButton onClick={openClaimModal}>VESTED {govToken?.symbol}</StyledMenuButton>
+            </div>
           )}
           <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
             <Web3Status />

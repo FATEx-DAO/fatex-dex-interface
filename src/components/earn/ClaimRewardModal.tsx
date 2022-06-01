@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import Modal from '../Modal'
 import { AutoColumn } from '../Column'
 import styled from 'styled-components'
@@ -13,6 +13,8 @@ import { useTransactionAdder } from '../../state/transactions/hooks'
 import { useActiveWeb3React } from '../../hooks'
 import { calculateGasMargin } from '../../utils'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
+import { useSingleCallResult } from '../../state/multicall/hooks'
+import { Fraction } from '@fatex-dao/sdk'
 
 const ContentWrapper = styled(AutoColumn)`
   width: 100%;
@@ -29,6 +31,18 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
   const { account } = useActiveWeb3React()
 
   const govToken = useGovernanceToken()
+  const fateRewardController = useFateRewardController()
+
+  const percentInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
+  const rewardFeePercentResult = useSingleCallResult(fateRewardController, 'getLockedRewardsFeePercent', percentInputs)
+
+  const rewardFeePercent = rewardFeePercentResult.result?.[0]
+    ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
+    : undefined
+  const totalRewardAmount =
+    rewardFeePercent && rewardFeePercent.lessThan('1') && stakingInfo.earnedAmount
+      ? stakingInfo.earnedAmount.multiply(new Fraction('1').subtract(rewardFeePercent).invert())
+      : undefined
 
   // monitor call to help UI loading state
   const addTransaction = useTransactionAdder()
@@ -42,8 +56,6 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
     setFailed(false)
     onDismiss()
   }
-
-  const fateRewardController = useFateRewardController()
 
   async function onClaimReward() {
     if (fateRewardController && stakingInfo?.stakedAmount) {
@@ -89,10 +101,16 @@ export default function ClaimRewardModal({ isOpen, onDismiss, stakingInfo }: Sta
           </RowBetween>
           {stakingInfo?.earnedAmount && (
             <AutoColumn justify="center" gap="md">
+              <TYPE.link fontWeight={400} color={'text1'}>
+                Your reward fees are currently:
+                <br />
+                {totalRewardAmount?.multiply(rewardFeePercent).toSignificant(8) ?? '-'} {govToken.symbol} (
+                {(rewardFeePercent ?? new Fraction('1')).multiply('100').toFixed(2)}%)
+              </TYPE.link>
               <TYPE.body fontWeight={600} fontSize={36}>
                 {stakingInfo?.earnedAmount?.toSignificant(6)}
               </TYPE.body>
-              <TYPE.body>Unclaimed {govToken?.symbol}</TYPE.body>
+              <TYPE.body>Unclaimed {govToken?.symbol} you will receive</TYPE.body>
             </AutoColumn>
           )}
           <ButtonError disabled={!!error} error={!!error && !!stakingInfo?.stakedAmount} onClick={onClaimReward}>

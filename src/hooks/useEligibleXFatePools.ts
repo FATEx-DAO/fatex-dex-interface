@@ -29,7 +29,7 @@ export default function useEligibleXFatePools(
         const balance = new TokenAmount(pair.liquidityToken, state.result?.[0].toString())
         const amount0 = balance.multiply(pair.reserve0.numerator).divide(totalSupply)
         const amount1 = balance.multiply(pair.reserve1.numerator).divide(totalSupply)
-        if (JSBI.GT(amount0.quotient, ZERO) && JSBI.GT(amount1.quotient, ZERO) && !isFatexFatePair(pair)) {
+        if (amount0.greaterThan(ZERO) && amount1.greaterThan(ZERO) && !isFatexFatePair(pair)) {
           claimFrom.push(pair.token0.address)
           claimTo.push(pair.token1.address)
         }

@@ -2427,22 +2427,22 @@
   resolved "https://registry.yarnpkg.com/@fatex-dao/community-token-list/-/community-token-list-3.0.0.tgz#f95677d48b806af7f122275aa97553ce44d0e461"
   integrity sha512-5t18zRyjZY5N7qx9twpboFMYiJKzMhb+BHen0tazxRC1IB1xxjC9e8g1R3LFLt8mCJpUIAuiepoQG0djv3lPDA==
 
-"@fatex-dao/default-token-list@^12.0.0":
-  version "12.0.0"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-12.0.0.tgz#afce67b7e923007a14fae3f08f46cf0617b66295"
-  integrity sha512-OxDGqMWjND+gSczKq2pBcHEhh9+cdaqgxtb90S1LXDYxv6omd5o0YhTokF0TkmSiVLc6Seof7gjPMUmL8AG6Vw==
+"@fatex-dao/default-token-list@^12.1.0":
+  version "12.1.0"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/default-token-list/-/default-token-list-12.1.0.tgz#61cf910189bb7342cbcf54857e762f2b73a689aa"
+  integrity sha512-FGQb952aTnbpBas/V2T2RpjXtfOunOa58T/0slv+q8J9NF0wNfYY7PhIzFtKU4j4EKyNFHEVXrAZmatypOEmcA==
 
-"@fatex-dao/sdk-extra@^2.2.2":
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-2.2.2.tgz#c8f85ddfb8235d6e10b3cd709f03228055a54391"
-  integrity sha512-Q1DGYspRO354edmuEsnILalrVjkiyGYPesSX7TZJJa63TWcdSUSd+n35Zl1Gk7jmIZWFVPmgDSmgoYFBGJIqOw==
+"@fatex-dao/sdk-extra@^2.3.0":
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/@fatex-dao/sdk-extra/-/sdk-extra-2.3.0.tgz#61eeef7d5a8c6a4b345f4b6f9f51cb7722361267"
+  integrity sha512-dOybdl9nOBd/kCHlPHq8RYQDtOhe1Trfu3ySiYouEivPf+JpjMz+4M5Z4jHAH3JC2Z1H9OUzYFfMeM/iNsoLDg==
   dependencies:
     "@ethersproject/address" "^5.3.0"
     "@ethersproject/contracts" "^5.3.0"
     "@ethersproject/providers" "^5.3.0"
     "@ethersproject/solidity" "^5.3.0"
     "@fatex-dao/community-token-list" "^3.0.0"
-    "@fatex-dao/default-token-list" "^12.0.0"
+    "@fatex-dao/default-token-list" "^12.1.0"
     "@fatex-dao/sdk" "^2.2.2"
     "@types/lodash.random" "^3.2.6"
     lodash.random "^3.2.0"
@@ -12415,6 +12415,11 @@ moment@2.26.0:
   version "2.26.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.26.0.tgz#5e1f82c6bafca6e83e808b30c8705eed0dcbd39a"
   integrity sha512-oIixUO+OamkUkwjhAVE18rAMfRJNsNe/Stid/gwHSOfHrOtw9EhAY2AHvdKZ/k/MggcYELFCJz/Sn2pL8b8JMw==
+
+moment@^2.29.2:
+  version "2.29.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.2.tgz#00910c60b20843bcba52d37d58c628b47b1f20e4"
+  integrity sha512-UgzG4rvxYpN15jgCmVJwac49h9ly9NurikMWGPdVxm8GZD6XjkKPxDTjQQ43gtGgnV3X0cAyWDdP2Wexoquifg==
 
 move-concurrently@^1.0.1:
   version "1.0.1"

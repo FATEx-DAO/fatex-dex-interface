@@ -10,6 +10,53 @@ export interface StakingRewardsInfo {
 export const STAKING_REWARDS_INFO: {
   [chainId in ChainId]?: StakingRewardsInfo[]
 } = {
+  [ChainId.POLYGON_MAINNET]: [
+    {
+      pid: 0,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'FATE/USDC'),
+      active: true
+    },
+    {
+      pid: 1,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WMATIC/USDC'),
+      active: true
+    },
+    {
+      pid: 2,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'FATE/PAXG'),
+      active: true
+    },
+    {
+      pid: 3,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'PAXG/USDC'),
+      active: true
+    },
+    {
+      pid: 4,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'FATE/WMATIC'),
+      active: false
+    },
+    {
+      pid: 5,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WMATIC/PAXG'),
+      active: false
+    },
+    {
+      pid: 6,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'FATE/xFATE'),
+      active: false
+    },
+    {
+      pid: 7,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'ETH/PAXG'),
+      active: false
+    },
+    {
+      pid: 8,
+      tokens: getPairTokensWithDefaults(ChainId.POLYGON_MAINNET, 'WBTC/PAXG'),
+      active: false
+    }
+  ],
   [ChainId.HARMONY_MAINNET]: [
     {
       pid: 0,

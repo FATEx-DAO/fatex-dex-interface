@@ -132,7 +132,7 @@ export default function RemoveLiquidity({
       ]
 
       const domain = {
-        name: 'FATExDAO LP Token',
+        name: 'FATExFi LP Token',
         version: '1',
         chainId: chainId,
         verifyingContract: pair.liquidityToken.address
@@ -511,8 +511,9 @@ export default function RemoveLiquidity({
             <BlueCard>
               <AutoColumn gap="10px">
                 <TYPE.link fontWeight={400} color={'text1'}>
-                  <b>Tip:</b> Removing pool tokens converts your position back into underlying tokens at the current
-                  rate, proportional to your share of the pool. Accrued fees are included in the amounts you receive.
+                  <b>NOTE:</b> When tokens are removed from the pool, you receive the number of each token listed below
+                  into your wallet automatically. The amounts are based on the current swap rate, proportional to your
+                  share of the pool. Accrued fees are included in the amounts you receive.
                 </TYPE.link>
               </AutoColumn>
             </BlueCard>

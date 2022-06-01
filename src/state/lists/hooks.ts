@@ -1,4 +1,4 @@
-import { UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { UNSUPPORTED_LIST_URLS } from '../../constants/lists'
 import DEFAULT_TOKEN_LIST from '@fatex-dao/default-token-list'
 import { ChainId, Token } from '@fatex-dao/sdk'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'

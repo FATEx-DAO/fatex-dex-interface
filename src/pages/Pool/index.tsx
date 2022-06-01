@@ -232,7 +232,7 @@ export default function Pool() {
                   blockchain === Blockchain.HARMONY && (
                     <ButtonSecondary>
                       <RowBetween>
-                        <ExternalLink href={'https://info.fatex.io/account/' + account}>
+                        <ExternalLink href={'https://info.fatexfi.io/account/' + account}>
                           Account analytics and accrued fees
                         </ExternalLink>
                         <span> ↗</span>

@@ -1,16 +1,13 @@
 import React, { useState } from 'react'
-import { JSBI } from '@fatex-dao/sdk'
-import { BLOCKCHAIN_SETTINGS } from '@fatex-dao/sdk-extra'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
 import { STAKING_REWARDS_INFO } from '../../constants/staking'
 import { useStakingInfo } from '../../state/stake/hooks'
-import { StyledInternalLink, TYPE } from '../../theme'
+import { ExternalLink, StyledInternalLink, TYPE } from '../../theme'
 import PoolCard from '../../components/earn/PoolCard'
 import { CustomButtonWhite } from '../../components/Button'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
-//import { RowBetween } from '../../components/Row'
-import { CardNoise, CardBGImage } from '../../components/earn/styled'
+import { CardBGImage, CardNoise } from '../../components/earn/styled'
 import Loader from '../../components/Loader'
 import ClaimAllRewardsModal from '../../components/earn/ClaimAllRewardsModal'
 import { useActiveWeb3React } from '../../hooks'
@@ -21,8 +18,8 @@ import useBaseStakingRewardsSchedule from '../../hooks/useBaseStakingRewardsSche
 import { OutlineCard } from '../../components/Card'
 import useFilterStakingInfos from '../../hooks/useFilterStakingInfos'
 import CombinedTVL from '../../components/CombinedTVL'
-//import GovTokenBalanceContent from '../../components/Header/GovTokenBalanceContent'
 import Pool from '../Pool'
+import { FEES_URL } from '../../constants'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 1800px;
@@ -142,9 +139,7 @@ const RightSideWrapper = styled.div<{ tvlLoaded: boolean }>`
   display: inline-block;
   vertical-align: top;
   margin-left: 5%;
-  ${({ tvlLoaded }) => tvlLoaded && 'margin-top: -20px;'}
-
-  @media screen and (max-width: 2000px) {
+  ${({ tvlLoaded }) => tvlLoaded && 'margin-top: -20px;'} @media screen and(max-width: 2000 px) {
     margin-left: 4%;
   }
 
@@ -209,10 +204,15 @@ const InfoRight = styled.div`
   }
 `
 
+const ArchivedWrapper = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+`
+
 export default function Earn() {
   const { chainId, account } = useActiveWeb3React()
   const govToken = useGovernanceToken()
-  const blockchainSettings = chainId ? BLOCKCHAIN_SETTINGS[chainId] : undefined
   const activePoolsOnly = true
   const stakingInfos = useStakingInfo(activePoolsOnly)
 
@@ -221,9 +221,7 @@ export default function Earn() {
   const stakingRewardsExist = Boolean(typeof chainId === 'number' && (STAKING_REWARDS_INFO[chainId]?.length ?? 0) > 0)
 
   const baseRewards = useBaseStakingRewardsSchedule()
-  const blocksPerMinute = blockchainSettings?.blockTime ? 60 / blockchainSettings.blockTime : 0
-  const rewardsPerMinute =
-    baseRewards && blockchainSettings ? baseRewards.multiply(JSBI.BigInt(blocksPerMinute)) : undefined
+  const rewardsPerMinute = baseRewards ? baseRewards.multiply('60') : undefined
 
   const activeStakingInfos = useFilterStakingInfos(stakingInfos, activePoolsOnly)
   const inactiveStakingInfos = useFilterStakingInfos(stakingInfos, false)
@@ -244,7 +242,6 @@ export default function Earn() {
       />
 
       <PoolSectionsWrapper>
-        <AwaitingRewards />
         <PoolSection>
           <Pool />
         </PoolSection>
@@ -267,6 +264,16 @@ export default function Earn() {
                   <TYPE.white fontSize={14}>
                     Stake your LP tokens to receive FATE, the FATExDAO governance token.
                   </TYPE.white>
+                  <TYPE.white fontSize={14}>
+                    {/*<span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>*/}
+                    {/*  💡*/}
+                    {/*</span>*/}
+                    NOTE: There are no deposit fees, but there <i>are</i> withdrawal fees. Learn more{' '}
+                    <ExternalLink style={{ textDecoration: 'underline' }} href={FEES_URL}>
+                      here
+                    </ExternalLink>{' '}
+                    before depositing.
+                  </TYPE.white>
                 </InfoLeft>
                 <InfoRight>
                   {stakingInfosWithRewards?.length > 0 && (
@@ -286,6 +293,10 @@ export default function Earn() {
             <CardNoise />
           </StakingInfo>
 
+          <StakingInfo>
+            <AwaitingRewards />
+          </StakingInfo>
+
           <StakingSection>
             {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
               <LoaderWrapper>
@@ -300,16 +311,13 @@ export default function Earn() {
                 Please connect your wallet to see available pools
               </OutlineCard>
             ) : (
-              activeStakingInfos?.map(stakingInfo => {
+              activeStakingInfos?.map((stakingInfo, i) => {
                 // need to sort by added liquidity here
-                return (
-                  stakingInfo?.baseToken?.symbol?.includes('FATE') && (
-                    <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
-                  )
-                )
+                return i % 2 === 0 && <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
               })
             )}
           </StakingSection>
+
           <StakingSection>
             {account && stakingRewardsExist && stakingInfos?.length === 0 ? (
               <LoaderWrapper second={true}>
@@ -322,23 +330,22 @@ export default function Earn() {
             ) : !account ? (
               <></>
             ) : (
-              activeStakingInfos?.map(stakingInfo => {
+              activeStakingInfos?.map((stakingInfo, i) => {
                 // need to sort by added liquidity here
-                return (
-                  !stakingInfo?.baseToken?.symbol?.includes('FATE') && (
-                    <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
-                  )
-                )
+                return i % 2 === 1 && <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
               })
             )}
-            {hasArchivedStakingPools && (
-              <StyledInternalLink to={`/depository/archived`}>
+          </StakingSection>
+
+          {hasArchivedStakingPools && (
+            <ArchivedWrapper>
+              <StyledInternalLink width={'50%'} to={`/depository/archived`}>
                 <CustomButtonWhite padding="8px" borderRadius="8px">
                   Archived Pools
                 </CustomButtonWhite>
               </StyledInternalLink>
-            )}
-          </StakingSection>
+            </ArchivedWrapper>
+          )}
         </RightSideWrapper>
 
         {stakingRewardsExist && baseRewards && (
@@ -347,7 +354,7 @@ export default function Earn() {
               ☁️
             </span>
             The base rewards rate is currently <b>{baseRewards.toSignificant(4, { groupSeparator: ',' })}</b>{' '}
-            {govToken?.symbol} per block.w
+            {govToken?.symbol} per second.
             <br />
             <b>{rewardsPerMinute?.toSignificant(4, { groupSeparator: ',' })}</b> {govToken?.symbol}
             will be minted every minute given the current rewards schedule.

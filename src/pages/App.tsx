@@ -19,7 +19,6 @@ import Earn from './Earn'
 import EarnArchived from './Earn/Archived'
 import Manage from './Earn/Manage'
 import XFate from './XFate'
-import Migrate from './Migrate'
 import PoolFinder from './PoolFinder'
 import RemoveLiquidity from './RemoveLiquidity'
 import { RedirectOldRemoveLiquidityPathStructure } from './RemoveLiquidity/redirects'
@@ -97,7 +96,7 @@ export default function App() {
               <Route exact strict path="/find" component={PoolFinder} />
               <Route exact strict path="/pool" component={Earn} />
               <Route exact strict path="/depository" component={Earn} />
-              <Route exact strict path="/migrate" component={Migrate} />
+              {/*<Route exact strict path="/migrate" component={Migrate} />*/}
               <Route exact strict path="/depository/archived" component={EarnArchived} />
               <Route exact strict path={'/xFATE'} component={XFate} />
               <Route exact strict path="/vote" component={Vote} />

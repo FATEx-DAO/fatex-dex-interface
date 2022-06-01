@@ -18,7 +18,7 @@ export enum MigrationCallbackState {
 
 export function pairTypeToString(pairType: PairType) {
   if (pairType === PairType.FATE) {
-    return 'FATEx'
+    return 'FATExFi'
   } else if (pairType === PairType.SUSHI) {
     return 'Sushi'
   } else if (pairType === PairType.VIPER) {

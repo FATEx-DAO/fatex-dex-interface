@@ -3,10 +3,11 @@ import { abi as GOVERNANCE_ABI } from '../constants/abis/governor-alpha.json'
 import { abi as UNI_ABI } from '../constants/abis/fate-token.json'
 import { abi as GOVERNANCE_TOKEN_ABI } from '../constants/abis/fate-token.json'
 import { abi as FATE_REWARD_CONTROLLER_ABI } from '../constants/abis/fate-reward-controller.json'
+import { abi as FATE_REWARD_CONTROLLER_READER_ABI } from '../constants/abis/fate-reward-controller-reader.json'
 import { abi as LIQUIDITY_MIGRATOR_ABI } from '../constants/abis/liquidity-migrator.json'
 import { abi as X_FATE_ABI } from '../constants/abis/xfate-token.json'
 import { abi as FEE_TOKEN_CONVERTER_TO_FATE_ABI } from '../constants/abis/fee-token-converter-to-fate.json'
-import { abi as MERKLE_DISTRIBUTOR_ABI } from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
+import { abi as MERKLE_DISTRIBUTOR_ABI } from '../constants/abis/merkle-distributor.json'
 import { ChainId, WETH } from '@fatex-dao/sdk'
 import { abi as IUniswapV2PairABI } from '../constants/abis/uniswap-v2-pair.json'
 import { useMemo } from 'react'
@@ -19,7 +20,8 @@ import {
   SUSHI_MIGRATOR,
   VIPER_MIGRATOR,
   FUZZ_MIGRATOR,
-  DEFI_KINGDOMS_MIGRATOR
+  DEFI_KINGDOMS_MIGRATOR,
+  FATE_REWARD_CONTROLLER_READER
 } from '../constants'
 import {
   ARGENT_WALLET_DETECTOR_ABI,
@@ -152,6 +154,12 @@ export function useFateRewardController(withSignerIfPossible?: boolean): Contrac
   const { chainId } = useActiveWeb3React()
   const address = chainId && FATE_REWARD_CONTROLLER[chainId]
   return useContract(address, FATE_REWARD_CONTROLLER_ABI, withSignerIfPossible)
+}
+
+export function useFateRewardControllerReader(withSignerIfPossible?: boolean): Contract | null {
+  const { chainId } = useActiveWeb3React()
+  const address = chainId && FATE_REWARD_CONTROLLER_READER[chainId]
+  return useContract(address, FATE_REWARD_CONTROLLER_READER_ABI, withSignerIfPossible)
 }
 
 export function useSocksController(): Contract | null {

@@ -1,18 +1,17 @@
-import React, { useCallback, useState, useMemo } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { AutoColumn } from '../../components/Column'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, RouteComponentProps } from 'react-router-dom'
 
-import { JSBI } from '@fatex-dao/sdk'
-import { RouteComponentProps } from 'react-router-dom'
+import { Fraction, JSBI, TokenAmount } from '@fatex-dao/sdk'
 import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import { useCurrency } from '../../hooks/Tokens'
-import { useWalletModalToggle, useBlockNumber } from '../../state/application/hooks'
-import { TYPE } from '../../theme'
+import { useWalletModalToggle } from '../../state/application/hooks'
+import { ExternalLink, TYPE } from '../../theme'
 
 import { RowBetween } from '../../components/Row'
-import { CardSection, DataCard, CardNoise, CardBGImage } from '../../components/earn/styled'
-import { ButtonPrimary, ButtonEmpty } from '../../components/Button'
+import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import { ButtonEmpty, ButtonPrimary } from '../../components/Button'
 import StakingModal from '../../components/earn/StakingModal'
 import AwaitingRewards from '../../components/earn/AwaitingRewards'
 import { useStakingInfo } from '../../state/stake/hooks'
@@ -27,11 +26,16 @@ import { wrappedCurrency } from '../../utils/wrappedCurrency'
 import { currencyId } from '../../utils/currencyId'
 import { usePair } from '../../data/Reserves'
 import usePrevious from '../../hooks/usePrevious'
-import { BIG_INT_ZERO } from '../../constants'
+import { BIG_INT_ZERO, FEES_URL } from '../../constants'
 import useGovernanceToken from '../../hooks/useGovernanceToken'
 import { useSingleCallResult } from '../../state/multicall/hooks'
 import { useFateRewardController } from '../../hooks/useContract'
 import { getEpochFromWeekIndex } from '../../constants/epoch'
+import useCurrentBlockTimestamp from '../../hooks/useCurrentBlockTimestamp'
+import { LightQuestionHelper } from '../../components/QuestionHelper'
+import moment from 'moment'
+import Loader from '../../components/Loader'
+import useRewardsStartTimestamp from '../../hooks/useRewardsStartTimestamp'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -70,14 +74,15 @@ const StyledBottomCard = styled(DataCard)<{ dim: any }>`
 
 const PoolData = styled(DataCard)`
   background: none;
-  /*border: 1px solid ${({ theme }) => theme.bg4};*/
+    /*border: 1px solid ${({ theme }) => theme.bg4};*/
   padding: 1rem 0.5rem;
   z-index: 1;
-  
+
   > div > div {
     :nth-of-type(1) {
       font-size: 18px;
     }
+
     :nth-of-type(2) {
       font-size: 26px;
     }
@@ -115,6 +120,7 @@ export default function Manage({
 }: RouteComponentProps<{ currencyIdA: string; currencyIdB: string }>) {
   const { account, chainId } = useActiveWeb3React()
   const govToken = useGovernanceToken()
+  const controller = useFateRewardController()
 
   // get currencies and pair
   const [currencyA, currencyB] = [useCurrency(currencyIdA), useCurrency(currencyIdB)]
@@ -124,46 +130,72 @@ export default function Manage({
 
   const [, stakingTokenPair] = usePair(tokenA, tokenB)
 
-  const blockNumber = useBlockNumber() ?? 0
-  const fateRewardController = useFateRewardController()
-  const startBlock = useSingleCallResult(fateRewardController, 'startBlock')
+  const currentTimestamp = useCurrentBlockTimestamp()
+  const rewardsStartTimestamp = useRewardsStartTimestamp()
 
-  const weekIndex = JSBI.divide(
-    JSBI.subtract(
-      JSBI.BigInt(blockNumber),
-      startBlock.result?.[0] ? JSBI.BigInt(startBlock.result?.[0].toString()) : JSBI.BigInt(blockNumber)
-    ),
-    JSBI.BigInt(302400)
-  )
-
+  const weekIndex = currentTimestamp
+    ? JSBI.divide(
+        JSBI.subtract(
+          JSBI.BigInt(currentTimestamp),
+          rewardsStartTimestamp ? JSBI.BigInt(rewardsStartTimestamp) : JSBI.BigInt(currentTimestamp)
+        ),
+        JSBI.BigInt(604800)
+      )
+    : JSBI.BigInt(0)
   const epoch = getEpochFromWeekIndex(weekIndex)
 
   let epochLengthWeeks: number
   let lockAmountPercent: string
   let unlockAmountPercent: string
   if (JSBI.equal(epoch, JSBI.BigInt('0'))) {
-    epochLengthWeeks = 13
-    lockAmountPercent = '80%'
-    unlockAmountPercent = '20%'
-  } else if (JSBI.equal(epoch, JSBI.BigInt('1'))) {
-    epochLengthWeeks = 16
+    epochLengthWeeks = 52
     lockAmountPercent = '92%'
     unlockAmountPercent = '8%'
   } else {
-    epochLengthWeeks = 16
+    epochLengthWeeks = 52
     lockAmountPercent = '92%'
     unlockAmountPercent = '8%'
   }
 
   const stakingInfo = useStakingInfo(undefined, stakingTokenPair)?.[0]
+  const percentInputs = useMemo(() => [stakingInfo?.pid, account], [account, stakingInfo])
+  const rewardFeePercentResult = useSingleCallResult(controller, 'getLockedRewardsFeePercent', percentInputs)
+  const lpFeePercentResult = useSingleCallResult(controller, 'getLPWithdrawFeePercent', percentInputs)
+  const membershipInfoResult = useSingleCallResult(controller, 'userMembershipInfo', percentInputs)
 
-  const currentBlock = useBlockNumber()
+  const lastWithdrawalTimestampLoading = membershipInfoResult.loading
+  const lastWithdrawalTimestamp =
+    membershipInfoResult.result?.[1] && membershipInfoResult.result?.[1].toString() !== '0'
+      ? new Date(Number(membershipInfoResult.result?.[1].toString()) * 1000)
+      : undefined
+
+  const depositDurationLoading = membershipInfoResult.loading
+  const depositDuration = lastWithdrawalTimestamp
+    ? moment.duration(moment().diff(moment(lastWithdrawalTimestamp)))
+    : undefined
+
+  const rewardFeePercentLoading = rewardFeePercentResult.loading
+  const rewardFeePercent =
+    rewardFeePercentResult.result?.[0] && lastWithdrawalTimestamp
+      ? new Fraction(rewardFeePercentResult.result?.[0].toString(), '10000')
+      : undefined
+
+  const lpFeePercentLoading = lpFeePercentResult.loading
+  const lpFeePercent =
+    lpFeePercentResult.result?.[0] && lastWithdrawalTimestamp
+      ? new Fraction(lpFeePercentResult.result?.[0].toString(), '10000')
+      : undefined
 
   const rewardsStarted = useMemo<boolean>(() => {
-    return stakingInfo && currentBlock
-      ? JSBI.greaterThanOrEqual(JSBI.BigInt(currentBlock), JSBI.BigInt(stakingInfo.startBlock))
-      : false
-  }, [stakingInfo, currentBlock])
+    if (!rewardsStartTimestamp || !currentTimestamp) {
+      return true
+    }
+
+    return JSBI.greaterThanOrEqual(
+      JSBI.BigInt(currentTimestamp.toString()),
+      JSBI.BigInt(rewardsStartTimestamp.toString())
+    )
+  }, [rewardsStartTimestamp, currentTimestamp])
 
   // detect existing unstaked LP position to show add button if none found
   const userLiquidityUnstaked = useTokenBalance(account ?? undefined, stakingInfo?.stakedAmount?.token)
@@ -182,7 +214,14 @@ export default function Manage({
 
   const backgroundColor = useColor(stakingInfo?.baseToken)
 
-  const countUpAmount = stakingInfo?.earnedAmount?.toFixed(6) ?? '0'
+  // For testing purposes
+  // if (stakingInfo) {
+  //   stakingInfo.earnedAmount = new TokenAmount(govToken, '123000000000000000000')
+  // }
+  const countUpAmount =
+    rewardFeePercent && rewardFeePercent.lessThan('1') && stakingInfo
+      ? stakingInfo.earnedAmount.multiply(new Fraction('1').subtract(rewardFeePercent).invert()).toFixed(6)
+      : '0'
   const countUpAmountPrevious = usePrevious(countUpAmount) ?? '0'
 
   const toggleWalletModal = useWalletModalToggle()
@@ -194,6 +233,8 @@ export default function Manage({
       toggleWalletModal()
     }
   }, [account, toggleWalletModal])
+
+  const liquidityTokenSymbol = `${stakingTokenPair?.token0.symbol}-${stakingTokenPair?.token1.symbol}-LP`
 
   return (
     <PageWrapper gap="lg" justify="center">
@@ -210,7 +251,7 @@ export default function Manage({
             <TYPE.body style={{ margin: 0 }}>Total Deposits</TYPE.body>
             <TYPE.body fontSize={24} fontWeight={500}>
               {stakingInfo && stakingInfo.valueOfTotalStakedAmountInUsd?.greaterThan('0')
-                ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(0, { groupSeparator: ',' })}`
+                ? `$${stakingInfo.valueOfTotalStakedAmountInUsd.toFixed(2, { groupSeparator: ',' })}`
                 : '-'}
             </TYPE.body>
           </AutoColumn>
@@ -222,9 +263,152 @@ export default function Manage({
               {stakingInfo
                 ? stakingInfo.active
                   ? `${stakingInfo.poolRewardsPerBlock.toSignificant(4, { groupSeparator: ',' })} 
-                  ${govToken?.symbol} / block`
-                  : `0 ${govToken?.symbol} / block`
+                  ${govToken?.symbol} / second`
+                  : `0 ${govToken?.symbol} / second`
                 : '-'}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+      </DataRow>
+      <DataRow style={{ gap: '0px' }}>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>Deposit Timestamp</TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {lastWithdrawalTimestampLoading ? (
+                <Loader />
+              ) : lastWithdrawalTimestamp ? (
+                moment(lastWithdrawalTimestamp).format('lll')
+              ) : (
+                '-'
+              )}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>Deposit Duration</TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {depositDurationLoading ? (
+                <Loader />
+              ) : depositDuration ? (
+                `${depositDuration.get('years') >= 2 ? `${depositDuration.get('years')} years ` : ''}` +
+                `${
+                  depositDuration.get('years') >= 1 && depositDuration.get('years') < 2
+                    ? `${depositDuration.get('years')} year `
+                    : ''
+                }` +
+                `${depositDuration.get('months') >= 2 ? `${depositDuration.get('months')} months ` : ''}` +
+                `${
+                  depositDuration.get('months') >= 1 && depositDuration.get('months') < 2
+                    ? `${depositDuration.get('months')} month `
+                    : ''
+                }` +
+                `${depositDuration.get('days') >= 2 ? `${depositDuration.get('days')} days ` : ''}` +
+                `${
+                  depositDuration.get('days') >= 1 && depositDuration.get('days') < 2
+                    ? `${depositDuration.get('days')} day `
+                    : ''
+                }` +
+                `${depositDuration.get('hours') >= 2 ? `${depositDuration.get('hours')} hours ` : ''}` +
+                `${
+                  depositDuration.get('hours') >= 1 && depositDuration.get('hours') < 2
+                    ? `${depositDuration.get('hours')} hour `
+                    : ''
+                }` +
+                `${
+                  depositDuration.get('minutes') >= 2 || depositDuration.get('minutes') < 1
+                    ? `${depositDuration.get('minutes')} minutes `
+                    : ''
+                }` +
+                `${
+                  depositDuration.get('minutes') >= 1 && depositDuration.get('minutes') < 2
+                    ? `${depositDuration.get('minutes')} minute `
+                    : ''
+                }`
+              ) : (
+                '-'
+              )}
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+      </DataRow>
+      <DataRow style={{ gap: '0px' }}>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>
+              LP Withdrawal Fee %{' '}
+              <ExternalLink href={'https://fatex.io'}>
+                <LightQuestionHelper
+                  text={
+                    <div>
+                      <span>
+                        This is the percent that will be taken from your LP tokens upon initiating a withdrawal based on
+                        the duration of your capital contribution.
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
+                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
+                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
+                        decrease substantially overtime.
+                      </span>
+                      <br />
+                      <br />
+                      <span>Learn more by clicking on this question mark tooltip.</span>
+                    </div>
+                  }
+                />
+              </ExternalLink>
+            </TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {lpFeePercentLoading ? <Loader /> : lpFeePercent ? `${lpFeePercent.multiply('100').toFixed(2)}%` : '-'}
+            </TYPE.body>
+            <TYPE.body>
+              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
+            </TYPE.body>
+          </AutoColumn>
+        </PoolData>
+        <PoolData>
+          <AutoColumn gap="sm">
+            <TYPE.body style={{ margin: 0 }}>
+              {govToken.symbol} Reward Fee %{' '}
+              <ExternalLink href={'https://fatex.io'}>
+                <LightQuestionHelper
+                  text={
+                    <div>
+                      <span>
+                        This is the percent that will be taken from your FATE rewards upon initiating a withdrawal based
+                        on the duration of your capital contribution.
+                      </span>
+                      <br />
+                      <br />
+                      <span>
+                        FATEx is a DAO that wants the holders of FATE to be rewarded for long-term membership &
+                        discourage short-term &quot;yield-farming.&quot; The fees taken are specifically structured to
+                        accomplish this: they directly reward committed members, automatically enhance FATE value, and
+                        decrease substantially overtime.
+                      </span>
+                      <br />
+                      <br />
+                      <span>Learn more by clicking on this question mark tooltip.</span>
+                    </div>
+                  }
+                />
+              </ExternalLink>
+            </TYPE.body>
+            <TYPE.body fontSize={24} fontWeight={500}>
+              {rewardFeePercentLoading ? (
+                <Loader />
+              ) : rewardFeePercent ? (
+                `${rewardFeePercent.multiply('100').toFixed(2)}%`
+              ) : (
+                '-'
+              )}
+            </TYPE.body>
+            <TYPE.body>
+              <ExternalLink href={FEES_URL}>View Fee Schedule ↗</ExternalLink>
             </TYPE.body>
           </AutoColumn>
         </PoolData>
@@ -237,11 +421,11 @@ export default function Manage({
           <CardSection>
             <AutoColumn gap="md">
               <RowBetween>
-                <TYPE.white fontWeight={600}>Step 1. Get FATEx-LP Liquidity tokens</TYPE.white>
+                <TYPE.white fontWeight={600}>Step 1. Get FATExFi-LP Liquidity tokens</TYPE.white>
               </RowBetween>
               <RowBetween style={{ marginBottom: '1rem' }}>
                 <TYPE.white fontSize={14}>
-                  {`FATEx-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
+                  {`FATExFi-LP tokens are required. Once you've added liquidity to the ${currencyA?.symbol}-${currencyB?.symbol} pool you can stake your liquidity tokens on this page.`}
                 </TYPE.white>
               </RowBetween>
               <ButtonPrimary
@@ -295,7 +479,7 @@ export default function Manage({
                     {stakingInfo?.stakedAmount?.toSignificant(6) ?? '-'}
                   </TYPE.white>
                   <TYPE.white>
-                    FATEx-LP {currencyA?.symbol}-{currencyB?.symbol}
+                    FATExFi-LP {currencyA?.symbol}-{currencyB?.symbol}
                   </TYPE.white>
                 </RowBetween>
               </AutoColumn>
@@ -349,27 +533,28 @@ export default function Manage({
               <span role="img" aria-label="wizard-icon" style={{ marginRight: '8px' }}>
                 💡
               </span>
-              The unclaimed {govToken?.symbol} amount listed above represents {unlockAmountPercent} of your rewards.
+              The unclaimed {govToken?.symbol} amount above represents unlocked rewards for the current epoch.
               <br />
-              The other {lockAmountPercent} can be claimed later, once this {epochLengthWeeks} week epoch period is
-              over. Learn more{' '}
-              <a
+              <br />
+              The locked rewards are distributed after the end of this epoch. Learn more{' '}
+              <ExternalLink
                 href={'https://fatexdao.gitbook.io/fatexdao/tokenomics/rewards-locking-1'}
-                target={'_blank'}
-                rel="noreferrer"
+                style={{ textDecoration: 'underline' }}
               >
                 here
-              </a>
-              .
+              </ExternalLink>{' '}
+              and please note there <i>ARE</i> withdrawal fees.
             </TYPE.main>
           )}
         </>
-        <AwaitingRewards />
+        {!rewardsStarted && <AwaitingRewards />}
         {!showAddLiquidityButton && (
           <DataRow style={{ marginBottom: '1rem' }}>
             {stakingInfo && (
               <ButtonPrimary padding="8px" borderRadius="8px" width="160px" onClick={handleDepositClick}>
-                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0)) ? 'Deposit' : 'Deposit FATEx-LP Tokens'}
+                {stakingInfo?.stakedAmount?.greaterThan(JSBI.BigInt(0))
+                  ? 'Deposit'
+                  : `Deposit ${stakingTokenPair.liquidityToken.symbol} Tokens`}
               </ButtonPrimary>
             )}
 
@@ -399,7 +584,9 @@ export default function Manage({
           </DataRow>
         )}
         {!userLiquidityUnstaked ? null : userLiquidityUnstaked.equalTo('0') ? null : !stakingInfo?.active ? null : (
-          <TYPE.main>You have {userLiquidityUnstaked.toSignificant(6)} FATEx-LP tokens available to deposit</TYPE.main>
+          <TYPE.main>
+            You have {userLiquidityUnstaked.toSignificant(6)} FATExFi-LP tokens available to deposit
+          </TYPE.main>
         )}
       </PositionInfo>
     </PageWrapper>

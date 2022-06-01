@@ -49,7 +49,7 @@ export const GOVERNANCE_START_BLOCK: { [chainId in ChainId]: number } = {
   [ChainId.POLYGON_MAINNET]: 0
 }
 
-export const TIMELOCK_ADDRESS = {
+export const TIMELOCK_ADDRESS: { [chainId in ChainId]: string } = {
   [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
   [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
   [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
@@ -59,7 +59,7 @@ export const TIMELOCK_ADDRESS = {
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: '0x6B7A6163714d3D3244A74be798E0194df6650D6A',
   [ChainId.HARMONY_TESTNET]: '0x73499F9B609fBb61291C90230454D73CC849e8cC',
-  [ChainId.POLYGON_MAINNET]: ZERO_ADDRESS
+  [ChainId.POLYGON_MAINNET]: ZERO_ONE_ADDRESS
 }
 
 export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
@@ -72,7 +72,20 @@ export const FATE_REWARD_CONTROLLER: { [chainId in ChainId]: string } = {
   [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
   [ChainId.HARMONY_MAINNET]: '0x04170495EA41288225025De3CDFE9A9799121861',
   [ChainId.HARMONY_TESTNET]: '0x61544e3aa27DcE173bDA940838CE04A1A1427de3',
-  [ChainId.POLYGON_MAINNET]: '0x515b52c9b7Ae148aeA0C8a820c9c8b4A000775f3'
+  [ChainId.POLYGON_MAINNET]: '0x7a8B2780189fa8758bf212321DabDbd3856D1155'
+}
+
+export const FATE_REWARD_CONTROLLER_READER: { [chainId in ChainId]: string } = {
+  [ChainId.MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.RINKEBY]: ZERO_ONE_ADDRESS,
+  [ChainId.ROPSTEN]: ZERO_ONE_ADDRESS,
+  [ChainId.GÖRLI]: ZERO_ONE_ADDRESS,
+  [ChainId.KOVAN]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.BSC_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_MAINNET]: ZERO_ONE_ADDRESS,
+  [ChainId.HARMONY_TESTNET]: ZERO_ONE_ADDRESS,
+  [ChainId.POLYGON_MAINNET]: '0xcD025fb26e99d0FBcb8356Dd5752E43c60053ab7'
 }
 
 export const FEE_TOKEN_CONVERTER: { [chainId in ChainId]: string } = {
@@ -168,6 +181,13 @@ export const X_FATE: { [chainId in ChainId]: Token } = {
     18,
     'xFATE',
     'xFATE Token'
+  ),
+  [ChainId.POLYGON_MAINNET]: new Token(
+    ChainId.POLYGON_MAINNET,
+    '0x56BE76031A4614370fA1f188e01e18a1CF16E642',
+    18,
+    'xFATE',
+    'xFATExFi'
   )
 }
 
@@ -194,7 +214,7 @@ export const WEB_INTERFACES: { [chainId in ChainId]: string[] } = {
   [ChainId.BSC_TESTNET]: [''],
   [ChainId.HARMONY_MAINNET]: ['app.fatex.fi', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org'],
   [ChainId.HARMONY_TESTNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org'],
-  [ChainId.POLYGON_MAINNET]: ['fatex.exchange', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org']
+  [ChainId.POLYGON_MAINNET]: ['app.fatex.fi', 'fatex.one', 'fatex.com', 'fatex.io', 'fatex.org']
 }
 
 export { PRELOADED_PROPOSALS } from './proposals'
@@ -211,6 +231,21 @@ export const COMP = new Token(ChainId.MAINNET, '0xc00e94Cb662C3520282E6f57172140
 export const MKR = new Token(ChainId.MAINNET, '0x9f8F72aA9304c8B593d555F12eF6589cC3A579A2', 18, 'MKR', 'Maker')
 export const AMPL = new Token(ChainId.MAINNET, '0xD46bA6D942050d489DBd938a2C909A5d5039A161', 9, 'AMPL', 'Ampleforth')
 export const WBTC = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC')
+
+export const POLYGON_PAXG = new Token(
+  ChainId.POLYGON_MAINNET,
+  '0x553d3D295e0f695B9228246232eDF400ed3560B5',
+  18,
+  'PAXG',
+  'Paxos Gold'
+)
+export const POLYGON_USDC = new Token(
+  ChainId.POLYGON_MAINNET,
+  '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  6,
+  'USDC',
+  'USD//C'
+)
 
 // Block time here is slightly higher (~1s) than average in order to avoid ongoing proposals past the displayed time
 export const AVERAGE_BLOCK_TIME_IN_SECS = 2
@@ -258,10 +293,17 @@ export const COMMON_CONTRACT_NAMES: { [chainId in ChainId]: { [address: string]:
   }
 }
 
+export const MERKLE_DISTRIBUTOR_PROOF_URL =
+  'https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/0x5215eb008425edf5fe396be6bfb783296de51084.json'
+
+export const FEES_URL =
+  'https://fatexdao.gitbook.io/fatexdao/fatexdao-dapps-and-tokens/fatexfi-faq/staked-lp-withdrawal-fees'
+
 export const MERKLE_DISTRIBUTOR_ADDRESS: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]: undefined,
   [ChainId.HARMONY_MAINNET]: undefined,
-  [ChainId.HARMONY_TESTNET]: undefined
+  [ChainId.HARMONY_TESTNET]: undefined,
+  [ChainId.POLYGON_MAINNET]: undefined
 }
 
 const WETH_ONLY: ChainTokenList = {
@@ -281,6 +323,12 @@ const WETH_ONLY: ChainTokenList = {
 export const BASES_TO_CHECK_TRADES_AGAINST: ChainTokenList = {
   ...WETH_ONLY,
   [ChainId.MAINNET]: [...WETH_ONLY[ChainId.MAINNET], DAI, USDC, USDT, COMP, MKR, WBTC],
+  [ChainId.POLYGON_MAINNET]: [
+    ...WETH_ONLY[ChainId.POLYGON_MAINNET],
+    GOVERNANCE_TOKEN[ChainId.POLYGON_MAINNET],
+    POLYGON_PAXG,
+    POLYGON_USDC
+  ],
   [ChainId.HARMONY_MAINNET]: [
     ...WETH_ONLY[ChainId.HARMONY_MAINNET],
     getTokenWithDefault(ChainId.HARMONY_MAINNET, 'BUSD'),
@@ -315,6 +363,11 @@ export const SUGGESTED_BASES: ChainTokenList = {
     ...WETH_ONLY[ChainId.HARMONY_TESTNET],
     getTokenWithDefault(ChainId.HARMONY_TESTNET, 'BUSD'),
     getTokenWithDefault(ChainId.HARMONY_TESTNET, 'FATE')
+  ],
+  [ChainId.POLYGON_MAINNET]: [
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'FATE'),
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'PAXG'),
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'USDC')
   ]
 }
 
@@ -339,6 +392,12 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     getTokenWithDefault(ChainId.HARMONY_TESTNET, 'FATE'),
     getTokenWithDefault(ChainId.HARMONY_TESTNET, '1ETH'),
     getTokenWithDefault(ChainId.HARMONY_TESTNET, 'LINK')
+  ],
+  [ChainId.POLYGON_MAINNET]: [
+    ...WETH_ONLY[ChainId.POLYGON_MAINNET],
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'USDC'),
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'PAXG'),
+    getTokenWithDefault(ChainId.POLYGON_MAINNET, 'FATE')
   ]
 }
 

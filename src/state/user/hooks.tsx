@@ -200,7 +200,7 @@ export function useURLWarningToggle(): () => void {
  * @param pairType the type of pair to compute
  */
 export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token], pairType: PairType = PairType.FATE): Token {
-  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB, pairType), 18, 'FATEx-LP', 'FATExDAO LP Token')
+  return new Token(tokenA.chainId, Pair.getAddress(tokenA, tokenB, pairType), 18, 'FATExFi-LP', 'FATExFi LP Token')
 }
 
 /**
