@@ -311,13 +311,9 @@ export default function Earn() {
                 Please connect your wallet to see available pools
               </OutlineCard>
             ) : (
-              activeStakingInfos?.map(stakingInfo => {
+              activeStakingInfos?.map((stakingInfo, i) => {
                 // need to sort by added liquidity here
-                return (
-                  stakingInfo?.baseToken?.symbol?.includes('FATE') && (
-                    <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
-                  )
-                )
+                return i % 2 === 0 && <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
               })
             )}
           </StakingSection>
@@ -334,13 +330,9 @@ export default function Earn() {
             ) : !account ? (
               <></>
             ) : (
-              activeStakingInfos?.map(stakingInfo => {
+              activeStakingInfos?.map((stakingInfo, i) => {
                 // need to sort by added liquidity here
-                return (
-                  !stakingInfo?.baseToken?.symbol?.includes('FATE') && (
-                    <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
-                  )
-                )
+                return i % 2 === 1 && <PoolCard key={stakingInfo.pid} stakingInfo={stakingInfo} isArchived={false} />
               })
             )}
           </StakingSection>

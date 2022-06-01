@@ -15,6 +15,11 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
   ) {
     baseToken = tokenData?.WETH?.token
   } else if (
+    tokens[0]?.symbol?.toUpperCase() === tokenData?.USDC?.token?.symbol?.toUpperCase() ||
+    tokens[1]?.symbol?.toUpperCase() === tokenData?.USDC?.token?.symbol?.toUpperCase()
+  ) {
+    baseToken = tokenData?.USDC?.token
+  } else if (
     tokens[0]?.symbol?.toUpperCase() === tokenData?.govToken?.token?.symbol?.toUpperCase() ||
     tokens[1]?.symbol?.toUpperCase() === tokenData?.govToken?.token?.symbol?.toUpperCase()
   ) {
@@ -24,11 +29,6 @@ export default function determineBaseToken(tokenData: Record<string, any>, token
     tokens[1]?.symbol?.toUpperCase() === tokenData?.BUSD?.token?.symbol?.toUpperCase()
   ) {
     baseToken = tokenData?.BUSD?.token
-  } else if (
-    tokens[0]?.symbol?.toUpperCase() === tokenData?.USDC?.token?.symbol?.toUpperCase() ||
-    tokens[1]?.symbol?.toUpperCase() === tokenData?.USDC?.token?.symbol?.toUpperCase()
-  ) {
-    baseToken = tokenData?.USDC?.token
   } else if (
     tokens[0]?.symbol?.toUpperCase() === tokenData?.UST?.token?.symbol?.toUpperCase() ||
     tokens[1]?.symbol?.toUpperCase() === tokenData?.UST?.token?.symbol?.toUpperCase()
