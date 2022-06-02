@@ -102,7 +102,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
   const govToken = tokensWithPrices?.govToken?.token
   const govTokenWETHPrice = tokensWithPrices?.govToken?.price
 
-  const blocksPerYear = getBlocksPerYear(chainId)
+  const secondsPerYear = JSBI.BigInt(86400 * 365)
 
   const pids = useMemo(() => masterInfo.map(({ pid }) => pid), [masterInfo])
 
@@ -268,9 +268,10 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
         const totalStakedAmountBUSD =
           wethBusdPrice && totalStakedAmountWETH && totalStakedAmountWETH.multiply(wethBusdPrice?.raw)
 
-        const apr = totalStakedAmountWETH
-          ? calculateApr(govTokenWETHPrice, baseRewardsPerSecond, blocksPerYear, poolShare, totalStakedAmountWETH)
-          : undefined
+        const apr =
+          totalStakedAmountWETH && totalStakedAmountWETH.greaterThan('0')
+            ? calculateApr(govTokenWETHPrice, baseRewardsPerSecond, secondsPerYear, poolShare, totalStakedAmountWETH)
+            : undefined
 
         const stakingInfo: StakingInfo = {
           pid: pid,
@@ -280,7 +281,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
           startTimestamp: startsAtTimestamp,
           baseRewardsPerSecond: baseRewardsPerSecond,
           poolRewardsPerBlock: poolBlockRewards,
-          blocksPerYear: blocksPerYear,
+          blocksPerYear: secondsPerYear,
           poolShare: poolShare,
           lockedRewardsPercentageUnits: lockedRewardsPercentageUnits,
           unlockedRewardsPercentageUnits: unlockedRewardsPercentageUnits,
@@ -321,7 +322,7 @@ export function useStakingInfo(active: boolean | undefined = undefined, pairToFi
     tokensWithPrices,
     wethBusdPrice,
     govTokenWETHPrice,
-    blocksPerYear
+    secondsPerYear
   ])
 }
 
