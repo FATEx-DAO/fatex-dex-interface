@@ -86,7 +86,7 @@ export default function GovTokenBalanceContent({
   const govToken = useGovernanceToken()
   const blockchain = useBlockchain()
   const govTokenBalance = useTokenBalance(account ?? undefined, govToken)
-  const xFateUserBalance = useTokenBalance(account ?? undefined, X_FATE[chainId ?? ChainId.HARMONY_MAINNET])
+  const xFateUserBalance = useTokenBalance(account ?? undefined, X_FATE[chainId ?? ChainId.POLYGON_MAINNET])
   const unlockedGovTokensToClaim = useTotalGovTokensEarned()
   const govTokenLockedBalance = useTotalLockedGovTokens()
   const lockedGovTokensToClaim = govToken ? new TokenAmount(govToken, '0') : undefined
@@ -113,8 +113,13 @@ export default function GovTokenBalanceContent({
     '0xFe2976Fc317667743d72D232DCEdd4E250170f1B', // Advisor Vault
     '0x45caFF15EEBe2D5Bd5569fa3878953d29376bb34', // Advisor Vault
     '0xFD266a3D4DA9d185A0491f71cE61C5a22014d874', // Team Vault
-    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc' // founder address EOA? // has some FATE in xFATE which messes up count
-    // '0xE3AC7a0780344E41A90FE8b750bFAC521B0c1fFb' // team address EOA? // has some FATE in xFATE which messes up count
+    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc', // founder address EOA - has some FATE in xFATE which messes up count
+    '0xFCD29346c35011628DE4E033Cf43dc6eAf2EfCbE', // founder or investor address EOA
+    '0x0d7a90BC336Ca443A89391503f327D5b78B5485D', // founder or investor address EOA
+    '0xD77be625Ef9E3a00551EfB79CD9a8f574f41763D', // founder or investor address EOA
+    '0x05eEE03F9A3Fa10aAC2921451421A9f4e37EaBbc', // founder or investor address EOA
+    '0xD8189e32771Ab8114f24eB5E3ACb5040BB8C7086', // founder or investor address EOA
+    '0xa6c43222D3fCdf85D31838D3ca62ae5a6E1B16Df' // Gnosis Safe
   ]
   const totalLockedSupplyMap = useAddressesTokenBalance(outOfCirculationBalances, govToken)
   const totalLockedSupply = govToken
@@ -124,7 +129,7 @@ export default function GovTokenBalanceContent({
     : undefined
   const totalUnlockedSupply = totalLockedSupply ? totalSupply?.subtract(totalLockedSupply) : undefined
 
-  const xFateBalance = useTokenBalance(X_FATE[chainId ?? ChainId.HARMONY_MAINNET].address, govToken)
+  const xFateBalance = useTokenBalance(X_FATE[chainId ?? ChainId.POLYGON_MAINNET].address, govToken)
   const xFatePercentage =
     xFateBalance && totalUnlockedSupply ? new Percent(xFateBalance.quotient, totalUnlockedSupply.quotient) : undefined
 
